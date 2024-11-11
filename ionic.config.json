@@ -1,0 +1,7 @@
+{
+  "name": "flower-power-dispensers",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
