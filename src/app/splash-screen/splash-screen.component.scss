@@ -1,0 +1,61 @@
+.splash-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+  
+    .logo {
+      width: 60%;
+      margin-bottom: 20px;
+    }
+  
+    .age-verification {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      position: absolute;
+      top: 50%;
+  
+      p {
+        color: black;
+        font-size: 1.2rem;
+        margin-bottom: 10px;
+      }
+  
+      .button-group {
+        display: flex;
+        gap: 20px;
+  
+        .yes-btn,
+        .no-btn {
+          border-radius: 5px;
+          width: 100px;
+          height: 50px;
+          color: white;
+          font-size: 1.2rem;
+          border: none;
+          cursor: pointer;
+        }
+  
+        .yes-btn {
+          --background: #25463D;
+        }
+  
+        .no-btn {
+          --background: #000000;
+        }
+      }
+    }
+  }
+  
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: white;
+}
+  
