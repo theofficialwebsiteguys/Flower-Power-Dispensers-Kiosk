@@ -1,0 +1,13 @@
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin: 12px 0;
+
+  ion-button {
+    text-transform: capitalize;
+  }
+}
+
+.filters-container {
+  height: 100%;
+}

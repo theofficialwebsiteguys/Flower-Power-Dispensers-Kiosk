@@ -1,0 +1,10 @@
+<button
+  type="button"
+  class="container"
+  (click)="handleCategorySelect(category)"
+>
+  <img />
+  <p>
+    {{ category.toLowerCase() + (category === "FLOWER" ? "" : "s") }}
+  </p>
+</button>
