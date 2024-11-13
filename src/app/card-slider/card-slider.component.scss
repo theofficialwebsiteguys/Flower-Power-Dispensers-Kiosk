@@ -1,0 +1,192 @@
+// .slider-container {
+//   overflow-x: auto;
+//   -webkit-overflow-scrolling: touch;
+//   padding: 10px;
+//   margin: 10px;
+// }
+
+// .slider {
+//   display: flex;
+//   gap: 10px;
+// }
+
+// .slide {
+//   flex: 0 0 auto;
+//   width: 200px; /* Set a fixed width for each card */
+// }
+
+// .card {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   width: 100%;
+//   height: 300px; /* Set a fixed height for each card */
+//   padding: 10px;
+//   background-color: #fff;
+//   border-radius: 10px;
+//   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//   overflow: hidden;
+// }
+
+// .image-container {
+//   position: relative;
+//   width: 100%;
+//   height: 150px; /* Set a fixed height for the image container */
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+
+// .image-container img {
+//   max-width: 100%;
+//   max-height: 100%;
+//   border-radius: 8px;
+// }
+
+// .add-icon {
+//   position: absolute;
+//   top: 10px;
+//   right: 10px;
+//   font-size: 1.5em;
+//   color: #28a745;
+//   cursor: pointer;
+// }
+
+// .card-content {
+//   text-align: center;
+//   padding: 10px 0;
+//   width: 100%;
+// }
+
+// .card-content h4 {
+//   font-size: 0.9em;
+//   color: #666;
+//   margin: 0;
+//   height: 20px; /* Fixed height for the brand name */
+// }
+
+// .card-content h3 {
+//   font-size: 1em;
+//   margin: 5px 0;
+//   color: #333;
+//   height: 40px; /* Fixed height for the title to handle multi-line titles */
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+//   display: -webkit-box;
+//   -webkit-line-clamp: 2;
+//   -webkit-box-orient: vertical;
+// }
+
+// .card-content p {
+//   font-size: 0.85em;
+//   color: #777;
+//   height: 20px; /* Fixed height for the description */
+// }
+
+// .card-footer {
+//   display: flex;
+//   justify-content: space-between;
+//   font-size: 0.9em;
+//   color: #333;
+//   margin-top: 5px;
+//   width: 100%;
+// }
+
+// .price {
+//   font-weight: bold;
+// }
+
+// .slider-container::-webkit-scrollbar {
+//   display: none;
+// }
+
+// .slider-container {
+//   -ms-overflow-style: none;
+//   scrollbar-width: none;
+// }
+
+.category-section {
+  margin-bottom: 20px; /* Space between each category section */
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.section-header h2 {
+  font-size: 1.7em;
+  // font-weight: bold;
+  margin: 10px;
+}
+
+.view-all {
+  font-size: 0.9em;
+  color: #007bff;
+  text-decoration: none;
+}
+
+.slider-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px;
+  margin: 10px;
+}
+
+.slider {
+  display: flex;
+  gap: 10px;
+}
+
+.slide {
+  flex: 0 0 auto;
+  width: 150px;
+  height: 150px;
+}
+
+.card {
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+.image-container {
+  width: 100%;
+  height: 100%;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.add-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5em;
+  color: #28a745;
+  cursor: pointer;
+}
+
+.slider-container::-webkit-scrollbar {
+  display: none;
+}
+
+.slider-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.arrow-icon{
+  font-size: 1.8em;
+  color: black;
+}

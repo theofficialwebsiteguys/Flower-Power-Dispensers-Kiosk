@@ -1,0 +1,17 @@
+<div *ngFor="let category of categories" class="category-section">
+  <div class="section-header">
+    <h2>{{ category.title }}</h2>
+    <a href="#" class="view-all"><ion-icon name="arrow-forward-outline" class="arrow-icon"></ion-icon></a>
+  </div>
+  <div class="slider-container">
+    <div class="slider">
+      <div class="slide" *ngFor="let card of category.cards">
+        <div class="card">
+          <div class="image-container">
+            <img [src]="card.image" alt="Product Image" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
