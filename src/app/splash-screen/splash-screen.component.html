@@ -1,0 +1,11 @@
+<div class="splash-container" [@fadeOut]="splashVisibility">
+  <img src="assets/logo.png" [@logoAnimation]="logoState" class="logo" alt="logo">
+  
+  <div *ngIf="showAgeVerification" @fadeIn class="age-verification">
+    <p>Are You 21+ Years Old?</p>
+    <div class="button-group">
+      <ion-button (click)="onYesClick()" class="yes-btn" shape="round">Yes</ion-button>
+      <ion-button (click)="onNoClick()" class="no-btn" shape="round">No</ion-button>
+    </div>
+  </div>
+</div>
