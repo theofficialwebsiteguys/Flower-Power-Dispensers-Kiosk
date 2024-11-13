@@ -2,10 +2,13 @@ import { IonicModule } from '@ionic/angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Tab1Page } from './tab1.page';
+import { HomePage } from './home.page';
 import { ExploreContainerComponentModule } from '../explore-container/explore-container.module';
 
-import { Tab1PageRoutingModule } from './tab1-routing.module';
+import { HomePageRoutingModule } from './home-routing.module';
+import { CardSliderComponent } from '../card-slider/card-slider.component';
+import { BannerCarouselComponent } from '../banner-carousel/banner-carousel.component';
+
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -14,9 +17,9 @@ import { SharedModule } from '../shared/shared.module';
     CommonModule,
     FormsModule,
     ExploreContainerComponentModule,
-    Tab1PageRoutingModule,
+    HomePageRoutingModule,
     SharedModule,
   ],
-  declarations: [Tab1Page],
+  declarations: [HomePage, CardSliderComponent, BannerCarouselComponent],
 })
-export class Tab1PageModule {}
+export class HomePageModule {}

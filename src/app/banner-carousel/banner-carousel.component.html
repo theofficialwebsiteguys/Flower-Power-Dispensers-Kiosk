@@ -1,0 +1,12 @@
+<div class="carousel-container">
+  <div
+    class="carousel-slide"
+    *ngFor="let banner of banners; let i = index"
+    [class.active]="i === currentIndex"
+    [style.backgroundImage]="'url(' + banner.image + ')'"
+  >
+    <div class="banner-content">
+
+    </div>
+  </div>
+</div>
