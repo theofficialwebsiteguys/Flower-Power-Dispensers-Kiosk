@@ -1,0 +1,10 @@
+<app-product-filters></app-product-filters>
+
+<ion-col>
+  <ng-container *ngFor="let product of products">
+    <app-product
+      *ngIf="product.category === currentCategory"
+      [product]="product"
+    ></app-product>
+  </ng-container>
+</ion-col>

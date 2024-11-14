@@ -1,0 +1,32 @@
+ion-item {
+  --padding-start: 24px;
+  --padding-end: 24px;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 40px;
+
+  padding: 16px 0;
+}
+
+img {
+  height: 100%;
+  width: 30%;
+}
+
+.info {
+}
+
+.weightAndPrice {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}

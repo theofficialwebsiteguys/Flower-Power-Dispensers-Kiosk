@@ -1,0 +1,20 @@
+<div class="button-container">
+  <ion-button (click)="setOpen(true)">Sort + Filter</ion-button>
+</div>
+
+<ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="setOpen(false)">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Sort + Filter</ion-title>
+        <ion-buttons slot="end"
+          ><ion-button (click)="setOpen(false)">
+            <ion-icon slot="icon-only" name="close"></ion-icon> </ion-button
+        ></ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <div class="filters-container">
+      <p>Filters</p>
+    </div>
+  </ng-template>
+</ion-modal>

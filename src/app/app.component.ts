@@ -1,5 +1,6 @@
 import { trigger, transition, style, animate } from '@angular/animations';
 import { Component } from '@angular/core';
+import { ProductsService } from './products.service';
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   showSplashScreen = true;
+
+  constructor(private productService: ProductsService){
+
+  }
+
+  ngOnInit(){
+    this.productService.fetchProducts();
+  }
 
 
   onCloseSplash() {
