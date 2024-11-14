@@ -25,12 +25,8 @@ import { SharedModule } from '../shared/shared.module';
     SharedModule,
   ],
   declarations: [
-    ProductsPage,
-    ProductCategoriesComponent,
-    ProductCategoryComponent,
-    ProductListComponent,
-    ProductComponent,
-    ProductFiltersComponent,
+    
+
   ],
 })
 export class ProductsPageModule {}

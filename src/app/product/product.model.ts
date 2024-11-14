@@ -6,4 +6,5 @@ export type Product = {
   thc: string;
   weight: string;
   price: string;
+  image: string;
 };

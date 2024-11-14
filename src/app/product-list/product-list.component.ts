@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { Product } from '../product/product.model';
 import { ProductCategory } from '../product-category/product-category.model';
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-product-list',
@@ -9,10 +10,16 @@ import { ProductCategory } from '../product-category/product-category.model';
   styleUrls: ['./product-list.component.scss'],
 })
 export class ProductListComponent implements OnInit {
-  constructor() {}
+  constructor(private productService: ProductsService) {}
 
-  @Input() products: Array<Product> = [];
-  @Input() currentCategory: ProductCategory = 'FLOWER';
+  currentCategory: ProductCategory = "FLOWER";
 
-  ngOnInit() {}
+  products: Array<Product> = [];
+
+  ngOnInit() {
+    this.productService.currentCategory$.subscribe(category => {
+      this.currentCategory = category; // Automatically updates whenever the category changes in the service
+      this.products = this.productService.getProductsList();
+    });
+  }
 }

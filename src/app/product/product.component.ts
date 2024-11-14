@@ -18,6 +18,7 @@ export class ProductComponent implements OnInit {
     thc: '',
     weight: '',
     price: '',
+    image: ''
   };
 
   ngOnInit() {}

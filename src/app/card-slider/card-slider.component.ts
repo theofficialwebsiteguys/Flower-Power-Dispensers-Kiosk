@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ProductCategory } from '../product-category/product-category.model';
+import { ProductsService } from '../products.service';
+import { Product } from '../product/product.model';
 
 @Component({
   selector: 'app-card-slider',
@@ -6,70 +9,50 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./card-slider.component.scss'],
 })
 export class CardSliderComponent {
-  categories = [
+  categories: { title: string; category?: ProductCategory; }[] = [
     {
       title: 'Concierge Picks',
-      cards: [
-        { image: 'assets/default.jpg', title: 'Special 1' },
-        { image: 'assets/default.jpg', title: 'Special 2' },
-        { image: 'assets/default.jpg', title: 'Special 2' },
-        { image: 'assets/default.jpg', title: 'Special 2' },
-        { image: 'assets/default.jpg', title: 'Special 2' },
-        { image: 'assets/default.jpg', title: 'Special 2' },
-        // Add more cards for Specials
-      ],
     },
     {
       title: 'Specials',
-      cards: [
-        { image: 'assets/default.jpg', title: 'Staff Pick 1' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        // Add more cards for Staff Picks
-      ],
     },
     {
       title: 'Flower',
-      cards: [
-        { image: 'assets/default.jpg', title: 'Staff Pick 1' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        // Add more cards for Flower
-      ],
+      category: 'FLOWER',
     },
     {
-      title: 'Pre-Rolls',
-      cards: [
-        { image: 'assets/default.jpg', title: 'Staff Pick 1' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        // Add more cards for Pre-Rolls
-      ],
+      title: 'Pre-Roll',
+      category: 'PRE-ROLL',
+      
     },
     {
-      title: 'Edibles',
-      cards: [
-        { image: 'assets/default.jpg', title: 'Staff Pick 1' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        { image: 'assets/default.jpg', title: 'Staff Pick 2' },
-        // Add more cards for Edibles
-      ],
+      title: 'Edible',
+      category: 'EDIBLE',
     },
     
     // Add more categories as needed
   ];
+
+  products: Array<Product> = [];
+
+  constructor(private productService: ProductsService){
+
+  }
+
+  ngOnInit(){
+    this.products = this.productService.getProductsList();
+  }
+
+  updateCategory(category?: ProductCategory){
+    if(!category){
+      return;
+    }
+    this.productService.updateCategory(category);
+  }
   
+  updateProductDisplay(product: Product) {
+    // Navigate to the desired route, e.g., /product-details/:id
+    this.productService.updateCurrentProduct(product);
+  }
   
 }

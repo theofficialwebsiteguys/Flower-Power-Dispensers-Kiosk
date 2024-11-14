@@ -1,12 +1,7 @@
 <ion-content>
   <app-header></app-header>
 
-  <app-product-categories
-    (selectCategory)="changeCategory($event)"
-  ></app-product-categories>
+  <app-product-categories></app-product-categories>
 
-  <app-product-list
-    [products]="products"
-    [currentCategory]="currentCategory"
-  ></app-product-list>
+  <app-product-list></app-product-list>
 </ion-content>
