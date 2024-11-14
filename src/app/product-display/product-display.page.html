@@ -1,0 +1,11 @@
+<ion-content [fullscreen]="true">
+  <app-header></app-header>
+
+  <app-single-product></app-single-product>
+
+  <h2 class="similar-title">Similar Items</h2>
+  <app-product-list
+  [products]="similarProducts"
+></app-product-list>
+
+</ion-content>
