@@ -1,13 +1,10 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
+
+import { ProductsService } from '../products.service';
 
 import { Product } from '../product/product.model';
 import { ProductCategory } from '../product-category/product-category.model';
-import {
-  DEFAULT_FILTERS,
-  Filters,
-} from '../product-filters/product-filters.model';
-
-import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-product-list',
@@ -17,19 +14,17 @@ import { ProductsService } from '../products.service';
 export class ProductListComponent implements OnInit {
   constructor(private productService: ProductsService) {}
 
-  @Input() products: Product[] = [];
-
   currentCategory: ProductCategory = 'FLOWER';
-  filteredProducts: Product[] = this.products;
+  products$: Observable<Product[]> = of([]);
 
   ngOnInit() {
     this.productService.currentCategory$.subscribe((category) => {
       this.currentCategory = category; // Automatically updates whenever the category changes in the service
+      this.products$ = this.productService.getFilteredProducts();
     });
-    this.onFilterUpdate(DEFAULT_FILTERS);
-  }
 
-  onFilterUpdate(filters: Filters) {
-    // sort and filter filteredProducts
+    this.productService.currentProductFilters$.subscribe(() => {
+      this.products$ = this.productService.getFilteredProducts();
+    });
   }
 }

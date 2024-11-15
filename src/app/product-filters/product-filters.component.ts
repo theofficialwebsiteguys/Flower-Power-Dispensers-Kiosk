@@ -1,20 +1,21 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
 
+import { ProductsService } from '../products.service';
+
 import {
-  DEFAULT_FILTERS,
-  Filters,
+  DEFAULT_PRODUCT_FILTERS,
   OPTIONS_CRITERIA,
   OPTIONS_DIRECTIONS,
+  OPTIONS_STRAINS,
+  OPTIONS_WEIGHTS,
+  ProductFilters,
+  ProductFilterField,
+  Options,
   CriteriaOptions,
   DirectionOptions,
   StrainOptions,
-  OPTIONS_STRAINS,
-  Strain,
-  WeightOptions,
-  OPTIONS_WEIGHTS,
-  Weight,
 } from './product-filters.model';
 
 @Component({
@@ -23,21 +24,25 @@ import {
   styleUrls: ['./product-filters.component.scss'],
 })
 export class ProductFiltersComponent implements OnInit {
-  constructor() {
+  constructor(private productService: ProductsService) {
     addIcons({ close });
   }
 
-  @Output() updateFilters = new EventEmitter<Filters>();
+  isModalOpen = false;
 
-  // TODO set to false
-  isModalOpen = true;
+  filters: ProductFilters = DEFAULT_PRODUCT_FILTERS;
 
-  filters: Filters = DEFAULT_FILTERS;
-
+  // TODO replace with parsed data from products array - getProductFilterOptions within product service
   criteriaOptions: CriteriaOptions = OPTIONS_CRITERIA;
   directionOptions: DirectionOptions = OPTIONS_DIRECTIONS;
+  brandOptions: Options = [
+    { label: 'Brand 1', value: 'Brand 1' },
+    { label: 'Brand 2', value: 'Brand 2' },
+    { label: 'Brand 3', value: 'Brand 3' },
+    { label: 'Brand 4', value: 'Brand 4' },
+  ];
   strainOptions: StrainOptions = OPTIONS_STRAINS;
-  weightOptions: WeightOptions = OPTIONS_WEIGHTS;
+  weightOptions: Options = OPTIONS_WEIGHTS;
 
   ngOnInit() {}
 
@@ -47,16 +52,11 @@ export class ProductFiltersComponent implements OnInit {
 
   handleFilterUpdate() {
     console.log(this.filters);
-    this.updateFilters.emit(this.filters);
+    this.productService.updateProductFilters(this.filters);
   }
 
-  handleChangeCriteria(e: CustomEvent) {
-    this.filters.sortMethod.criterion = e.detail.value;
-    this.handleFilterUpdate();
-  }
-
-  handleChangeDirection(e: CustomEvent) {
-    this.filters.sortMethod.direction = e.detail.value;
+  handleChangeField(e: CustomEvent, field: ProductFilterField) {
+    this.filters[field] = e.detail.value;
     this.handleFilterUpdate();
   }
 
@@ -64,27 +64,21 @@ export class ProductFiltersComponent implements OnInit {
     return array.includes(value);
   }
 
-  handleCheckStrain(isChecked: boolean, strain: Strain) {
+  handleCheckField(
+    isChecked: boolean,
+    value: string,
+    field: ProductFilterField
+  ) {
     if (!isChecked) {
-      this.filters.strains = this.filters.strains.filter((s) => s !== strain);
+      this.filters[field] = this.filters[field].filter(
+        (v: string) => v !== value
+      );
       this.handleFilterUpdate();
       return;
     }
 
-    if (!this.isChecked(this.filters.strains, strain))
-      this.filters.strains.push(strain);
-    this.handleFilterUpdate();
-  }
-
-  handleCheckWeight(isChecked: boolean, weight: Weight) {
-    if (!isChecked) {
-      this.filters.weights = this.filters.weights.filter((w) => w !== weight);
-      this.handleFilterUpdate();
-      return;
-    }
-
-    if (!this.isChecked(this.filters.weights, weight))
-      this.filters.weights.push(weight);
+    if (!this.isChecked(this.filters[field], value))
+      this.filters[field].push(value);
     this.handleFilterUpdate();
   }
 }

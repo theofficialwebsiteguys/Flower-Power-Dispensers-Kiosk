@@ -1,3 +1,5 @@
+$color-primary: #208636;
+
 .button-container {
   display: flex;
   justify-content: center;
@@ -31,6 +33,13 @@
   display: flex;
   flex-wrap: nowrap;
   gap: 24px;
+
+  ion-select {
+    --border-width: 1px;
+    --highlight-color-focused: black;
+    --highlight-color-valid: black;
+    --highlight-color-invalid: red;
+  }
 }
 
 .checkbox-container {
@@ -59,12 +68,24 @@
       transition: 0.15s ease-in;
     }
 
-    $color-checked: #208636;
     input[type="checkbox"]:checked + ion-label {
       color: white;
-      background-color: $color-checked;
-      border-color: $color-checked;
+      background-color: $color-primary;
+      border-color: $color-primary;
       transition: 0.15s ease-in;
     }
+  }
+}
+
+.range-container {
+  flex-direction: column;
+  gap: 0px;
+
+  .range-label {
+    margin: 0;
+  }
+
+  ion-range {
+    padding: 0;
   }
 }

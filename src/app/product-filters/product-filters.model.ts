@@ -1,3 +1,5 @@
+import { Strain } from '../product/product.model';
+
 export type SortCriterion = 'POPULAR' | 'PRICE' | 'THC' | 'ALPHABETICAL';
 export type CriteriaOptions = {
   label: string;
@@ -10,25 +12,37 @@ export type DirectionOptions = {
   value: SortDirection;
 }[];
 
-export type Strain = 'HYBRID' | 'INDICA' | 'SATIVA';
+export type Options = { label: string; value: string }[];
+
 export type StrainOptions = {
   label: string;
   value: Strain;
 }[];
 
-export type Weight = '1/8' | '1/4' | '1/2' | '1';
-export type WeightOptions = { label: string; value: Weight }[];
+export type PotencyRange = { lower: number; upper: number };
 
-export type Filters = {
+export type ProductFilterField =
+  | 'sortMethod.criterion'
+  | 'sortMethod.direction'
+  | 'brands'
+  | 'strains'
+  | 'weights'
+  | 'potency.thc';
+export type ProductFilters = {
+  [key: string]: any;
   sortMethod: { criterion: SortCriterion; direction: SortDirection };
+  brands: string[];
   strains: Strain[];
-  weights: Weight[];
+  weights: string[];
+  potency: { thc: PotencyRange };
 };
 
-export const DEFAULT_FILTERS: Filters = {
+export const DEFAULT_PRODUCT_FILTERS: ProductFilters = {
   sortMethod: { criterion: 'POPULAR', direction: 'DESC' },
+  brands: [],
   strains: [],
   weights: [],
+  potency: { thc: { lower: 0, upper: 100 } },
 };
 
 export const OPTIONS_CRITERIA: CriteriaOptions = [
@@ -49,9 +63,12 @@ export const OPTIONS_STRAINS: StrainOptions = [
   { label: 'Sativa', value: 'SATIVA' },
 ];
 
-export const OPTIONS_WEIGHTS: WeightOptions = [
-  { label: '1/8oz', value: '1/8' },
-  { label: '1/4oz', value: '1/4' },
-  { label: '1/2oz', value: '1/2' },
-  { label: '1oz', value: '1' },
+export const OPTIONS_WEIGHTS: Options = [
+  { label: '1/8oz', value: '1/8oz' },
+  { label: '1/4oz', value: '1/4oz' },
+  { label: '1/2oz', value: '1/2oz' },
+  { label: '1oz', value: '1oz' },
+  { label: '0.5g', value: '0.5g' },
+  { label: '1g', value: '1g' },
+  { label: '2g', value: '2g' },
 ];

@@ -1,7 +1,8 @@
-import { Component, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { ProductsService } from '../products.service';
 
 import { ProductCategory } from '../product-category/product-category.model';
-import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-product-categories',
