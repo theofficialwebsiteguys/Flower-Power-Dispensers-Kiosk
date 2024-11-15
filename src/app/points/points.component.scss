@@ -1,0 +1,37 @@
+.points-container {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  
+  .points-header {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .progress-bar-container {
+    background: #e0e0e0;
+    border-radius: 10px;
+    height: 8px;
+    margin: 10px 0;
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+    margin: 10px auto;
+  }
+  
+  .progress-bar {
+    background: linear-gradient(to right, #00aaff, #00ff00); // Adjust gradient color as needed
+    border-radius: 10px;
+    height: 100%;
+  }
+  
+  .progress-steps {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    max-width: 300px;
+    margin: 5px auto 0;
+    padding: 0 2px;
+  }
+  
