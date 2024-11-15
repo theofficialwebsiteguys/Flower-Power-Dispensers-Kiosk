@@ -11,7 +11,7 @@ import { ProductCategory } from '../product-category/product-category.model';
 export class ProductsPage implements OnInit {
   constructor() {}
 
-  products: Array<Product> = [];
+  products: Product[] = [];
   currentCategory: ProductCategory = 'FLOWER';
 
   ngOnInit() {
@@ -23,7 +23,7 @@ export class ProductsPage implements OnInit {
     this.currentCategory = category;
   }
 
-  getProducts(): Array<Product> {
+  getProducts(): Product[] {
     return [
       {
         category: 'FLOWER',

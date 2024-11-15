@@ -1,7 +1,9 @@
-<app-product-filters></app-product-filters>
+<app-product-filters
+  (updateFilters)="onFilterUpdate($event)"
+></app-product-filters>
 
 <ion-col>
-  <ng-container *ngFor="let product of products">
+  <ng-container *ngFor="let product of filteredProducts">
     <app-product
       *ngIf="product.category === currentCategory"
       [product]="product"

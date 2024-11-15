@@ -10,9 +10,9 @@ import { ProductCategory } from '../product-category/product-category.model';
 export class ProductCategoriesComponent implements OnInit {
   constructor() {}
 
-  categories: Array<ProductCategory> = [];
-
   @Output() selectCategory = new EventEmitter<ProductCategory>();
+
+  categories: ProductCategory[] = [];
 
   ngOnInit() {
     // TODO replace with call to product categories service getter
@@ -23,7 +23,7 @@ export class ProductCategoriesComponent implements OnInit {
     this.selectCategory.emit(category);
   }
 
-  getCategories(): Array<ProductCategory> {
+  getCategories(): ProductCategory[] {
     return [
       'FLOWER',
       'PRE-ROLL',

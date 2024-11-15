@@ -2,6 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { Product } from '../product/product.model';
 import { ProductCategory } from '../product-category/product-category.model';
+import {
+  DEFAULT_FILTERS,
+  Filters,
+} from '../product-filters/product-filters.model';
 
 @Component({
   selector: 'app-product-list',
@@ -11,8 +15,16 @@ import { ProductCategory } from '../product-category/product-category.model';
 export class ProductListComponent implements OnInit {
   constructor() {}
 
-  @Input() products: Array<Product> = [];
+  @Input() products: Product[] = [];
   @Input() currentCategory: ProductCategory = 'FLOWER';
 
-  ngOnInit() {}
+  filteredProducts: Product[] = this.products;
+
+  ngOnInit() {
+    this.onFilterUpdate(DEFAULT_FILTERS);
+  }
+
+  onFilterUpdate(filters: Filters) {
+    // sort and filter filteredProducts
+  }
 }

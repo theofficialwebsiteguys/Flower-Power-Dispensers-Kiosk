@@ -13,8 +13,71 @@
         ></ion-buttons>
       </ion-toolbar>
     </ion-header>
+
     <div class="filters-container">
-      <p>Filters</p>
+      <div class="section">
+        <ion-label class="section-title">Sort</ion-label>
+        <ion-row class="select-container">
+          <ion-select
+            label="Criteria"
+            label-placement="floating"
+            fill="outline"
+            interface="popover"
+            [(ngModel)]="filters.sortMethod.criterion"
+            (ionChange)="handleChangeCriteria($event)"
+          >
+            <ion-select-option
+              *ngFor="let criterion of criteriaOptions"
+              [value]="criterion.value"
+              >{{ criterion.label }}</ion-select-option
+            >
+          </ion-select>
+          <ion-select
+            label="Direction"
+            label-placement="floating"
+            fill="outline"
+            interface="popover"
+            [(ngModel)]="filters.sortMethod.direction"
+            (ionChange)="handleChangeDirection($event)"
+          >
+            <ion-select-option
+              *ngFor="let direction of directionOptions"
+              [value]="direction.value"
+              >{{ direction.label }}</ion-select-option
+            >
+          </ion-select>
+        </ion-row>
+      </div>
+
+      <div class="section">
+        <ion-label class="section-title">Strains</ion-label>
+        <ion-row class="checkbox-container">
+          <label class="checkbox-wrapper" *ngFor="let strain of strainOptions">
+            <input
+              #strainInput
+              type="checkbox"
+              [checked]="isChecked(filters.strains, strain.value)"
+              (change)="handleCheckStrain(strainInput.checked, strain.value)"
+            />
+            <ion-label>{{ strain.label }}</ion-label>
+          </label>
+        </ion-row>
+      </div>
+
+      <div class="section">
+        <ion-label class="section-title">Weights</ion-label>
+        <ion-row class="checkbox-container">
+          <label class="checkbox-wrapper" *ngFor="let weight of weightOptions">
+            <input
+              #weightInput
+              type="checkbox"
+              [checked]="isChecked(filters.weights, weight.value)"
+              (change)="handleCheckWeight(weightInput.checked, weight.value)"
+            />
+            <ion-label>{{ weight.label }}</ion-label>
+          </label>
+        </ion-row>
+      </div>
     </div>
   </ng-template>
 </ion-modal>
