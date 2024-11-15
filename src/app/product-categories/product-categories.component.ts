@@ -1,6 +1,7 @@
 import { Component, Output, OnInit, EventEmitter } from '@angular/core';
 
 import { ProductCategory } from '../product-category/product-category.model';
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-product-categories',
@@ -8,30 +9,11 @@ import { ProductCategory } from '../product-category/product-category.model';
   styleUrls: ['./product-categories.component.scss'],
 })
 export class ProductCategoriesComponent implements OnInit {
-  constructor() {}
-
-  @Output() selectCategory = new EventEmitter<ProductCategory>();
+  constructor(private productService: ProductsService) {}
 
   categories: ProductCategory[] = [];
 
   ngOnInit() {
-    // TODO replace with call to product categories service getter
-    this.categories = this.getCategories();
-  }
-
-  handleCategorySelect(category: ProductCategory) {
-    this.selectCategory.emit(category);
-  }
-
-  getCategories(): ProductCategory[] {
-    return [
-      'FLOWER',
-      'PRE-ROLL',
-      'CONCENTRATE',
-      'VAPORIZER',
-      'TOPICAL',
-      'TINCTURE',
-      'EDIBLE',
-    ];
+    this.categories = this.productService.getCategories();
   }
 }

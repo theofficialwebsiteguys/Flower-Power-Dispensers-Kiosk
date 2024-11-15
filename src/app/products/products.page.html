@@ -1,12 +1,11 @@
 <ion-content>
   <app-header></app-header>
 
-  <app-product-categories
-    (selectCategory)="changeCategory($event)"
-  ></app-product-categories>
+  <app-product-categories></app-product-categories>
+
+  <app-product-filters></app-product-filters>
 
   <app-product-list
     [products]="products"
-    [currentCategory]="currentCategory"
   ></app-product-list>
 </ion-content>
