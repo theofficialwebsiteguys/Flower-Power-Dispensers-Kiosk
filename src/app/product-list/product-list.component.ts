@@ -14,12 +14,11 @@ export class ProductListComponent implements OnInit {
 
   currentCategory: ProductCategory = "FLOWER";
 
-  products: Array<Product> = [];
+  @Input() products: Array<Product> = [];
 
   ngOnInit() {
     this.productService.currentCategory$.subscribe(category => {
       this.currentCategory = category; // Automatically updates whenever the category changes in the service
-      this.products = this.productService.getProductsList();
     });
   }
 }

@@ -13,9 +13,7 @@ import { SharedModule } from '../shared/shared.module';
 import { ProductCategoriesComponent } from '../product-categories/product-categories.component';
 import { ProductsPage } from '../products/products.page';
 import { ProductCategoryComponent } from '../product-category/product-category.component';
-import { ProductFiltersComponent } from '../product-filters/product-filters.component';
-import { ProductListComponent } from '../product-list/product-list.component';
-import { ProductComponent } from '../product/product.component';
+
 
 @NgModule({
   imports: [
@@ -24,11 +22,8 @@ import { ProductComponent } from '../product/product.component';
     FormsModule,
     ExploreContainerComponentModule,
     HomePageRoutingModule,
-    SharedModule,
+    SharedModule
   ],
-  declarations: [HomePage, CardSliderComponent, BannerCarouselComponent, ProductCategoriesComponent, ProductsPage,     ProductCategoryComponent,
-    ProductListComponent,
-    ProductComponent,
-    ProductFiltersComponent],
+  declarations: [HomePage, CardSliderComponent, BannerCarouselComponent],
 })
 export class HomePageModule {}

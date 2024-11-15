@@ -22,11 +22,8 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     IonicModule,
     ProductsPageRoutingModule,
-    SharedModule,
+    SharedModule
   ],
-  declarations: [
-    
-
-  ],
+  declarations: [ProductsPage ],
 })
 export class ProductsPageModule {}
