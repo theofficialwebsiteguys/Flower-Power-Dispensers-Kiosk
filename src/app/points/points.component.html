@@ -1,17 +1,32 @@
 <div class="points-container">
+  <!-- Points Header -->
   <div class="points-header">
+    <h1>Your Points</h1>
     <span class="points-value">{{ points }} pts</span>
   </div>
 
+  <!-- Progress Bar -->
   <div class="progress-bar-container">
     <div class="progress-bar" [style.width.%]="progressPercentage"></div>
   </div>
 
+  <!-- Progress Steps -->
   <div class="progress-steps">
     <span>0</span>
     <span>1500</span>
     <span>3000</span>
     <span>4500</span>
-    <span>6000</span>
+    <span>{{ maxPoints }}</span>
+  </div>
+
+  <!-- Banner Carousel -->
+  <app-banner-carousel></app-banner-carousel>
+
+  <!-- Instructions -->
+  <div class="instructions-container">
+    <div class="instructions">
+      <h2>How to Earn Points</h2>
+      <p>{{ earningInstructions }}</p>
+    </div>
   </div>
 </div>

@@ -1,37 +1,94 @@
 .points-container {
-    text-align: center;
-    font-family: Arial, sans-serif;
-    color: #333;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  text-align: center;
+  padding: 20px;
+  background-color: #f7f8fa;
+  overflow-y: auto; /* Enables scrolling for long content */
+
+  /* Points Header */
   .points-header {
-    font-size: 24px;
-    font-weight: bold;
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .points-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #4caf50; /* Matches the primary accent color */
+      margin-top: 10px;
+    }
   }
-  
+
+  /* Progress Bar */
   .progress-bar-container {
-    background: #e0e0e0;
-    border-radius: 10px;
-    height: 8px;
-    margin: 10px 0;
-    position: relative;
     width: 100%;
-    max-width: 300px;
-    margin: 10px auto;
+    max-width: 400px; /* Center the bar on larger screens */
+    height: 12px;
+    background-color: #ddd;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 20px 0;
+
+    .progress-bar {
+      height: 100%;
+      background-color: #4caf50;
+      transition: width 0.5s ease-in-out;
+    }
   }
-  
-  .progress-bar {
-    background: linear-gradient(to right, #00aaff, #00ff00); // Adjust gradient color as needed
-    border-radius: 10px;
-    height: 100%;
-  }
-  
+
+  /* Progress Steps */
   .progress-steps {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
-    max-width: 300px;
-    margin: 5px auto 0;
-    padding: 0 2px;
+    font-size: 0.9rem;
+    color: #555;
+    width: 100%;
+    max-width: 400px;
+
+    span {
+      position: relative;
+      bottom: -8px;
+    }
   }
-  
+
+  /* Instructions */
+  .instructions-container {
+    width: 100%;
+    max-width: 400px;
+    margin-top: 30px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .instructions {
+      h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1rem;
+        color: #666;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  /* Banner Carousel */
+  app-banner-carousel {
+    margin: 30px 0;
+    width: 100%;
+    max-width: 400px;
+  }
+}

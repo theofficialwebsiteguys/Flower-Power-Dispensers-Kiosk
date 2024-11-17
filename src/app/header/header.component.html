@@ -1,10 +1,29 @@
 <ion-toolbar>
+  <!-- Left Button -->
   <ion-buttons slot="start">
-    <ion-button class="action-button" href="/tabs/tab1"
-      >Flower Power Dispensers</ion-button
-    >
+    <ion-button class="action-button" href="/tabs/tab1">
+      Flower Power Dispensers
+    </ion-button>
   </ion-buttons>
+
+  <!-- Right Button -->
   <ion-buttons slot="end">
-    <ion-button class="action-button">Log In</ion-button>
+    <!-- Log In Button (Visible when not logged in) -->
+    <ion-button
+      class="action-button"
+      *ngIf="!isLoggedIn"
+      href="/auth?mode=login"
+    >
+      Log In
+    </ion-button>
+
+    <!-- Log Out Button (Visible when logged in) -->
+    <ion-button
+      class="action-button"
+      *ngIf="isLoggedIn"
+      (click)="logout()"
+    >
+      Log Out
+    </ion-button>
   </ion-buttons>
 </ion-toolbar>

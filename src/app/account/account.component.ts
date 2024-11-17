@@ -5,10 +5,21 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss'],
 })
-export class AccountComponent  implements OnInit {
+export class AccountComponent {
+  user = {
+    name: 'John Doe',
+    email: 'john.doe@example.com',
+    phone: '000-000-0000'
+  };
 
-  constructor() { }
+  settings = {
+    notifications: true,
+    darkMode: false,
+    promotionalEmails: true
+  };
 
-  ngOnInit() {}
+  toggleSetting(setting: keyof typeof this.settings) {
+    this.settings[setting] = !this.settings[setting];
+  }
 
 }

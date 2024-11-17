@@ -12,6 +12,7 @@ import { PointsComponent } from '../points/points.component';
 import { AccountComponent } from '../account/account.component';
 import { ReferComponent } from '../refer/refer.component';
 import { ReviewComponent } from '../review/review.component';
+import { GuestComponent } from '../guest/guest.component';
 
 @NgModule({
   imports: [
@@ -21,6 +22,6 @@ import { ReviewComponent } from '../review/review.component';
     RewardsPageRoutingModule,
     SharedModule
   ],
-  declarations: [RewardsPage, PointsComponent, AccountComponent, ReferComponent, ReviewComponent]
+  declarations: [RewardsPage, PointsComponent, AccountComponent, ReferComponent, ReviewComponent, GuestComponent]
 })
 export class RewardsPageModule {}

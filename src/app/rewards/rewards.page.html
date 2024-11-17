@@ -1,9 +1,16 @@
 <app-header></app-header>
 
 <ion-content [fullscreen]="true">
+  <!-- Show rewards content if user is logged in -->
+  <div *ngIf="isLoggedIn; else guestContent">
+    <app-points [points]="1000"></app-points>
+    <app-refer></app-refer>
+    <app-account></app-account>
+    <app-review></app-review>
+  </div>
 
-  <app-points></app-points>
-  <app-account></app-account>
-  <app-refer></app-refer>
-  <app-review></app-review>
+  <!-- Guest content -->
+  <ng-template #guestContent>
+    <app-guest></app-guest> <!-- Replace with your guest component -->
+  </ng-template>
 </ion-content>

@@ -7,11 +7,17 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class PointsComponent {
 
-  @Input() points: number = 2000; // Current points
-  maxPoints: number = 6000; // Maximum points for meter
+  @Input() points: number = 1200;
+  maxPoints: number = 6000;
+  progressPercentage: number = (this.points / this.maxPoints) * 100;
 
-  get progressPercentage(): number {
-    // Cap the progress to 100% if points exceed maxPoints
-    return Math.min((this.points / this.maxPoints) * 100, 100);
-  }
+  earningInstructions: string = `
+    Earn points by making purchases, referring friends, and participating in promotions.
+    Every dollar spent earns you 10 points.
+  `;
+
+  redeemInstructions: string = `
+    Redeem points for discounts on purchases. Every 100 points equals $1 off.
+    Redeem easily at checkout or save up for bigger rewards!
+  `;
 }

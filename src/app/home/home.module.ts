@@ -24,6 +24,6 @@ import { ProductCategoryComponent } from '../product-category/product-category.c
     HomePageRoutingModule,
     SharedModule
   ],
-  declarations: [HomePage, CardSliderComponent, BannerCarouselComponent],
+  declarations: [HomePage, CardSliderComponent],
 })
 export class HomePageModule {}

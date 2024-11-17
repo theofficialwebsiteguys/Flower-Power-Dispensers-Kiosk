@@ -1,0 +1,90 @@
+.guest-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Ensures space between sections */
+    height: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: #f7f8fa;
+    overflow-y: auto; /* Enables scrolling for the container */
+  
+    .guest-header {
+      margin-bottom: 20px;
+  
+      h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #333;
+      }
+  
+      p {
+        font-size: 1rem;
+        color: #666;
+        margin-top: 10px;
+      }
+    }
+  
+    .rewards-details {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      margin-bottom: 30px;
+      width: 100%;
+      margin-top: 20px;
+  
+      .reward-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #ffffff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+  
+        ion-icon {
+          font-size: 2rem;
+          color: #4caf50;
+          margin-bottom: 10px;
+        }
+  
+        h3 {
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 10px;
+        }
+  
+        p {
+          font-size: 0.9rem;
+          color: #666;
+        }
+      }
+    }
+  
+    ion-button {
+      width: 100%;
+      max-width: 300px;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 12px;
+      margin-bottom: 20px;
+      align-self: center; /* Centers the button */
+    }
+  
+    .login-link {
+      font-size: 0.9rem;
+      color: #666;
+  
+      a {
+        color: #4caf50;
+        text-decoration: none;
+  
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+  

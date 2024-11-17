@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-rewards',
@@ -7,9 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RewardsPage implements OnInit {
 
-  constructor() { }
+  user: any;
+
+  isLoggedIn: boolean = false;
+
+  constructor(private authService: AuthService) {}
 
   ngOnInit() {
+    this.authService.isLoggedIn().subscribe((status) => {
+      this.isLoggedIn = status;
+      this.authService.getUserInfo().subscribe((userInfo) => {
+        this.user = userInfo;
+      });
+    });
   }
 
 }

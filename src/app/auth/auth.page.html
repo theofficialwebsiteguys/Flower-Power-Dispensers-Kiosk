@@ -1,0 +1,15 @@
+<ion-content>
+  <div class="auth-container">
+    <ng-container *ngIf="showMode === 'login'; else modeTemplate">
+      <app-login></app-login>
+    </ng-container>
+    <ng-template #modeTemplate>
+      <ng-container *ngIf="showMode === 'register'; else forgotPasswordTemplate">
+        <app-register></app-register>
+      </ng-container>
+    </ng-template>
+    <ng-template #forgotPasswordTemplate>
+      <app-forgot-password></app-forgot-password>
+    </ng-template>
+  </div>
+</ion-content>

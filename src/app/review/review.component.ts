@@ -5,10 +5,12 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './review.component.html',
   styleUrls: ['./review.component.scss'],
 })
-export class ReviewComponent  implements OnInit {
+export class ReviewComponent {
 
-  constructor() { }
+  reviewComment: string = '';
+  googleReviewUrl: string = 'https://search.google.com/local/writereview?placeid=ChIJaewyJiZZwokRRTvQ3pXjVZk'; // Replace with your actual Google Review link
 
-  ngOnInit() {}
-
+  leaveReview() {
+    window.open(this.googleReviewUrl, '_blank');
+  }
 }

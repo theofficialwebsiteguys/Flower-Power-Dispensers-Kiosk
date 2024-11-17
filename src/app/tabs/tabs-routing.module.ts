@@ -28,6 +28,11 @@ const routes: Routes = [
           import('../rewards/rewards.module').then((m) => m.RewardsPageModule),
       },
       {
+        path: 'auth',
+        loadChildren: () =>
+          import('../auth/auth.module').then((m) => m.AuthPageModule),
+      },
+      {
         path: '',
         redirectTo: '/home',
         pathMatch: 'full',

@@ -1,3 +1,41 @@
-<h2>
-  Account
-</h2>
+<div class="account-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>My Account</h1>
+  </div>
+
+  <!-- User Info -->
+  <div class="user-info">
+    <div class="info-item">
+      <ion-icon name="person-outline"></ion-icon>
+      <p><strong>Name:</strong> {{ user.name }}</p>
+    </div>
+    <div class="info-item">
+      <ion-icon name="mail-outline"></ion-icon>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+    </div>
+    <div class="info-item">
+      <ion-icon name="call-outline"></ion-icon>
+      <p><strong>Phone:</strong> {{ user.phone }}</p>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div class="settings">
+    <h2>Settings</h2>
+    <div class="setting-item">
+      <label for="notifications">Enable Notifications</label>
+      <ion-toggle
+        id="notifications"
+        [(ngModel)]="settings.notifications"
+      ></ion-toggle>
+    </div>
+    <div class="setting-item">
+      <label for="darkMode">Enable Dark Mode</label>
+      <ion-toggle
+        id="darkMode"
+        [(ngModel)]="settings.darkMode"
+      ></ion-toggle>
+    </div>
+  </div>
+</div>
