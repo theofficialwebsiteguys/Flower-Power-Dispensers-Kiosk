@@ -12,7 +12,8 @@ export type DirectionOptions = {
   value: SortDirection;
 }[];
 
-export type Options = { label: string; value: string }[];
+export type Option = { label: string; value: string };
+export type Options = Option[];
 
 export type StrainOptions = {
   label: string;
@@ -21,13 +22,7 @@ export type StrainOptions = {
 
 export type PotencyRange = { lower: number; upper: number };
 
-export type ProductFilterField =
-  | 'sortMethod.criterion'
-  | 'sortMethod.direction'
-  | 'brands'
-  | 'strains'
-  | 'weights'
-  | 'potency.thc';
+export type ProductFilterField = 'brands' | 'strains' | 'weights';
 export type ProductFilters = {
   [key: string]: any;
   sortMethod: { criterion: SortCriterion; direction: SortDirection };
@@ -35,6 +30,11 @@ export type ProductFilters = {
   strains: Strain[];
   weights: string[];
   potency: { thc: PotencyRange };
+};
+export type ProductFilterOptions = {
+  [key: string]: any;
+  brands: Options;
+  weights: Options;
 };
 
 export const DEFAULT_PRODUCT_FILTERS: ProductFilters = {
@@ -53,22 +53,12 @@ export const OPTIONS_CRITERIA: CriteriaOptions = [
 ];
 
 export const OPTIONS_DIRECTIONS: DirectionOptions = [
-  { label: 'Low to High', value: 'ASC' },
   { label: 'High to Low', value: 'DESC' },
+  { label: 'Low to High', value: 'ASC' },
 ];
 
 export const OPTIONS_STRAINS: StrainOptions = [
   { label: 'Hybrid', value: 'HYBRID' },
   { label: 'Indica', value: 'INDICA' },
   { label: 'Sativa', value: 'SATIVA' },
-];
-
-export const OPTIONS_WEIGHTS: Options = [
-  { label: '1/8oz', value: '1/8oz' },
-  { label: '1/4oz', value: '1/4oz' },
-  { label: '1/2oz', value: '1/2oz' },
-  { label: '1oz', value: '1oz' },
-  { label: '0.5g', value: '0.5g' },
-  { label: '1g', value: '1g' },
-  { label: '2g', value: '2g' },
 ];

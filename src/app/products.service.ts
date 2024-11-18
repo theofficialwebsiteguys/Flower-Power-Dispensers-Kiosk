@@ -8,6 +8,7 @@ import { ProductCategory } from './product-category/product-category.model';
 import {
   DEFAULT_PRODUCT_FILTERS,
   PotencyRange,
+  ProductFilterOptions,
   ProductFilters,
 } from './product-filters/product-filters.model';
 
@@ -121,6 +122,39 @@ export class ProductsService {
     );
   }
 
+  getProductFilterOptions(): Observable<ProductFilterOptions> {
+    return this.products$.pipe(
+      map((productArray) => {
+        const fields = ['brand', 'weight'];
+
+        let options: { [key: string]: any } = {};
+        options = fields.reduce((acc, field) => {
+          acc[`${field}s`] = new Set();
+          return acc;
+        }, options);
+
+        productArray.forEach((product) => {
+          fields.forEach((field) => {
+            if (!!product[field]) {
+              options[`${field}s`].add(product[field]);
+            }
+          });
+        });
+
+        let result: ProductFilterOptions = { brands: [], weights: [] };
+        result = fields.reduce((acc, field) => {
+          acc[`${field}s`] = Array.from(options[`${field}s`]).map((o) => ({
+            label: o,
+            value: o,
+          }));
+          return acc;
+        }, result);
+
+        return result;
+      })
+    );
+  }
+
   updateCategory(category: ProductCategory) {
     this.currentCategory.next(category); // Updates the value in the BehaviorSubject
     this.route.navigateByUrl('/products');
@@ -178,6 +212,17 @@ export class ProductsService {
         image: 'assets/default.jpg',
       },
       {
+        category: 'FLOWER',
+        title: 'Flower 4',
+        brand: 'Brand 3',
+        desc: '',
+        strainType: 'SATIVA',
+        thc: '25.4',
+        weight: '1/4oz',
+        price: '65',
+        image: 'assets/default.jpg',
+      },
+      {
         category: 'PRE-ROLL',
         title: 'Pre Roll 1',
         brand: 'Brand 1',
@@ -202,7 +247,7 @@ export class ProductsService {
       {
         category: 'PRE-ROLL',
         title: 'Pre Roll 3',
-        brand: 'Brand 2',
+        brand: 'Brand 3',
         desc: '',
         strainType: 'SATIVA',
         thc: '20.3',

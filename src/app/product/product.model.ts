@@ -1,6 +1,7 @@
 export type Strain = 'HYBRID' | 'INDICA' | 'SATIVA';
 
 export type Product = {
+  [key: string]: any;
   category: string;
   title: string;
   desc: string;

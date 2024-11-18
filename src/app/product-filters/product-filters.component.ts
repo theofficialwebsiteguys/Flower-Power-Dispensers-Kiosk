@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { close } from 'ionicons/icons';
+import { Observable, of } from 'rxjs';
 
 import { ProductsService } from '../products.service';
 
@@ -9,14 +10,14 @@ import {
   OPTIONS_CRITERIA,
   OPTIONS_DIRECTIONS,
   OPTIONS_STRAINS,
-  OPTIONS_WEIGHTS,
   ProductFilters,
   ProductFilterField,
-  Options,
   CriteriaOptions,
   DirectionOptions,
   StrainOptions,
+  ProductFilterOptions,
 } from './product-filters.model';
+import { Strain } from '../product/product.model';
 
 @Component({
   selector: 'app-product-filters',
@@ -32,53 +33,63 @@ export class ProductFiltersComponent implements OnInit {
 
   filters: ProductFilters = DEFAULT_PRODUCT_FILTERS;
 
-  // TODO replace with parsed data from products array - getProductFilterOptions within product service
   criteriaOptions: CriteriaOptions = OPTIONS_CRITERIA;
   directionOptions: DirectionOptions = OPTIONS_DIRECTIONS;
-  brandOptions: Options = [
-    { label: 'Brand 1', value: 'Brand 1' },
-    { label: 'Brand 2', value: 'Brand 2' },
-    { label: 'Brand 3', value: 'Brand 3' },
-    { label: 'Brand 4', value: 'Brand 4' },
-  ];
   strainOptions: StrainOptions = OPTIONS_STRAINS;
-  weightOptions: Options = OPTIONS_WEIGHTS;
 
-  ngOnInit() {}
+  dynamicFilterOptions$: Observable<ProductFilterOptions> = of({
+    brands: [],
+    weights: [],
+  });
+
+  ngOnInit() {
+    this.productService.products$.subscribe(() => {
+      this.dynamicFilterOptions$ =
+        this.productService.getProductFilterOptions();
+    });
+  }
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
   }
 
   handleFilterUpdate() {
-    console.log(this.filters);
     this.productService.updateProductFilters(this.filters);
-  }
-
-  handleChangeField(e: CustomEvent, field: ProductFilterField) {
-    this.filters[field] = e.detail.value;
-    this.handleFilterUpdate();
   }
 
   isChecked(array: any, value: string): boolean {
     return array.includes(value);
   }
 
+  isStrain(value: string): value is Strain {
+    return ['HYBRID', 'SATIVA', 'INDICA'].includes(value);
+  }
+
   handleCheckField(
     isChecked: boolean,
-    value: string,
+    value: string | Strain,
     field: ProductFilterField
   ) {
     if (!isChecked) {
-      this.filters[field] = this.filters[field].filter(
-        (v: string) => v !== value
-      );
+      if (field === 'strains')
+        this.filters[field] = this.filters[field].filter(
+          (v: Strain) => v !== value
+        );
+      else
+        this.filters[field] = this.filters[field].filter(
+          (v: string) => v !== value
+        );
+
       this.handleFilterUpdate();
       return;
     }
 
-    if (!this.isChecked(this.filters[field], value))
-      this.filters[field].push(value);
+    if (!this.isChecked(this.filters[field], value)) {
+      if (field === 'strains') {
+        if (this.isStrain(value)) this.filters[field].push(value);
+      } else this.filters[field].push(value);
+    }
+
     this.handleFilterUpdate();
   }
 }

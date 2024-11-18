@@ -24,7 +24,7 @@
             fill="outline"
             interface="popover"
             [(ngModel)]="filters.sortMethod.criterion"
-            (ionChange)="handleChangeField($event, 'sortMethod.criterion')"
+            (ionChange)="handleFilterUpdate()"
           >
             <ion-select-option
               *ngFor="let criterion of criteriaOptions"
@@ -38,7 +38,7 @@
             fill="outline"
             interface="popover"
             [(ngModel)]="filters.sortMethod.direction"
-            (ionChange)="handleChangeField($event, 'sortMethod.direction')"
+            (ionChange)="handleFilterUpdate()"
           >
             <ion-select-option
               *ngFor="let direction of directionOptions"
@@ -49,10 +49,16 @@
         </ion-row>
       </div>
 
-      <div class="section">
+      <div
+        class="section"
+        *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions"
+      >
         <ion-label class="section-title">Brands</ion-label>
         <ion-row class="checkbox-container">
-          <label class="checkbox-wrapper" *ngFor="let brand of brandOptions">
+          <label
+            class="checkbox-wrapper"
+            *ngFor="let brand of dynamicFilterOptions.brands"
+          >
             <input
               #brandInput
               type="checkbox"
@@ -83,10 +89,16 @@
         </ion-row>
       </div>
 
-      <div class="section">
+      <div
+        class="section"
+        *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions"
+      >
         <ion-label class="section-title">Weights</ion-label>
         <ion-row class="checkbox-container">
-          <label class="checkbox-wrapper" *ngFor="let weight of weightOptions">
+          <label
+            class="checkbox-wrapper"
+            *ngFor="let weight of dynamicFilterOptions.weights"
+          >
             <input
               #weightInput
               type="checkbox"
@@ -111,7 +123,7 @@
             [value]="filters.potency.thc"
             [(ngModel)]="filters.potency.thc"
             color="dark"
-            (ionChange)="handleChangeField($event, 'potency.thc')"
+            (ionChange)="handleFilterUpdate()"
           ></ion-range>
         </ion-row>
       </div>
