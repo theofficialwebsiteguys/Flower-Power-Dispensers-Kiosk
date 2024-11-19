@@ -5,33 +5,49 @@
   </div>
 
   <!-- User Info -->
-  <div class="user-info">
+  <div class="card user-info">
     <div class="info-item">
       <ion-icon name="person-outline"></ion-icon>
-      <p><strong>Name:</strong> {{ user.name }}</p>
+      <div>
+        <p class="label">Name</p>
+        <p>{{ user.name }}</p>
+      </div>
     </div>
     <div class="info-item">
       <ion-icon name="mail-outline"></ion-icon>
-      <p><strong>Email:</strong> {{ user.email }}</p>
+      <div>
+        <p class="label">Email</p>
+        <p>{{ user.email }}</p>
+      </div>
     </div>
     <div class="info-item">
       <ion-icon name="call-outline"></ion-icon>
-      <p><strong>Phone:</strong> {{ user.phone }}</p>
+      <div>
+        <p class="label">Phone</p>
+        <p>{{ user.phone }}</p>
+      </div>
+    </div>
+    <div class="info-item">
+      <ion-icon name="calendar-outline"></ion-icon>
+      <div>
+        <p class="label">Date of Birth</p>
+        <p>{{ user.dob }}</p>
+      </div>
     </div>
   </div>
 
   <!-- Settings -->
-  <div class="settings">
+  <div class="card settings">
     <h2>Settings</h2>
     <div class="setting-item">
-      <label for="notifications">Enable Notifications</label>
+      <label for="notifications">Notifications</label>
       <ion-toggle
         id="notifications"
         [(ngModel)]="settings.notifications"
       ></ion-toggle>
     </div>
     <div class="setting-item">
-      <label for="darkMode">Enable Dark Mode</label>
+      <label for="darkMode">Dark Mode</label>
       <ion-toggle
         id="darkMode"
         [(ngModel)]="settings.darkMode"

@@ -8,15 +8,15 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class BannerCarouselComponent implements OnInit, OnDestroy {
   banners = [
     {
-      image: 'assets/default.jpg',
+      image: 'assets/flower-power-banner.webp',
       title: 'Where Passion Meets Potency',
       description: 'Flower Power Dispensary',
     },
-    {
-      image: 'assets/default.jpg',
-      title: 'Quality You Can Trust',
-      description: 'Explore Our Collection',
-    },
+    // {
+    //   image: 'assets/default.jpg',
+    //   title: 'Quality You Can Trust',
+    //   description: 'Explore Our Collection',
+    // },
     // Add more banners as needed
   ];
 

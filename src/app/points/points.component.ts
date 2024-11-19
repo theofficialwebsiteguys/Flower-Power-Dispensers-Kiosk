@@ -9,6 +9,8 @@ export class PointsComponent {
 
   @Input() points: number = 1200;
   maxPoints: number = 6000;
+  isExclusiveMember: boolean = false; // Membership status
+  
   progressPercentage: number = (this.points / this.maxPoints) * 100;
 
   earningInstructions: string = `

@@ -16,6 +16,17 @@ export class RegisterComponent {
   submitted = false;
   error = '';
 
+  countries = [
+    { name: 'United States', dialCode: '+1' },
+    { name: 'United Kingdom', dialCode: '+44' },
+    { name: 'France', dialCode: '+33' },
+    { name: 'Germany', dialCode: '+49' },
+    { name: 'Croatia', dialCode: '+385' },
+    // Add more countries as needed
+  ];
+
+  selectedCountryCode = this.countries[0].dialCode; // Default country code
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -25,7 +36,8 @@ export class RegisterComponent {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
+      countryCode: [this.countries[0].dialCode, Validators.required], // Default to the first country
+      phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]], // 7-15 digits
       dob: ['', [Validators.required, this.validateAge]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],
@@ -54,6 +66,14 @@ export class RegisterComponent {
           console.error('Registration failed:', err);
         }
       });
+    }
+  }
+
+  onCountryCodeChange() {
+    const countryCode = this.registerForm.get('countryCode')?.value;
+    const phoneControl = this.registerForm.get('phone');
+    if (phoneControl) {
+      phoneControl.setValue(`${countryCode}${phoneControl.value || ''}`);
     }
   }
 

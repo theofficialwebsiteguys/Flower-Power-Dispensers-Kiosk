@@ -10,6 +10,8 @@ import { AuthPage } from './auth.page';
 import { LoginComponent } from '../login/login.component';
 import { RegisterComponent } from '../register/register.component';
 import { ForgotPasswordComponent } from '../forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -17,8 +19,10 @@ import { ForgotPasswordComponent } from '../forgot-password/forgot-password.comp
     FormsModule,
     IonicModule,
     AuthPageRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ReactiveFormsModule,
+    SharedModule
   ],
-  declarations: [AuthPage, LoginComponent, RegisterComponent, ForgotPasswordComponent]
+  declarations: [AuthPage, LoginComponent, RegisterComponent, ForgotPasswordComponent, ResetPasswordComponent]
 })
 export class AuthPageModule {}

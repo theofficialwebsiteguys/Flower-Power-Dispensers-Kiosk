@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { User } from './user.model';
+
 
 @Component({
   selector: 'app-rewards',
@@ -8,7 +10,12 @@ import { AuthService } from '../auth.service';
 })
 export class RewardsPage implements OnInit {
 
-  user: any;
+  user: User = {
+    name: '',
+    email: '',
+    phone: '',
+    dob: '',
+  };
 
   isLoggedIn: boolean = false;
 
@@ -17,9 +24,10 @@ export class RewardsPage implements OnInit {
   ngOnInit() {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
-      this.authService.getUserInfo().subscribe((userInfo) => {
-        this.user = userInfo;
-      });
+      this.user = this.authService.getUserInfo();
+      // this.authService.getUserInfo().subscribe((userInfo) => {
+      //   this.user = userInfo;
+      // });
     });
   }
 

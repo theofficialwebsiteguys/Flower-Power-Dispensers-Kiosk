@@ -44,18 +44,37 @@
         />
       </div>
 
-      <!-- Phone -->
-      <div class="form-group">
-        <label for="phone">Phone*</label>
-        <input
-          type="tel"
-          id="phone"
-          formControlName="phone"
-          placeholder="Enter your phone number"
-          required
-        />
+      <!-- Phone Group -->
+      <div class="form-group phone-group">
+        <!-- Country Code Dropdown -->
+        <div class="country-code">
+          <label for="countryCode">Code</label>
+          <select
+            id="countryCode"
+            formControlName="countryCode"
+            (change)="onCountryCodeChange()"
+            required
+          >
+            <option *ngFor="let country of countries" [value]="country.dialCode">
+              {{ country.name }} {{ country.dialCode }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Phone Number Input -->
+        <div class="phone-number">
+          <label for="phone">Phone Number*</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
       </div>
 
+      <!-- Date of Birth -->
       <div class="form-group">
         <label for="dob">Date of Birth*</label>
         <input
@@ -93,8 +112,6 @@
       <!-- Submit Button -->
       <button type="submit" [disabled]="registerForm.invalid">Register</button>
     </form>
-
-
 
     <p class="login-link">
       Already have an account?

@@ -1,90 +1,95 @@
 .account-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    height: 100%;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100%;
+  padding: 20px;
+  padding-top: 0;
+
+  /* Header */
+  .header {
+    margin-bottom: 20px;
+    h1 {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: #2a2a2a;
+    }
+  }
+
+  /* Card Style */
+  .card {
+    width: 100%;
+    max-width: 400px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    background-color: #f7f8fa;
-    overflow-y: auto; /* Allows scrolling for longer content */
-  
-    /* Header */
-    .header {
-      margin-bottom: 20px;
-  
-      h1 {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #333;
+    margin-bottom: 20px;
+  }
+
+  /* User Info */
+  .user-info {
+    .info-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
       }
-    }
-  
-    /* User Info */
-    .user-info {
-      width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      margin-bottom: 30px;
-  
-      .info-item {
-        display: flex;
-        align-items: center;
-        margin-bottom: 15px;
-  
-        ion-icon {
-          font-size: 1.5rem;
-          color: #4caf50;
-          margin-right: 10px;
-        }
-  
-        p {
-          font-size: 1rem;
-          color: #555;
-  
-          strong {
-            color: #333;
-          }
-        }
+
+      ion-icon {
+        font-size: 1.6rem;
+        color: #4caf50;
+        margin-right: 15px;
       }
-    }
-  
-    /* Settings */
-    .settings {
-      width: 100%;
-      max-width: 400px;
-      padding: 20px;
-      border-radius: 10px;
-      background-color: #ffffff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  
-      h2 {
-        font-size: 1.4rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 20px;
+
+      .label {
+        font-size: 0.8rem;
+        font-weight: bold;
+        color: #888;
+        margin: 0;
       }
-  
-      .setting-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
+
+      p {
         font-size: 1rem;
-  
-        label {
-          color: #555;
-        }
-  
-        ion-toggle {
-          --handle-background: #4caf50; /* Match the primary accent color */
-          --background-checked: rgba(76, 175, 80, 0.2);
-          --background: #ddd;
-        }
+        color: #333;
+        margin: 0;
       }
     }
   }
-  
+
+  /* Settings */
+  .settings {
+    h2 {
+      font-size: 1.4rem;
+      font-weight: bold;
+      color: #2a2a2a;
+      margin-bottom: 15px;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid #f0f0f0;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      label {
+        font-size: 1rem;
+        color: #555;
+      }
+
+      ion-toggle {
+        --handle-background: #4caf50;
+        --background-checked: rgba(76, 175, 80, 0.2);
+        --background: #ddd;
+      }
+    }
+  }
+}

@@ -8,15 +8,20 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class AuthPage implements OnInit {
   
-  showMode: 'login' | 'register' | 'forgot-password' = 'login'; // Default to login mode
+  showMode: 'login' | 'register' | 'forgot-password' | 'reset-password' = 'login';
+
 
   constructor(private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       const mode = params['mode'];
-      if (mode === 'register' || mode === 'forgot-password') {
+      const token = params['token']; // Check for the reset token
+  
+      if (token) {
+        this.showMode = 'reset-password'; // Switch to reset-password mode
+      } else if (mode === 'register' || mode === 'forgot-password') {
         this.showMode = mode;
       } else {
-        this.showMode = 'login'; // Default to login if mode is invalid
+        this.showMode = 'login'; // Default to login if no valid mode
       }
     });
   }

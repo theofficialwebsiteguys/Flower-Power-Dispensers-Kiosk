@@ -153,3 +153,59 @@ button[type="submit"] {
     transform: translateY(0);
   }
 }
+
+.phone-group {
+  display: flex;
+  gap: 8px; /* Space between the dropdown and the phone input */
+  align-items: flex-start; /* Ensures both fields are vertically aligned */
+
+  .country-code {
+    flex: 0 0 80px; /* Fixed width for the dropdown */
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap; /* Prevents text from wrapping */
+      text-overflow: ellipsis; /* Adds "..." if the text is too long */
+      overflow: hidden; /* Ensures the text stays within bounds */
+      background-color: #f9f9f9;
+    }
+
+    select:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+  }
+
+  .phone-number {
+    flex: 1; /* Takes the remaining width of the row */
+
+    label {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+  }
+}

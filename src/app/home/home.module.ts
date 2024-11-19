@@ -10,10 +10,6 @@ import { CardSliderComponent } from '../card-slider/card-slider.component';
 import { BannerCarouselComponent } from '../banner-carousel/banner-carousel.component';
 
 import { SharedModule } from '../shared/shared.module';
-import { ProductCategoriesComponent } from '../product-categories/product-categories.component';
-import { ProductsPage } from '../products/products.page';
-import { ProductCategoryComponent } from '../product-category/product-category.component';
-
 
 @NgModule({
   imports: [
@@ -22,7 +18,7 @@ import { ProductCategoryComponent } from '../product-category/product-category.c
     FormsModule,
     ExploreContainerComponentModule,
     HomePageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
   declarations: [HomePage, CardSliderComponent],
 })

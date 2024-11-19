@@ -1,8 +1,11 @@
 <div class="points-container">
   <!-- Points Header -->
   <div class="points-header">
-    <h1>Your Points</h1>
+
     <span class="points-value">{{ points }} pts</span>
+    <p class="membership-status">
+      {{ isExclusiveMember ? 'Exclusive Member' : 'Free Member: $1 = 1 Point' }}
+    </p>
   </div>
 
   <!-- Progress Bar -->
@@ -19,14 +22,24 @@
     <span>{{ maxPoints }}</span>
   </div>
 
-  <!-- Banner Carousel -->
-  <app-banner-carousel></app-banner-carousel>
+  <app-redeem-products></app-redeem-products>
 
-  <!-- Instructions -->
-  <div class="instructions-container">
-    <div class="instructions">
-      <h2>How to Earn Points</h2>
-      <p>{{ earningInstructions }}</p>
+  <!-- Membership Details -->
+  <div class="rewards-details">
+    <div class="reward-item">
+      <ion-icon name="medal-outline"></ion-icon>
+      <div class="reward-header">Annual fee required (sign up in-store)</div>
+      <h3>Exclusive Membership</h3>
+      <ul class="reward-list">
+        <li>200 bonus points upon joining</li>
+        <li>10% off all in-store purchases of $125+ (pre-tax)</li>
+        <li>Earn 2 points for every $1 spent (pre-tax)</li>
+        <li>Redeem points for select products</li>
+      </ul>
     </div>
   </div>
+
+
+
+  
 </div>

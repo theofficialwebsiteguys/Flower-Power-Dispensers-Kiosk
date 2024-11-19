@@ -8,12 +8,6 @@ import { ProductsPageRoutingModule } from './products-routing.module';
 
 import { ProductsPage } from './products.page';
 
-import { ProductCategoriesComponent } from '../product-categories/product-categories.component';
-import { ProductCategoryComponent } from '../product-category/product-category.component';
-import { ProductListComponent } from '../product-list/product-list.component';
-import { ProductComponent } from '../product/product.component';
-import { ProductFiltersComponent } from '../product-filters/product-filters.component';
-
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -22,8 +16,8 @@ import { SharedModule } from '../shared/shared.module';
     FormsModule,
     IonicModule,
     ProductsPageRoutingModule,
-    SharedModule
+    SharedModule,
   ],
-  declarations: [ProductsPage ],
+  declarations: [ProductsPage],
 })
 export class ProductsPageModule {}

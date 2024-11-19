@@ -9,7 +9,12 @@
       </ng-container>
     </ng-template>
     <ng-template #forgotPasswordTemplate>
-      <app-forgot-password></app-forgot-password>
+      <ng-container *ngIf="showMode === 'forgot-password'; else resetPasswordTemplate">
+        <app-forgot-password></app-forgot-password>
+      </ng-container>
+    </ng-template>
+    <ng-template #resetPasswordTemplate>
+      <app-reset-password></app-reset-password>
     </ng-template>
   </div>
 </ion-content>

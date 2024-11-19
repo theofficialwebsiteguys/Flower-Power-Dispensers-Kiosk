@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-account',
@@ -6,16 +6,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent {
-  user = {
-    name: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '000-000-0000'
+  @Input() user: { name: string; email: string; phone: string; dob: string } = {
+    name: '',
+    email: '',
+    phone: '',
+    dob: '',
   };
 
   settings = {
     notifications: true,
     darkMode: false,
-    promotionalEmails: true
+    promotionalEmails: true, // New setting added
   };
 
   toggleSetting(setting: keyof typeof this.settings) {

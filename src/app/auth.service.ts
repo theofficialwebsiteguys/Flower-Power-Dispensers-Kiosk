@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable, of, tap } from 'rxjs';
 })
 export class AuthService {
 
+
   private userSubject = new BehaviorSubject<any>(null); // Store user info
 
   private tokenKey = 'auth_token'; // Key for storing JWT in localStorage
@@ -24,7 +25,13 @@ export class AuthService {
   private apiUrl = 'http://localhost:8080/api/users'; 
 
    // Observable for user info
-  getUserInfo(): Observable<any> {
+  getUserInfo(): any {
+    return {
+        name: 'John Doe',
+        email: 'john.doe@example.com',
+        phone: '000-000-0000',
+        dob: '1990-01-01', // New field added
+      };
     return this.userSubject.asObservable();
   }
 
@@ -119,7 +126,13 @@ export class AuthService {
     return now > token.exp;
   }
 
-  forgotPassword(): any {
-
+  sendPasswordReset(email: string): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/forgot-password`, { email });
   }
+
+  resetPassword(password: string, token: string | null): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/reset-password`, { password, token });
+  }
+
+
 }

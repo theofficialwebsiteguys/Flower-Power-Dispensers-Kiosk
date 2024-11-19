@@ -1,39 +1,41 @@
 import { Component, OnInit } from '@angular/core';
-import { ProductsService } from '../products.service';
-import { Product } from '../product/product.model';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
+import { ProductsService } from '../products.service';
+
+import { Product } from '../product/product.model';
 
 @Component({
   selector: 'app-single-product',
   templateUrl: './single-product.component.html',
   styleUrls: ['./single-product.component.scss'],
 })
-export class SingleProductComponent  implements OnInit {
-
+export class SingleProductComponent implements OnInit {
   currentProduct: Product = {
     category: '',
     title: '',
     brand: '',
     desc: '',
-    strainType: '',
+    strainType: 'HYBRID',
     thc: '',
     weight: '',
     price: '',
-    image: ''
+    image: '',
   };
 
   showFullDescription = false;
 
-  constructor(private productService: ProductsService, private location: Location, private router: Router) { }
+  constructor(
+    private productService: ProductsService,
+    private location: Location,
+    private router: Router
+  ) {}
 
   ngOnInit() {
-    this.productService.currentProduct$.subscribe(product => {
-      if(product)
-        this.currentProduct = product;
-      else
-        this.router.navigateByUrl('/home');
+    this.productService.currentProduct$.subscribe((product) => {
+      if (product) this.currentProduct = product;
+      else this.router.navigateByUrl('/home');
     });
   }
 
@@ -53,5 +55,4 @@ export class SingleProductComponent  implements OnInit {
   goBack() {
     this.location.back();
   }
-
 }

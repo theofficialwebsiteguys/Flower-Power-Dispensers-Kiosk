@@ -1,13 +1,11 @@
 .points-container {
-  display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   height: 100%;
   text-align: center;
   padding: 20px;
-  background-color: #f7f8fa;
-  overflow-y: auto; /* Enables scrolling for long content */
+  overflow-y: auto;
 
   /* Points Header */
   .points-header {
@@ -22,15 +20,22 @@
     .points-value {
       font-size: 2rem;
       font-weight: bold;
-      color: #4caf50; /* Matches the primary accent color */
+      color: #4caf50;
       margin-top: 10px;
+    }
+
+    .membership-status {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #666;
+      margin-top: 5px;
     }
   }
 
   /* Progress Bar */
   .progress-bar-container {
     width: 100%;
-    max-width: 400px; /* Center the bar on larger screens */
+    max-width: 400px;
     height: 12px;
     background-color: #ddd;
     border-radius: 6px;
@@ -52,10 +57,60 @@
     color: #555;
     width: 100%;
     max-width: 400px;
+    margin-bottom: 20px;
 
     span {
       position: relative;
       bottom: -8px;
+    }
+  }
+
+  /* Membership Details */
+  .membership-details {
+    width: 100%;
+    max-width: 400px;
+    margin: 30px 0;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+    .membership-upgrade,
+    .membership-thankyou {
+      h2 {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      p {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 10px;
+      }
+
+      .benefits-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        text-align: left;
+
+        li {
+          font-size: 0.9rem;
+          color: #666;
+          margin-bottom: 5px;
+          position: relative;
+          padding-left: 20px;
+
+          &:before {
+            content: '✔';
+            position: absolute;
+            left: 0;
+            color: #4caf50;
+          }
+        }
+      }
     }
   }
 
@@ -92,3 +147,73 @@
     max-width: 400px;
   }
 }
+
+
+.rewards-details {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-top: 20px;
+
+  .reward-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+
+    ion-icon {
+      font-size: 2rem;
+      color: #4caf50;
+      margin-bottom: 10px;
+    }
+
+    .reward-header {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #4caf50;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+
+    h3 {
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .reward-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      text-align: left;
+      width: 100%;
+
+      li {
+        position: relative;
+        font-size: 0.9rem;
+        color: #666;
+        padding-left: 25px;
+        margin-bottom: 10px;
+
+        &:before {
+          content: '•';
+          position: absolute;
+          left: 0;
+          top: 0;
+          color: #4caf50;
+          font-size: 1.2rem;
+          line-height: 1.2;
+        }
+      }
+    }
+  }
+}
+
+
+

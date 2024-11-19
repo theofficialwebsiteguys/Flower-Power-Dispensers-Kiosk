@@ -13,6 +13,7 @@ import { AccountComponent } from '../account/account.component';
 import { ReferComponent } from '../refer/refer.component';
 import { ReviewComponent } from '../review/review.component';
 import { GuestComponent } from '../guest/guest.component';
+import { RedeemProductsComponent } from '../redeem-products/redeem-products.component';
 
 @NgModule({
   imports: [
@@ -22,6 +23,6 @@ import { GuestComponent } from '../guest/guest.component';
     RewardsPageRoutingModule,
     SharedModule
   ],
-  declarations: [RewardsPage, PointsComponent, AccountComponent, ReferComponent, ReviewComponent, GuestComponent]
+  declarations: [RewardsPage, PointsComponent, AccountComponent, ReferComponent, ReviewComponent, GuestComponent, RedeemProductsComponent]
 })
 export class RewardsPageModule {}

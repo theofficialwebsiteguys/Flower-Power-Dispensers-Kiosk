@@ -5,4 +5,6 @@ export type ProductCategory =
   | 'CONCENTRATE'
   | 'TOPICAL'
   | 'TINCTURE'
-  | 'EDIBLE';
+  | 'EDIBLE'
+  | 'SPECIAL'
+  | 'CONCIERGE';

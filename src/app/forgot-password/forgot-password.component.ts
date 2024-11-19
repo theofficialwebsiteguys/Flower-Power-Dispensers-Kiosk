@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -9,8 +10,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ForgotPasswordComponent {
   forgotPasswordForm: FormGroup;
+  emailSent = false; // Flag to toggle between form and success message
+  errorMessage = ''; // Store error message to display
 
-  constructor(private fb: FormBuilder, private http: HttpClient) {
+  constructor(private fb: FormBuilder, private authService: AuthService) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
     });
@@ -19,9 +22,20 @@ export class ForgotPasswordComponent {
   onSubmit() {
     if (this.forgotPasswordForm.valid) {
       const email = this.forgotPasswordForm.value.email;
-      this.http.post('http://your-api-url/api/forgot-password', { email }).subscribe({
-        next: () => alert('Check your email for reset instructions'),
-        error: (err) => alert('Error: ' + err.message),
+
+      // Call the AuthService to reset the password
+      this.authService.sendPasswordReset(email).subscribe({
+        next: () => {
+          this.emailSent = true; // Show confirmation message
+          this.errorMessage = ''; // Clear any previous error message
+        },
+        error: (err) => {
+          if (err.status === 404) {
+            this.errorMessage = 'The email is not associated with a registered account.';
+          } else {
+            this.errorMessage = 'An error occurred. Please try again later.';
+          }
+        },
       });
     }
   }
