@@ -1,5 +1,5 @@
 <ion-col>
-  <ng-container *ngFor="let product of products">
+  <ng-container *ngFor="let product of products$ | async">
     <app-product
       *ngIf="product.category === currentCategory"
       [product]="product"

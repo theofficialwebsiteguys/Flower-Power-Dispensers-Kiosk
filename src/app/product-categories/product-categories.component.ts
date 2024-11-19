@@ -1,7 +1,8 @@
-import { Component, Output, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+
+import { ProductsService } from '../products.service';
 
 import { ProductCategory } from '../product-category/product-category.model';
-import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-product-categories',
@@ -11,11 +12,9 @@ import { ProductsService } from '../products.service';
 export class ProductCategoriesComponent implements OnInit {
   constructor(private productService: ProductsService) {}
 
-  categories: Array<ProductCategory> = [];
+  categories: ProductCategory[] = [];
 
   ngOnInit() {
     this.categories = this.productService.getCategories();
   }
-
-
 }

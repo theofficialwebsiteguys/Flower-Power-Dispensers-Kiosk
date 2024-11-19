@@ -1,7 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import { Product } from './product.model';
 import { ProductsService } from '../products.service';
+
+import { Product } from './product.model';
 
 @Component({
   selector: 'app-product',
@@ -16,17 +17,16 @@ export class ProductComponent implements OnInit {
     title: '',
     brand: '',
     desc: '',
-    strainType: '',
+    strainType: 'HYBRID',
     thc: '',
     weight: '',
     price: '',
-    image: ''
+    image: '',
   };
 
   ngOnInit() {}
 
   updateProductDisplay() {
-    // Navigate to the desired route, e.g., /product-details/:id
     this.productService.updateCurrentProduct(this.product);
   }
 }

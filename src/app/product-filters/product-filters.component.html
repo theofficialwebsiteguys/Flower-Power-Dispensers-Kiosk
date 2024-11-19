@@ -1,5 +1,5 @@
 <div class="button-container">
-  <ion-button (click)="setOpen(true)">Sort + Filter</ion-button>
+  <ion-button (click)="setOpen(true)" color="dark">Sort + Filter</ion-button>
 </div>
 
 <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="setOpen(false)">
@@ -13,8 +13,120 @@
         ></ion-buttons>
       </ion-toolbar>
     </ion-header>
+
     <div class="filters-container">
-      <p>Filters</p>
+      <div class="section">
+        <ion-label class="section-title">Sort</ion-label>
+        <ion-row class="select-container">
+          <ion-select
+            label="By"
+            label-placement="floating"
+            fill="outline"
+            interface="popover"
+            [(ngModel)]="filters.sortMethod.criterion"
+            (ionChange)="handleFilterUpdate()"
+          >
+            <ion-select-option
+              *ngFor="let criterion of criteriaOptions"
+              [value]="criterion.value"
+              >{{ criterion.label }}</ion-select-option
+            >
+          </ion-select>
+          <ion-select
+            label="From"
+            label-placement="floating"
+            fill="outline"
+            interface="popover"
+            [(ngModel)]="filters.sortMethod.direction"
+            (ionChange)="handleFilterUpdate()"
+          >
+            <ion-select-option
+              *ngFor="let direction of directionOptions"
+              [value]="direction.value"
+              >{{ direction.label }}</ion-select-option
+            >
+          </ion-select>
+        </ion-row>
+      </div>
+
+      <div
+        class="section"
+        *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions"
+      >
+        <ion-label class="section-title">Brands</ion-label>
+        <ion-row class="checkbox-container">
+          <label
+            class="checkbox-wrapper"
+            *ngFor="let brand of dynamicFilterOptions.brands"
+          >
+            <input
+              #brandInput
+              type="checkbox"
+              [checked]="isChecked(filters.brands, brand.value)"
+              (change)="
+                handleCheckField(brandInput.checked, brand.value, 'brands')
+              "
+            />
+            <ion-label>{{ brand.label }}</ion-label>
+          </label>
+        </ion-row>
+      </div>
+
+      <div class="section">
+        <ion-label class="section-title">Strains</ion-label>
+        <ion-row class="checkbox-container">
+          <label class="checkbox-wrapper" *ngFor="let strain of strainOptions">
+            <input
+              #strainInput
+              type="checkbox"
+              [checked]="isChecked(filters.strains, strain.value)"
+              (change)="
+                handleCheckField(strainInput.checked, strain.value, 'strains')
+              "
+            />
+            <ion-label>{{ strain.label }}</ion-label>
+          </label>
+        </ion-row>
+      </div>
+
+      <div
+        class="section"
+        *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions"
+      >
+        <ion-label class="section-title">Weights</ion-label>
+        <ion-row class="checkbox-container">
+          <label
+            class="checkbox-wrapper"
+            *ngFor="let weight of dynamicFilterOptions.weights"
+          >
+            <input
+              #weightInput
+              type="checkbox"
+              [checked]="isChecked(filters.weights, weight.value)"
+              (change)="
+                handleCheckField(weightInput.checked, weight.value, 'weights')
+              "
+            />
+            <ion-label>{{ weight.label }}</ion-label>
+          </label>
+        </ion-row>
+      </div>
+
+      <div class="section">
+        <ion-label class="section-title">Potency</ion-label>
+        <ion-row class="range-container">
+          <h5 class="range-label">THC %</h5>
+          <ion-range
+            #potencyInput
+            [dualKnobs]="true"
+            [pin]="true"
+            [value]="filters.potency.thc"
+            [(ngModel)]="filters.potency.thc"
+            color="dark"
+            (ionChange)="handleFilterUpdate()"
+          ></ion-range>
+        </ion-row>
+      </div>
     </div>
   </ng-template>
 </ion-modal>

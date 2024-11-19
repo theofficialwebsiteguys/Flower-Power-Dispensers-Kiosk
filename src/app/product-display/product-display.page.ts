@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Product } from '../product/product.model';
+
 import { ProductsService } from '../products.service';
+
+import { DEFAULT_PRODUCT_FILTERS } from '../product-filters/product-filters.model';
 
 @Component({
   selector: 'app-product-display',
@@ -8,13 +10,12 @@ import { ProductsService } from '../products.service';
   styleUrls: ['./product-display.page.scss'],
 })
 export class ProductDisplayPage implements OnInit {
-
-  similarProducts: Array<Product> = []
-
-  constructor(private productService: ProductsService) { }
+  constructor(private productService: ProductsService) {}
 
   ngOnInit() {
-    this.similarProducts = this.productService.getSimilarProducts()
+    this.productService.updateProductFilters({
+      ...DEFAULT_PRODUCT_FILTERS,
+      sortMethod: { criterion: 'POPULAR', direction: 'DESC' },
+    });
   }
-
 }
