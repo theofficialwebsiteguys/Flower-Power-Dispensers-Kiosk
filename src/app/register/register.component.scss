@@ -1,0 +1,211 @@
+// Colors, font sizes, and spacing variables
+$primary-bg: #ffffff;
+$secondary-bg: #f7f8fa;
+$text-color-dark: #333;
+$text-color-light: #666;
+$accent-color: #4caf50; // A vibrant green for call-to-action buttons
+$disabled-btn-bg: #e0e0e0;
+$btn-text-color: #ffffff;
+$input-border-color: #dcdcdc;
+$font-size-header: 24px;
+$font-size-input: 16px;
+$font-size-btn: 18px;
+$font-size-footer-link: 14px;
+$border-radius: 8px;
+$box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+$padding: 20px;
+$spacing: 16px;
+
+// Log In Page
+.log-in-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $padding;
+}
+
+// Login Container
+.login-container {
+  width: 100%;
+  max-width: 420px; // Slightly wider to fit two fields per row
+  padding: $padding;
+  border-radius: $border-radius;
+  box-shadow: $box-shadow;
+  animation: fadeInUp 0.4s ease-in-out;
+
+  display: flex;
+  flex-direction: column;
+  align-items: stretch; // Makes the form stretch to fill space
+}
+
+// Login Header
+.login-header {
+  text-align: center;
+  margin-bottom: $spacing;
+
+  h1 {
+    font-size: $font-size-header;
+    margin-bottom: $spacing;
+    font-weight: 700;
+    color: $text-color-dark;
+  }
+}
+
+// Logo
+.login-header-logo {
+  text-align: center;
+  margin: $spacing auto;
+
+  .logo {
+    width: 150px; // Slightly larger for emphasis
+    height: auto;
+  }
+}
+
+// Form Group
+.form-group {
+  margin-bottom: $spacing;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: $text-color-dark;
+  }
+
+  input[type="email"],
+  input[type="password"],
+  input[type="text"],
+  input[type="tel"],
+  input[type="date"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid $input-border-color;
+    border-radius: $border-radius;
+    font-size: $font-size-input;
+    background-color: #f9f9f9;
+    color: $text-color-dark;
+
+    &:focus {
+      border-color: $accent-color;
+      outline: none;
+    }
+  }
+}
+
+// Name Row (First Name and Last Name on the same row)
+.name-row {
+  display: flex;
+  gap: $spacing;
+
+  .form-group {
+    flex: 1; // Makes each input take equal space
+  }
+}
+
+// Submit Button
+button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background-color: $accent-color;
+  color: $btn-text-color;
+  border: none;
+  border-radius: $border-radius;
+  font-size: $font-size-btn;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.3s;
+
+  &:hover {
+    background-color: darken($accent-color, 10%);
+  }
+
+  &:disabled {
+    background-color: $disabled-btn-bg;
+    cursor: not-allowed;
+  }
+}
+
+// Login Link
+.login-link {
+  text-align: center;
+  margin-top: $spacing;
+
+  a {
+    color: $accent-color;
+    text-decoration: underline;
+    font-size: $font-size-footer-link;
+
+    &:hover {
+      color: darken($accent-color, 10%);
+    }
+  }
+}
+
+// Animations
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.phone-group {
+  display: flex;
+  gap: 8px; /* Space between the dropdown and the phone input */
+  align-items: flex-start; /* Ensures both fields are vertically aligned */
+
+  .country-code {
+    flex: 0 0 80px; /* Fixed width for the dropdown */
+    display: flex;
+    flex-direction: column;
+
+    label {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+      white-space: nowrap; /* Prevents text from wrapping */
+      text-overflow: ellipsis; /* Adds "..." if the text is too long */
+      overflow: hidden; /* Ensures the text stays within bounds */
+      background-color: #f9f9f9;
+    }
+
+    select:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+  }
+
+  .phone-number {
+    flex: 1; /* Takes the remaining width of the row */
+
+    label {
+      margin-bottom: 4px;
+      font-weight: bold;
+    }
+
+    input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    input:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+  }
+}

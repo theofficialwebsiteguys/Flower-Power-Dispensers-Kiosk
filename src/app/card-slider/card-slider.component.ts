@@ -14,9 +14,11 @@ export class CardSliderComponent {
   categories: { title: string; category?: ProductCategory }[] = [
     {
       title: 'Concierge Picks',
+      category: 'CONCIERGE',
     },
     {
       title: 'Specials',
+      category: 'SPECIAL',
     },
     {
       title: 'Flower',

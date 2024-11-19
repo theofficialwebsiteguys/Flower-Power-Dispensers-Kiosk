@@ -23,9 +23,14 @@ const routes: Routes = [
           import('../product-display/product-display.module').then((m) => m.ProductDisplayPageModule),
       },
       {
-        path: 'tab3',
+        path: 'rewards',
         loadChildren: () =>
-          import('../tab3/tab3.module').then((m) => m.Tab3PageModule),
+          import('../rewards/rewards.module').then((m) => m.RewardsPageModule),
+      },
+      {
+        path: 'auth',
+        loadChildren: () =>
+          import('../auth/auth.module').then((m) => m.AuthPageModule),
       },
       {
         path: '',

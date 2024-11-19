@@ -1,0 +1,12 @@
+<div class="slider-container">
+  <div class="slider">
+    <div class="slide" *ngFor="let product of products">
+      <div class="card">
+        <div class="image-container">
+          <img src="assets/default.jpg" alt="Product Image" />
+          <div class="points-badge">{{ product.points }} Points</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

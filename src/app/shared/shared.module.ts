@@ -9,6 +9,7 @@ import { ProductComponent } from '../product/product.component';
 import { ProductCategoriesComponent } from '../product-categories/product-categories.component';
 import { ProductCategoryComponent } from '../product-category/product-category.component';
 import { ProductFiltersComponent } from '../product-filters/product-filters.component';
+import { BannerCarouselComponent } from '../banner-carousel/banner-carousel.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { ProductFiltersComponent } from '../product-filters/product-filters.comp
     ProductCategoriesComponent,
     ProductCategoryComponent,
     ProductFiltersComponent,
+    BannerCarouselComponent
   ],
   imports: [CommonModule, IonicModule, FormsModule],
   exports: [
@@ -27,6 +29,7 @@ import { ProductFiltersComponent } from '../product-filters/product-filters.comp
     ProductCategoriesComponent,
     ProductCategoryComponent,
     ProductFiltersComponent,
+    BannerCarouselComponent
   ],
 })
 export class SharedModule {}

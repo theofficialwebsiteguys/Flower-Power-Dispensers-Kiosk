@@ -1,0 +1,121 @@
+<div class="log-in-page">
+  <div class="login-container">
+    <div class="login-header">
+      <div class="login-header-logo">
+        <img src="assets/logo.png" alt="Your Website Guy Logo" class="logo" />
+      </div>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Name Row -->
+      <div class="name-row">
+        <div class="form-group">
+          <label for="firstName">First Name*</label>
+          <input
+            type="text"
+            id="firstName"
+            formControlName="firstName"
+            placeholder="Enter your first name"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name*</label>
+          <input
+            type="text"
+            id="lastName"
+            formControlName="lastName"
+            placeholder="Enter your last name"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="form-group">
+        <label for="email">Email*</label>
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Enter your email"
+          required
+        />
+      </div>
+
+      <!-- Phone Group -->
+      <div class="form-group phone-group">
+        <!-- Country Code Dropdown -->
+        <div class="country-code">
+          <label for="countryCode">Code</label>
+          <select
+            id="countryCode"
+            formControlName="countryCode"
+            (change)="onCountryCodeChange()"
+            required
+          >
+            <option *ngFor="let country of countries" [value]="country.dialCode">
+              {{ country.name }} {{ country.dialCode }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Phone Number Input -->
+        <div class="phone-number">
+          <label for="phone">Phone Number*</label>
+          <input
+            type="tel"
+            id="phone"
+            formControlName="phone"
+            placeholder="Enter your phone number"
+            required
+          />
+        </div>
+      </div>
+
+      <!-- Date of Birth -->
+      <div class="form-group">
+        <label for="dob">Date of Birth*</label>
+        <input
+          type="date"
+          id="dob"
+          formControlName="dob"
+          required
+        />
+      </div>
+
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password*</label>
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirm Password*</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          formControlName="confirmPassword"
+          placeholder="Confirm your password"
+          required
+        />
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" [disabled]="registerForm.invalid">Register</button>
+    </form>
+
+    <p class="login-link">
+      Already have an account?
+      <a href="/auth?mode=login">Login</a>
+    </p>
+  </div>
+</div>

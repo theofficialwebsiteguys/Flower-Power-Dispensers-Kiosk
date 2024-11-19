@@ -1,0 +1,36 @@
+<div class="referral-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Invite & Earn</h1>
+    <p>Earn 100 points for every referral. Max 3 referrals allowed.</p>
+  </div>
+
+  <!-- Referral Status -->
+  <div class="referral-status">
+    <ion-icon name="people-outline"></ion-icon>
+    <p><strong>Referrals Remaining:</strong> {{ maxReferrals - referralCount }}</p>
+  </div>
+
+  <!-- Input and Button -->
+  <div class="input-container">
+    <input
+      class="email-input"
+      type="email"
+      [(ngModel)]="referralEmail"
+      placeholder="Enter user's email"
+      [disabled]="referralCount >= maxReferrals"
+    />
+    <ion-button
+      expand="block"
+      (click)="sendReferral()"
+      [disabled]="referralCount >= maxReferrals"
+      class="send-btn"
+      color="primary"
+    >
+      Send Invitation
+    </ion-button>
+  </div>
+
+  <!-- Message -->
+  <p class="message" *ngIf="message">{{ message }}</p>
+</div>

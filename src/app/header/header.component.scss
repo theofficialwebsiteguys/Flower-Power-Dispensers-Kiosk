@@ -4,4 +4,9 @@ img {
 
 .action-button {
   text-transform: capitalize;
+
+  a{
+    text-decoration: none;
+    color: black;
+  }
 }

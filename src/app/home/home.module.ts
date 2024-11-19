@@ -20,6 +20,6 @@ import { SharedModule } from '../shared/shared.module';
     HomePageRoutingModule,
     SharedModule,
   ],
-  declarations: [HomePage, CardSliderComponent, BannerCarouselComponent],
+  declarations: [HomePage, CardSliderComponent],
 })
 export class HomePageModule {}
