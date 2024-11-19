@@ -55,7 +55,7 @@
             (change)="onCountryCodeChange()"
             required
           >
-            <option *ngFor="let country of countries" [value]="country.dialCode">
+            <option *ngFor="let country of countries" [value]="country.code">
               {{ country.name }} {{ country.dialCode }}
             </option>
           </select>
@@ -77,13 +77,49 @@
       <!-- Date of Birth -->
       <div class="form-group">
         <label for="dob">Date of Birth*</label>
-        <input
-          type="date"
-          id="dob"
-          formControlName="dob"
-          required
-        />
+        <div class="dob-container">
+          <!-- Month Input -->
+          <input
+            type="text"
+            id="month"
+            formControlName="month"
+            class="dob-input"
+            placeholder="MM"
+            maxlength="2"
+            (input)="focusNext($event, 'day', 2)"
+          />
+      
+          <!-- Day Input -->
+          <input
+            type="text"
+            id="day"
+            formControlName="day"
+            class="dob-input"
+            placeholder="DD"
+            maxlength="2"
+            (input)="focusNext($event, 'year', 2)"
+          />
+      
+          <!-- Year Input -->
+          <input
+            type="text"
+            id="year"
+            formControlName="year"
+            class="dob-input"
+            placeholder="YYYY"
+            maxlength="4"
+            (input)="validateDOB()"
+          />
+        </div>
+        <!-- Error Messages -->
+        <p *ngIf="registerForm.controls['dob'].hasError('required') && registerForm.controls['dob'].touched" class="error">
+          Date of Birth is required.
+        </p>
+        <p *ngIf="registerForm.controls['dob'].hasError('underage')" class="error">
+          You must be 18 years or older to register.
+        </p>
       </div>
+      
 
       <!-- Password -->
       <div class="form-group">
@@ -110,7 +146,7 @@
       </div>
 
       <!-- Submit Button -->
-      <button type="submit" [disabled]="registerForm.invalid">Register</button>
+      <ion-button expand="block" color="dark" type="submit" [disabled]="registerForm.invalid">Register</ion-button>
     </form>
 
     <p class="login-link">

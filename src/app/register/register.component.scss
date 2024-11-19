@@ -209,3 +209,34 @@ button[type="submit"] {
     }
   }
 }
+.dob-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  .dob-input {
+    width: calc(33.33% - 8px); /* Equal width for three inputs */
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    text-align: center;
+    transition: border-color 0.3s ease;
+
+    &::placeholder {
+      color: #aaa;
+    }
+
+    &:focus {
+      border-color: #4caf50;
+      outline: none;
+    }
+  }
+
+  .error {
+    font-size: 0.8rem;
+    color: #e53935; /* Red for error messages */
+    margin-top: 5px;
+  }
+}
