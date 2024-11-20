@@ -17,13 +17,26 @@ export class RegisterComponent {
   error = '';
 
   countries = [
-    { name: 'United States', dialCode: '+1' },
-    { name: 'United Kingdom', dialCode: '+44' },
-    { name: 'France', dialCode: '+33' },
-    { name: 'Germany', dialCode: '+49' },
-    { name: 'Croatia', dialCode: '+385' },
-    // Add more countries as needed
+    { name: 'United States', dialCode: '+1', code: 'US' },
+    { name: 'United Kingdom', dialCode: '+44', code: 'GB' },
+    { name: 'France', dialCode: '+33', code: 'FR' },
+    { name: 'Germany', dialCode: '+49', code: 'DE' },
+    { name: 'Croatia', dialCode: '+385', code: 'HR' },
+    { name: 'Canada', dialCode: '+1', code: 'CA' },
+    { name: 'Australia', dialCode: '+61', code: 'AU' },
+    { name: 'India', dialCode: '+91', code: 'IN' },
+    { name: 'Japan', dialCode: '+81', code: 'JP' },
+    { name: 'China', dialCode: '+86', code: 'CN' },
+    { name: 'Italy', dialCode: '+39', code: 'IT' },
+    { name: 'Spain', dialCode: '+34', code: 'ES' },
+    { name: 'Mexico', dialCode: '+52', code: 'MX' },
+    { name: 'Brazil', dialCode: '+55', code: 'BR' },
+    { name: 'South Africa', dialCode: '+27', code: 'ZA' },
+    { name: 'New Zealand', dialCode: '+64', code: 'NZ' },
+    { name: 'Russia', dialCode: '+7', code: 'RU' },
+    { name: 'South Korea', dialCode: '+82', code: 'KR' },
   ];
+  
 
   selectedCountryCode = this.countries[0].dialCode; // Default country code
 
@@ -36,15 +49,42 @@ export class RegisterComponent {
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
-      countryCode: [this.countries[0].dialCode, Validators.required], // Default to the first country
+      countryCode: [this.countries[0].code, Validators.required], // Default to the first country
       phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]], // 7-15 digits
-      dob: ['', [Validators.required, this.validateAge]],
+      month: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])$/)]], // MM
+      day: ['', [Validators.required, Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])$/)]], // DD
+      year: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]], // YYYY
+      dob: ['', [Validators.required, this.validateAge]], // Combined DOB validation
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]],     
     }, {
       validator: this.passwordMatchValidator, // Custom validator
     });
   }
+
+  focusNext(event: Event, nextField: string, maxLength: number) {
+    const input = event.target as HTMLInputElement;
+    if (input.value.length === maxLength) {
+      const nextInput = document.getElementById(nextField) as HTMLInputElement;
+      nextInput?.focus();
+    }
+  }
+
+  validateDOB() {
+    const month = this.registerForm.get('month')?.value;
+    const day = this.registerForm.get('day')?.value;
+    const year = this.registerForm.get('year')?.value;
+
+    if (month && day && year) {
+      const dob = `${year}-${month}-${day}`;
+      this.registerForm.patchValue({ dob }); // Combine into dob field
+      const isValid = this.registerForm.get('dob')?.valid;
+      if (!isValid) {
+        this.registerForm.get('dob')?.setErrors({ invalid: true });
+      }
+    }
+  }
+  
   onSubmit() {
     if (this.registerForm.valid) {
       const formData = this.registerForm.value;
@@ -52,10 +92,10 @@ export class RegisterComponent {
         fname: formData.firstName,
         lname: formData.lastName,
         email: formData.email,
-        phone: formData.phone,
         dob: formData.dob,
-        password: formData.password,
-        confirmPassword: formData.confirmPassword
+        country: formData.countryCode,
+        phone: formData.phone,
+        password: formData.password
       };
   
       this.authService.register(userData).subscribe({

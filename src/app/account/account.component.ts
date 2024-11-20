@@ -6,12 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
   styleUrls: ['./account.component.scss'],
 })
 export class AccountComponent {
-  @Input() user: { name: string; email: string; phone: string; dob: string } = {
-    name: '',
-    email: '',
-    phone: '',
-    dob: '',
-  };
+  @Input() user: any;
 
   settings = {
     notifications: true,

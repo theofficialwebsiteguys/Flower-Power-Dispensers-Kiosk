@@ -10,12 +10,7 @@ import { User } from './user.model';
 })
 export class RewardsPage implements OnInit {
 
-  user: User = {
-    name: '',
-    email: '',
-    phone: '',
-    dob: '',
-  };
+  user: any;
 
   isLoggedIn: boolean = false;
 
@@ -24,10 +19,10 @@ export class RewardsPage implements OnInit {
   ngOnInit() {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
-      this.user = this.authService.getUserInfo();
-      // this.authService.getUserInfo().subscribe((userInfo) => {
-      //   this.user = userInfo;
-      // });
+      // this.user = this.authService.getUserInfo();
+      this.authService.getUserInfo().subscribe((userInfo: any) => {
+        this.user = userInfo;
+      });
     });
   }
 
