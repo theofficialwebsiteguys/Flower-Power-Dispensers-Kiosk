@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, of, tap } from 'rxjs';
@@ -11,7 +11,6 @@ export class AuthService {
 
   private userSubject = new BehaviorSubject<any>(null); // Store user info
 
-  private tokenKey = 'auth_token'; // Key for storing JWT in localStorage
   private authStatus = new BehaviorSubject<boolean>(this.hasToken()); // Observable for auth status
 
   constructor(private http: HttpClient, private router: Router) {
@@ -63,7 +62,7 @@ export class AuthService {
       tap((response: {sessionId: string, user: any, expiresAt: Date}) => {
         if (response) {
           // Save the session details or token
-          this.storeToken(response.sessionId); // Assuming sessionId is used as the token
+          this.storeSessionData(response.sessionId, response.expiresAt);
           this.authStatus.next(true); // Notify subscribers of auth status
         }
         if (response.user) {
@@ -73,16 +72,40 @@ export class AuthService {
     );
   }
   
-  // Log out a user
   logout(): void {
-    this.removeToken();
-    this.authStatus.next(false);
-    this.router.navigate(['/rewards']); // Redirect to login page
+    const sessionData = localStorage.getItem('sessionData');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${sessionData ? JSON.parse(sessionData).token : null}`, // Set Authorization header
+    });
+
+  
+    this.http
+      .post<{ sessionId: string; user: any; expiresAt: Date }>(
+        `${this.apiUrl}/logout`,
+        {}, // No body required
+        { headers } // Pass headers in options
+      )
+      .pipe(
+        tap((response: { sessionId: string; user: any; expiresAt: Date }) => {
+          if (response) {
+            // Handle logout logic
+            this.removeToken();
+            this.authStatus.next(false);
+            this.router.navigate(['/rewards']); // Redirect to rewards page
+            this.userSubject.next(null);
+            this.removeUser();
+          }
+        })
+      )
+      .subscribe(); // Ensure the request is sent
   }
 
-  // Store the token securely
-  private storeToken(token: string): void {
-    localStorage.setItem(this.tokenKey, token);
+  private storeSessionData(sessionId: string, expiresAt: Date): void {
+    const sessionData = {
+      token: sessionId,
+      expiry: expiresAt,
+    };
+    localStorage.setItem('sessionData', JSON.stringify(sessionData));
   }
 
   private storeUserInfo(user: any) {
@@ -90,27 +113,34 @@ export class AuthService {
     this.userSubject.next(user);
   }
 
-  // Get the stored token
-  getToken(): string | null {
-    return localStorage.getItem(this.tokenKey);
+  private getSessionData(): { token: string; expiry: string } | null {
+    const sessionData = localStorage.getItem('sessionData');
+    return sessionData ? JSON.parse(sessionData) : null;
   }
 
   // Remove the token
   private removeToken(): void {
-    localStorage.removeItem(this.tokenKey);
+    localStorage.removeItem('sessionData');
   }
+
+  
+  // Remove the token
+  private removeUser(): void {
+    localStorage.removeItem('user_info');
+  }
+
 
   // Check if token exists
   private hasToken(): boolean {
-    return !!this.getToken();
+    return !!this.getSessionData();
   }
 
   // Get decoded token data (optional: use a library like jwt-decode for this)
   getDecodedToken(): any {
-    const token = this.getToken();
-    if (!token) return null;
+    const sessionData = this.getSessionData();
+    if (!sessionData) return null;
     // Decode JWT (assumes base64 payload; adjust as needed)
-    const payload = token.split('.')[1];
+    const payload = sessionData.token.split('.')[1];
     return JSON.parse(atob(payload));
   }
 
@@ -123,7 +153,8 @@ export class AuthService {
   }
 
   sendPasswordReset(email: string): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/forgot-password`, { email });
+    const business_id = 1;
+    return this.http.post<void>(`${this.apiUrl}/forgot-password`, { email, business_id });
   }
 
   resetPassword(password: string, token: string | null): Observable<void> {
