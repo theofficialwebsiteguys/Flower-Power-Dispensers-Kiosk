@@ -2,6 +2,7 @@ import { trigger, transition, style, animate } from '@angular/animations';
 import { Component } from '@angular/core';
 
 import { ProductsService } from './products.service';
+import { AuthService } from './auth.service';
 
 @Component({
   selector: 'app-root',
@@ -19,10 +20,12 @@ import { ProductsService } from './products.service';
 export class AppComponent {
   showSplashScreen = true;
 
-  constructor(private productService: ProductsService) {}
+  constructor(private productService: ProductsService, private authService: AuthService) {}
 
   ngOnInit() {
     this.productService.fetchProducts();
+    this.authService.validateSession();
+
   }
 
   onCloseSplash() {
