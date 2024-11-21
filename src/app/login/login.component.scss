@@ -160,3 +160,22 @@ button[type="submit"] {
     }
   }
   
+.form-error {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-top: 0.4rem;
+  display: block;
+  text-align: left;
+  padding-left: 0.2rem;
+}
+
+  /* Error Message */
+.error-message {
+  color: #d32f2f;
+  background: #fdecea;
+  padding: 0.8rem;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}

@@ -43,7 +43,8 @@
       <label for="notifications">Notifications</label>
       <ion-toggle
         id="notifications"
-        [(ngModel)]="settings.notifications"
+        [(ngModel)]="allowNotifications"
+        (ionChange)="onToggleNotifications($event)"
       ></ion-toggle>
     </div>
     <div class="setting-item">
@@ -51,7 +52,9 @@
       <ion-toggle
         id="darkMode"
         [(ngModel)]="settings.darkMode"
+        (ionChange)="onToggleDarkMode($event)"
       ></ion-toggle>
     </div>
   </div>
+  
 </div>

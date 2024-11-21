@@ -15,6 +15,7 @@ export class RegisterComponent {
   loading = false;
   submitted = false;
   error = '';
+  isFormTouched = false; // Tracks if any input has been entered
 
   countries = [
     { name: 'United States', dialCode: '+1', code: 'US' },
@@ -54,7 +55,7 @@ export class RegisterComponent {
       month: ['', [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])$/)]], // MM
       day: ['', [Validators.required, Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])$/)]], // DD
       year: ['', [Validators.required, Validators.pattern(/^\d{4}$/)]], // YYYY
-      dob: ['', [Validators.required, this.validateAge]], // Combined DOB validation
+      dob: ['', [Validators.required]], // Combined DOB validation
       password: ['', [Validators.required, Validators.minLength(6)]],
       confirmPassword: ['', [Validators.required]],     
     }, {
@@ -62,51 +63,59 @@ export class RegisterComponent {
     });
   }
 
-  focusNext(event: Event, nextField: string, maxLength: number) {
-    const input = event.target as HTMLInputElement;
-    if (input.value.length === maxLength) {
-      const nextInput = document.getElementById(nextField) as HTMLInputElement;
-      nextInput?.focus();
-    }
+  ngOnInit() {
+    // Track changes in the form to determine if any input is entered
+    this.registerForm.valueChanges.subscribe(() => {
+      this.isFormTouched = true;
+    });
+    this.registerForm.get('month')?.valueChanges.subscribe(() => this.validateDOB());
+    this.registerForm.get('day')?.valueChanges.subscribe(() => this.validateDOB());
+    this.registerForm.get('year')?.valueChanges.subscribe(() => this.validateDOB());
   }
 
-  validateDOB() {
-    const month = this.registerForm.get('month')?.value;
-    const day = this.registerForm.get('day')?.value;
-    const year = this.registerForm.get('year')?.value;
 
-    if (month && day && year) {
-      const dob = `${year}-${month}-${day}`;
-      this.registerForm.patchValue({ dob }); // Combine into dob field
-      const isValid = this.registerForm.get('dob')?.valid;
-      if (!isValid) {
-        this.registerForm.get('dob')?.setErrors({ invalid: true });
-      }
-    }
-  }
   
   onSubmit() {
-    if (this.registerForm.valid) {
-      const formData = this.registerForm.value;
-      const userData = {
-        fname: formData.firstName,
-        lname: formData.lastName,
-        email: formData.email,
-        dob: formData.dob,
-        country: formData.countryCode,
-        phone: formData.phone,
-        password: formData.password
-      };
-  
-      this.authService.register(userData).subscribe({
-        next: (response) => {
-          console.log('Registration successful', response);
-        },
-        error: (err) => {
-          console.error('Registration failed:', err);
-        }
-      });
+    this.submitted = true;
+
+    if (this.registerForm.invalid) {
+      return;
     }
+  
+    this.loading = true;
+    this.error = ''; // Clear previous error
+  
+    const formData = this.registerForm.value;
+    const userData = {
+      fname: formData.firstName,
+      lname: formData.lastName,
+      email: formData.email,
+      dob: formData.dob,
+      country: formData.countryCode,
+      phone: formData.phone,
+      password: formData.password,
+    };
+  
+    this.authService.register(userData).subscribe({
+      next: () => {
+        this.loading = false;
+      },
+      error: (err) => {
+        this.loading = false;
+        this.error = this.getErrorMessage(err); // Set friendly error message
+      },
+    });
+  }
+
+  private getErrorMessage(err: any): string {
+    if (err.status === 400) {
+      return 'Invalid registration details. Please check your inputs.';
+    } else if (err.status === 409) {
+      return 'Email or phone number is already in use.';
+    } else if (err.status === 500) {
+      return 'Server error. Please try again later.';
+    }
+    return 'An unexpected error occurred. Please try again.';
   }
 
   onCountryCodeChange() {
@@ -124,11 +133,42 @@ export class RegisterComponent {
     return password === confirmPassword ? null : { notMatching: true };
   }
 
-  validateAge(control: any): { [key: string]: boolean } | null {
-    const dob = new Date(control.value);
-    const ageDiffMs = Date.now() - dob.getTime();
-    const ageDate = new Date(ageDiffMs);
-    const age = Math.abs(ageDate.getUTCFullYear() - 1970);
-    return age >= 18 ? null : { underage: true }; // Must be 18+
+  validateDOB() {
+    const month = this.registerForm.get('month')?.value;
+    const day = this.registerForm.get('day')?.value;
+    const year = this.registerForm.get('year')?.value;
+  
+    if (month && day && year) {
+      const dob = `${year}-${month}-${day}`;
+  
+      // Validate if the date is valid and user is 18+
+      const date = new Date(dob);
+      if (isNaN(date.getTime())) {
+        this.registerForm.get('dob')?.setErrors({ invalid: true });
+        return;
+      }
+  
+      const age = this.calculateAge(date);
+      if (age < 18) {
+        this.registerForm.get('dob')?.setErrors({ underage: true });
+      } else {
+        this.registerForm.get('dob')?.setErrors(null); // Clear errors if valid
+      }
+  
+      this.registerForm.patchValue({ dob }); // Combine into dob field
+    } else {
+      // Reset errors if the fields are incomplete
+      this.registerForm.get('dob')?.setErrors({ required: true });
+    }
   }
+  
+  private calculateAge(dob: Date): number {
+    const today = new Date();
+    const age = today.getFullYear() - dob.getFullYear();
+    const monthDiff = today.getMonth() - dob.getMonth();
+    const dayDiff = today.getDate() - dob.getDate();
+  
+    return monthDiff < 0 || (monthDiff === 0 && dayDiff < 0) ? age - 1 : age;
+  }
+  
 }
