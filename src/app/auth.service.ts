@@ -1,14 +1,12 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-
-
   private userSubject = new BehaviorSubject<any>(null); // Store user info
 
   private authStatus = new BehaviorSubject<boolean>(this.hasToken()); // Observable for auth status
@@ -113,7 +111,7 @@ export class AuthService {
     this.userSubject.next(user);
   }
 
-  private getSessionData(): { token: string; expiry: string } | null {
+  private getSessionData(): { token: string; expiry: Date } | null {
     const sessionData = localStorage.getItem('sessionData');
     return sessionData ? JSON.parse(sessionData) : null;
   }
@@ -135,23 +133,15 @@ export class AuthService {
     return !!this.getSessionData();
   }
 
-  // Get decoded token data (optional: use a library like jwt-decode for this)
-  getDecodedToken(): any {
-    const sessionData = this.getSessionData();
-    if (!sessionData) return null;
-    // Decode JWT (assumes base64 payload; adjust as needed)
-    const payload = sessionData.token.split('.')[1];
-    return JSON.parse(atob(payload));
-  }
 
-  // Check token expiration
-  isTokenExpired(): boolean {
-    const token = this.getDecodedToken();
-    if (!token || !token.exp) return true;
-    const now = Math.floor(Date.now() / 1000);
-    return now > token.exp;
+  isTokenExpired(expiry: Date): boolean {
+    const currentTime = new Date().getTime(); // Get the current time in milliseconds
+    const expiryTime = new Date(expiry).getTime(); // Convert the expiry date to milliseconds
+  
+    // Return true if the current time is greater than or equal to the expiry time
+    return currentTime >= expiryTime;
   }
-
+  
   sendPasswordReset(email: string): Observable<void> {
     const business_id = 1;
     return this.http.post<void>(`${this.apiUrl}/forgot-password`, { email, business_id });
@@ -162,4 +152,38 @@ export class AuthService {
   }
 
 
+  validateSession(): void {
+    const sessionData = this.getSessionData();
+  
+    if (!sessionData || this.isTokenExpired(sessionData.expiry)) {
+      // No session or expired session
+      this.authStatus.next(false); // Notify subscribers that the user is logged out
+      this.removeToken();
+      this.removeUser();
+      return;
+    }
+  
+
+    // If token exists, validate it against the backend
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${sessionData?.token}`, // Use the stored token
+    });
+  
+    console.log(sessionData)
+    this.http
+    .get<{ valid: boolean }>(`${this.apiUrl}/validate-session`, { headers })
+    .pipe(
+      map((response) => response.valid), // Transform the response to just the boolean
+      tap((isValid) => {
+        if (isValid) {
+          this.authStatus.next(true); // Session is valid
+        } else {
+          this.authStatus.next(false); // Session is invalid
+          this.removeToken(); // Clear invalid session data
+          this.removeUser();
+        }
+      })
+    ).subscribe();
+  }
+  
 }
