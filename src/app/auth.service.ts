@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -184,6 +184,35 @@ export class AuthService {
         }
       })
     ).subscribe();
+  }
+
+  toggleUserNotifications(userId: string): Observable<any> {
+    const sessionData = localStorage.getItem('sessionData'); // Retrieve the session data
+    const token = sessionData ? JSON.parse(sessionData).token : null; // Extract the token
+
+    if (!token) {
+      this.logout();
+      return of();
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`, // Add Authorization header
+    });
+
+    const payload = { userId }; // Pass the userId in the request body
+
+    return this.http
+    .put(`${this.apiUrl}/toggle-notifications`, payload, { headers })
+    .pipe(
+      tap((response: any) => {
+        // Call another function here
+        this.storeUserInfo(response.user);
+      }),
+      catchError((error) => {
+        console.error('Error toggling notifications:', error);
+        return throwError(() => error);
+      })
+    );
   }
   
 }
