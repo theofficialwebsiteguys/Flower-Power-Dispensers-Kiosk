@@ -20,24 +20,35 @@ export class ForgotPasswordComponent {
   }
 
   onSubmit() {
-    if (this.forgotPasswordForm.valid) {
-      const email = this.forgotPasswordForm.value.email;
-
-      // Call the AuthService to reset the password
-      this.authService.sendPasswordReset(email).subscribe({
-        next: () => {
-          this.emailSent = true; // Show confirmation message
-          this.errorMessage = ''; // Clear any previous error message
-        },
-        error: (err) => {
-          if (err.status === 404) {
-            this.errorMessage = 'The email is not associated with a registered account.';
-          } else {
-            this.errorMessage = 'An error occurred. Please try again later.';
-          }
-        },
-      });
+    if (this.forgotPasswordForm.invalid) {
+      this.errorMessage = 'Please enter a valid email address.';
+      return;
     }
+
+    const email = this.forgotPasswordForm.value.email;
+    this.errorMessage = ''; // Clear previous errors
+
+    // Call the AuthService to reset the password
+    this.authService.sendPasswordReset(email).subscribe({
+      next: () => {
+        this.emailSent = true; // Show confirmation message
+        this.errorMessage = ''; // Clear any previous error message
+      },
+      error: (err) => {
+        this.errorMessage = this.getErrorMessage(err);
+      },
+    });
+  }
+
+  private getErrorMessage(err: any): string {
+    if (err.status === 404) {
+      return 'The email is not associated with a registered account.';
+    } else if (err.status === 400) {
+      return 'The email address provided is invalid.';
+    } else if (err.status === 500) {
+      return 'An error occurred on the server. Please try again later.';
+    }
+    return 'An unexpected error occurred. Please try again.';
   }
 
 }

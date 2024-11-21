@@ -7,6 +7,7 @@ import { BehaviorSubject, catchError, map, Observable, of, tap, throwError } fro
   providedIn: 'root'
 })
 export class AuthService {
+
   private userSubject = new BehaviorSubject<any>(null); // Store user info
 
   private authStatus = new BehaviorSubject<boolean>(this.hasToken()); // Observable for auth status
@@ -213,6 +214,24 @@ export class AuthService {
         return throwError(() => error);
       })
     );
+  }
+  
+  validateResetToken(token: string) {
+    return this.http
+      .get<{ valid: boolean; user?: any }>(`${this.apiUrl}/validate-reset-token`, {
+        params: { token }, // Pass token as a query parameter
+      })
+      .pipe(
+        tap((response) => {
+          if (response.valid && response.user) {
+            this.storeUserInfo(response.user); // Optional: Save user info if needed
+          }
+        }),
+        catchError((error) => {
+          console.error('Error validating reset token:', error);
+          return throwError(() => error);
+        })
+      );
   }
   
 }

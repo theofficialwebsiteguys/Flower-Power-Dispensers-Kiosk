@@ -35,8 +35,12 @@ export class ProductsService {
   }
 
   fetchProducts(): void {
+    // const payload = {
+    //   businessId: '1', // Replace with your business ID logic
+    //   businessName: 'Flower Power Dispensers', // Replace with your business name logic
+    // };
     // this.http
-    //   .get<Product[]>('https://your-api-endpoint.com/products')
+    //   .get<Product[]>('https://your-api-endpoint.com/products', {payload})
     //   .subscribe((data) => {
     //     this.products.next(data); // Updates the BehaviorSubject with new data
     //   });
