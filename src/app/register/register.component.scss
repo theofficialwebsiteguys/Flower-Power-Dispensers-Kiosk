@@ -4,6 +4,7 @@ $secondary-bg: #f7f8fa;
 $text-color-dark: #333;
 $text-color-light: #666;
 $accent-color: #4caf50; // A vibrant green for call-to-action buttons
+$error-color: #d32f2f;
 $disabled-btn-bg: #e0e0e0;
 $btn-text-color: #ffffff;
 $input-border-color: #dcdcdc;
@@ -71,6 +72,13 @@ $spacing: 16px;
     margin-bottom: 6px;
     font-weight: 600;
     color: $text-color-dark;
+
+      &.required::after {
+        content: '*';
+        color: $error-color;
+        margin-left: 2px;
+      }
+      
   }
 
   input[type="email"],
@@ -90,6 +98,7 @@ $spacing: 16px;
       border-color: $accent-color;
       outline: none;
     }
+    
   }
 }
 
@@ -154,6 +163,10 @@ button[type="submit"] {
   }
 }
 
+.phone-number{
+  margin-top: auto;
+}
+
 .phone-group {
   display: flex;
   gap: 8px; /* Space between the dropdown and the phone input */
@@ -163,52 +176,42 @@ button[type="submit"] {
     flex: 0 0 80px; /* Fixed width for the dropdown */
     display: flex;
     flex-direction: column;
+    width: 20%;
 
     label {
       margin-bottom: 4px;
       font-weight: bold;
     }
 
-    select {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-      white-space: nowrap; /* Prevents text from wrapping */
-      text-overflow: ellipsis; /* Adds "..." if the text is too long */
-      overflow: hidden; /* Ensures the text stays within bounds */
+    ion-select{
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      padding-left: 10px;
+      padding-right: 10px;
       background-color: #f9f9f9;
     }
 
-    select:focus {
-      border-color: #4caf50;
-      outline: none;
-    }
+
+    // select {
+    //   width: 100%;
+    //   padding: 8px;
+    //   border: 1px solid #ccc;
+    //   border-radius: 4px;
+    //   font-size: 14px;
+    //   white-space: nowrap; /* Prevents text from wrapping */
+    //   text-overflow: ellipsis; /* Adds "..." if the text is too long */
+    //   overflow: hidden; /* Ensures the text stays within bounds */
+    //   background-color: #f9f9f9;
+    // }
+
+    // select:focus {
+    //   border-color: #4caf50;
+    //   outline: none;
+    // }
   }
 
-  .phone-number {
-    flex: 1; /* Takes the remaining width of the row */
-
-    label {
-      margin-bottom: 4px;
-      font-weight: bold;
-    }
-
-    input {
-      width: 100%;
-      padding: 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      font-size: 14px;
-    }
-
-    input:focus {
-      border-color: #4caf50;
-      outline: none;
-    }
-  }
 }
+
 .dob-container {
   display: flex;
   gap: 8px;
@@ -261,4 +264,13 @@ button[type="submit"] {
   margin-bottom: 1rem;
   border: 1px solid #f5c6cb;
   box-shadow: 0 2px 4px rgba(211, 47, 47, 0.1);
+}
+
+input.invalid {
+  border-color: #d32f2f !important; /* Red color for error */
+}
+
+input.invalid:focus {
+  border-color: #b71c1c !important; /* Darker red for focused error */
+  outline: none;
 }
