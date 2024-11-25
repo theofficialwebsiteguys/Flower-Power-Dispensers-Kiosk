@@ -97,12 +97,15 @@
       <div class="form-group">
         <label for="dob" class="required">Date of Birth</label>
         <div class="dob-container">
-          <input type="text" id="month" formControlName="month" [class.invalid]="submitted && registerForm.get('dob')?.invalid" placeholder="MM" class="dob-input" maxlength="2" />
-          <input type="text" id="day" formControlName="day" [class.invalid]="submitted && registerForm.get('dob')?.invalid" placeholder="DD" class="dob-input" maxlength="2" />
-          <input type="text" id="year" formControlName="year" [class.invalid]="submitted && registerForm.get('dob')?.invalid" placeholder="YYYY" class="dob-input" maxlength="4" />
+          <input type="text" id="month" formControlName="month" [class.invalid]="submitted && registerForm.get('month')?.invalid" placeholder="MM" class="dob-input" maxlength="2" />
+          <input type="text" id="day" formControlName="day" [class.invalid]="submitted && registerForm.get('day')?.invalid" placeholder="DD" class="dob-input" maxlength="2" />
+          <input type="text" id="year" formControlName="year" [class.invalid]="submitted && registerForm.get('year')?.invalid" placeholder="YYYY" class="dob-input" maxlength="4" />
         </div>
-        <div *ngIf="submitted && registerForm.get('dob')?.invalid" class="form-error">
-          Date of Birth is required and you must be 18+ years old.
+        <div *ngIf="submitted && dobEmptyError || dobInvalidError" class="form-error">
+          A valid Date of Birth is Required.
+        </div>
+        <div *ngIf="submitted && underageError" class="form-error">
+          You must be 21 years or older.
         </div>
       </div>
 
