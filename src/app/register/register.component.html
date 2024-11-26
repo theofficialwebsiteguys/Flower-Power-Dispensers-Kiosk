@@ -10,16 +10,18 @@
     <div *ngIf="error" class="error-message">
       {{ error }}
     </div>
+    
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <!-- Name Row -->
       <div class="name-row">
         <div class="form-group">
-          <label for="firstName">First Name*</label>
+          <label for="firstName" class="required">First Name</label>
           <input
             type="text"
             id="firstName"
             formControlName="firstName"
+            [class.invalid]="submitted && registerForm.get('firstName')?.invalid"
             placeholder="Enter your first name"
             required
           />
@@ -29,11 +31,12 @@
         </div>
 
         <div class="form-group">
-          <label for="lastName">Last Name*</label>
+          <label for="lastName" class="required">Last Name</label>
           <input
             type="text"
             id="lastName"
             formControlName="lastName"
+            [class.invalid]="submitted && registerForm.get('lastName')?.invalid"
             placeholder="Enter your last name"
             required
           />
@@ -45,11 +48,12 @@
 
       <!-- Email -->
       <div class="form-group">
-        <label for="email">Email*</label>
+        <label for="email" class="required">Email</label>
         <input
           type="email"
           id="email"
           formControlName="email"
+          [class.invalid]="submitted && registerForm.get('email')?.invalid"
           placeholder="Enter your email"
           required
         />
@@ -61,24 +65,25 @@
       <!-- Phone Group -->
       <div class="form-group phone-group">
         <div class="country-code">
-          <label for="countryCode">Code</label>
-          <select
-            id="countryCode"
+          <label for="countryCode" class="required">Phone</label>
+          <ion-select
             formControlName="countryCode"
-            required
+            id="countryCode"
+            placeholder="Select Country Code"
+            interface="popover"
           >
-            <option *ngFor="let country of countries" [value]="country.code">
-              {{ country.name }} {{ country.dialCode }}
-            </option>
-          </select>
+            <ion-select-option *ngFor="let country of countries" [value]="country.code">
+              {{ country.name }} ({{ country.dialCode }})
+            </ion-select-option>
+          </ion-select>
         </div>
 
         <div class="phone-number">
-          <label for="phone">Phone Number*</label>
           <input
             type="tel"
             id="phone"
             formControlName="phone"
+            [class.invalid]="submitted && registerForm.get('phone')?.invalid"
             placeholder="Enter your phone number"
             required
           />
@@ -90,24 +95,28 @@
 
       <!-- DOB -->
       <div class="form-group">
-        <label for="dob">Date of Birth*</label>
+        <label for="dob" class="required">Date of Birth</label>
         <div class="dob-container">
-          <input type="text" id="month" formControlName="month" placeholder="MM" class="dob-input" maxlength="2" />
-          <input type="text" id="day" formControlName="day" placeholder="DD" class="dob-input" maxlength="2" />
-          <input type="text" id="year" formControlName="year" placeholder="YYYY" class="dob-input" maxlength="4" />
+          <input type="text" id="month" formControlName="month" [class.invalid]="submitted && registerForm.get('month')?.invalid" placeholder="MM" class="dob-input" maxlength="2" />
+          <input type="text" id="day" formControlName="day" [class.invalid]="submitted && registerForm.get('day')?.invalid" placeholder="DD" class="dob-input" maxlength="2" />
+          <input type="text" id="year" formControlName="year" [class.invalid]="submitted && registerForm.get('year')?.invalid" placeholder="YYYY" class="dob-input" maxlength="4" />
         </div>
-        <div *ngIf="submitted && registerForm.get('dob')?.invalid" class="form-error">
-          Date of Birth is required and you must be 18+ years old.
+        <div *ngIf="submitted && dobEmptyError || dobInvalidError" class="form-error">
+          A valid Date of Birth is Required.
+        </div>
+        <div *ngIf="submitted && underageError" class="form-error">
+          You must be 21 years or older.
         </div>
       </div>
 
       <!-- Password -->
       <div class="form-group">
-        <label for="password">Password*</label>
+        <label for="password" class="required">Password</label>
         <input
           type="password"
           id="password"
           formControlName="password"
+          [class.invalid]="submitted && registerForm.get('password')?.invalid"
           placeholder="Enter your password"
           required
         />
@@ -118,11 +127,12 @@
 
       <!-- Confirm Password -->
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password*</label>
+        <label for="confirmPassword" class="required">Confirm Password</label>
         <input
           type="password"
           id="confirmPassword"
           formControlName="confirmPassword"
+          [class.invalid]="submitted && registerForm.get('notMatching')?.invalid"
           placeholder="Confirm your password"
           required
         />

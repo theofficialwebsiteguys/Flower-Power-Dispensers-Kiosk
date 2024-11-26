@@ -74,7 +74,7 @@ export class AuthService {
   logout(): void {
     const sessionData = localStorage.getItem('sessionData');
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${sessionData ? JSON.parse(sessionData).token : null}`, // Set Authorization header
+      Authorization: sessionData ? JSON.parse(sessionData).token : null, // Set Authorization header
     });
 
   
@@ -167,7 +167,7 @@ export class AuthService {
 
     // If token exists, validate it against the backend
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${sessionData?.token}`, // Use the stored token
+      Authorization: sessionData?.token, // Use the stored token
     });
   
     console.log(sessionData)
@@ -197,7 +197,7 @@ export class AuthService {
     }
 
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`, // Add Authorization header
+      Authorization: token, // Add Authorization header
     });
 
     const payload = { userId }; // Pass the userId in the request body
