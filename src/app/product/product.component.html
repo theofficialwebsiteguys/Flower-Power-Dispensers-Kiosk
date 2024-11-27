@@ -1,6 +1,6 @@
 <ion-item (click)="updateProductDisplay()">
   <ion-row class="container">
-    <img />
+    <img [src]="product.image"/>
     <ion-label class="info">
       <p>{{ product.brand }}</p>
       <h1>{{ product.title }}</h1>

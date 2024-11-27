@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product } from './product/product.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
@@ -31,20 +31,59 @@ export class ProductsService {
   currentProductFilters$ = this.currentProductFilters.asObservable();
 
   constructor(private http: HttpClient, private route: Router) {
-    this.products.next(this.getProductsList());
+
   }
 
   fetchProducts(): void {
-    // const payload = {
-    //   businessId: '1', // Replace with your business ID logic
-    //   businessName: 'Flower Power Dispensers', // Replace with your business name logic
-    // };
-    // this.http
-    //   .get<Product[]>('https://your-api-endpoint.com/products', {payload})
-    //   .subscribe((data) => {
-    //     this.products.next(data); // Updates the BehaviorSubject with new data
-    //   });
+    const headers = new HttpHeaders({
+      'x-dispense-api-key': 'c2f270b6-6452-4090-bcf7-20d2e97ac405',
+    });
+  
+    const products: Product[] = [];
+    const limit = 100; // Number of items per request
+    let skip = 0; // Start at the first page
+    let total = 0; // Total number of products
+  
+    const fetchPage = () => {
+      this.http
+        .get<any>(`https://api.dispenseapp.com/2023-03/products?limit=${limit}&skip=${skip}`, { headers })
+        .subscribe((response) => {
+          console.log(response.data);
+          if (response.data) {
+            const currentProducts: Product[] = response.data
+              .filter((item: any) => item.quantity > 0) // Only include products with quantity > 0
+              .map((item: any) => ({
+                category: item.cannabisComplianceType || item.cannabisType || '',
+                title: item.name || '',
+                desc: item.description || '',
+                brand: item.brand?.name || '',
+                strainType: item.cannabisStrain || '',
+                thc: item.description?.split('\n')[0] || '',
+                weight: item.weight || '',
+                price: item.price || '',
+                image: item.image || item.images?.[0] || '',
+              }));
+  
+            products.push(...currentProducts);
+            skip += limit; // Increment the skip for the next page
+            total = response.count; // Total number of items from the API
+  
+            if (skip < total) {
+              // Fetch the next page if there are more products
+              fetchPage();
+            } else {
+              // All products fetched
+              this.products.next(products); // Update BehaviorSubject
+              console.log(products); // Verify all products are fetched
+            }
+          }
+        });
+    };
+  
+    // Start fetching the first page
+    fetchPage();
   }
+  
 
   getProducts(): Observable<Product[]> {
     return this.products$;
@@ -171,14 +210,13 @@ export class ProductsService {
   getCategories(): ProductCategory[] {
     return [
       'FLOWER',
-      'PRE-ROLL',
-      'CONCENTRATE',
-      'VAPORIZER',
-      'TOPICAL',
-      'TINCTURE',
-      'EDIBLE',
-      'SPECIAL',
-      'CONCIERGE'
+      'PRE_ROLLS',
+      'CONCENTRATES',
+      'VAPORIZERS',
+      'BEVERAGES',
+      'TINCTURES',
+      'EDIBLES',
+      'ACCESSORIES',
     ];
   }
 
