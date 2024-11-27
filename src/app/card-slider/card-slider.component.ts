@@ -4,6 +4,7 @@ import { ProductsService } from '../products.service';
 
 import { ProductCategory } from '../product-category/product-category.model';
 import { Product } from '../product/product.model';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-card-slider',
@@ -13,24 +14,28 @@ import { Product } from '../product/product.model';
 export class CardSliderComponent {
   categories: { title: string; category?: ProductCategory }[] = [
     {
-      title: 'Concierge Picks',
-      category: 'CONCIERGE',
-    },
-    {
-      title: 'Specials',
-      category: 'SPECIAL',
-    },
-    {
       title: 'Flower',
       category: 'FLOWER',
     },
     {
       title: 'Pre-Roll',
-      category: 'PRE-ROLL',
+      category: 'PRE_ROLLS',
     },
     {
       title: 'Edible',
-      category: 'EDIBLE',
+      category: 'EDIBLES',
+    },
+    {
+      title: 'Vaporizers',
+      category: 'VAPORIZERS',
+    },
+    {
+      title: 'Edible',
+      category: 'EDIBLES',
+    },
+    {
+      title: 'Accessories',
+      category: 'ACCESSORIES',
     },
 
     // Add more categories as needed
@@ -41,7 +46,10 @@ export class CardSliderComponent {
   constructor(private productService: ProductsService) {}
 
   ngOnInit() {
-    this.products = this.productService.getProductsList();
+    this.productService.getProducts().subscribe((products) => {
+      this.products = products;
+      console.log(this.products)
+    });
   }
 
   updateCategory(category?: ProductCategory) {
