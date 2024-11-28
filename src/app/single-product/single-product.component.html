@@ -8,11 +8,11 @@
   <div class="product-info">
     <p class="brand">{{ currentProduct.brand }}</p>
     <h2 class="title">{{ currentProduct.title }}</h2>
-    <span class="price">${{ currentProduct.price }}</span>
-    <p class="strain">{{ currentProduct.strainType }} - THC: {{ currentProduct.thc }}%</p>
+    <span class="price">{{ currentProduct.price | currency }}</span>
+    <p class="strain">{{ currentProduct.strainType }} {{ currentProduct.thc ? '- ' + currentProduct.thc : '' }}</p>
     <p class="description">
       {{ getDescription() }}
-      <span class="see-more" (click)="toggleDescription()">
+      <span class="see-more" (click)="toggleDescription()" *ngIf="currentProduct.desc">
         {{ showFullDescription ? 'See Less' : 'See More' }}
       </span>
     </p>

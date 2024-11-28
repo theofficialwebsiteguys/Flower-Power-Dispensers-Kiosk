@@ -31,60 +31,39 @@ export class ProductsService {
   currentProductFilters$ = this.currentProductFilters.asObservable();
 
   constructor(private http: HttpClient, private route: Router) {
+    this.loadProductsFromLocalStorage();
+  }
 
+  private loadProductsFromLocalStorage(): void {
+    const storedProducts = localStorage.getItem('products');
+    if (storedProducts) {
+      const parsedProducts: Product[] = JSON.parse(storedProducts);
+      this.products.next(parsedProducts); // Load products into BehaviorSubject
+    }
+  }
+
+  private saveProductsToLocalStorage(products: Product[]): void {
+    localStorage.setItem('products', JSON.stringify(products));
   }
 
   fetchProducts(): void {
-    const headers = new HttpHeaders({
-      'x-dispense-api-key': 'c2f270b6-6452-4090-bcf7-20d2e97ac405',
-    });
-  
-    const products: Product[] = [];
-    const limit = 100; // Number of items per request
-    let skip = 0; // Start at the first page
-    let total = 0; // Total number of products
-  
-    const fetchPage = () => {
-      this.http
-        .get<any>(`https://api.dispenseapp.com/2023-03/products?limit=${limit}&skip=${skip}`, { headers })
-        .subscribe((response) => {
-          console.log(response.data);
-          if (response.data) {
-            const currentProducts: Product[] = response.data
-              .filter((item: any) => item.quantity > 0) // Only include products with quantity > 0
-              .map((item: any) => ({
-                category: item.cannabisComplianceType || item.cannabisType || '',
-                title: item.name || '',
-                desc: item.description || '',
-                brand: item.brand?.name || '',
-                strainType: item.cannabisStrain || '',
-                thc: item.description?.split('\n')[0] || '',
-                weight: item.weight || '',
-                price: item.price || '',
-                image: item.image || item.images?.[0] || '',
-              }));
-  
-            products.push(...currentProducts);
-            skip += limit; // Increment the skip for the next page
-            total = response.count; // Total number of items from the API
-  
-            if (skip < total) {
-              // Fetch the next page if there are more products
-              fetchPage();
-            } else {
-              // All products fetched
-              this.products.next(products); // Update BehaviorSubject
-              console.log(products); // Verify all products are fetched
-            }
-          }
-        });
-    };
-  
-    // Start fetching the first page
-    fetchPage();
+    if (this.products.value.length > 0) {
+      console.log('Products already loaded from local storage.');
+      return;
+    }
+
+    this.http.get<Product[]>('http://localhost:3333/api/products/all-products').subscribe(
+      (products) => {
+        this.products.next(products); // Update BehaviorSubject
+        this.saveProductsToLocalStorage(products); // Save to local storage
+        console.log(products); // Verify all products are fetched
+      },
+      (error) => {
+        console.error('Error fetching products from backend:', error);
+      }
+    );
   }
   
-
   getProducts(): Observable<Product[]> {
     return this.products$;
   }

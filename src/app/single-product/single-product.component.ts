@@ -45,7 +45,7 @@ export class SingleProductComponent implements OnInit {
 
   getDescription(): string {
     if (!this.currentProduct.desc) {
-      return 'Description Goes Here...';
+      return '';
     }
     return this.showFullDescription || this.currentProduct.desc.length <= 75
       ? this.currentProduct.desc
