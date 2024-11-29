@@ -1,10 +1,9 @@
 export type ProductCategory =
   | 'FLOWER'
-  | 'PRE-ROLL'
-  | 'VAPORIZER'
-  | 'CONCENTRATE'
-  | 'TOPICAL'
-  | 'TINCTURE'
-  | 'EDIBLE'
-  | 'SPECIAL'
-  | 'CONCIERGE';
+  | 'PRE_ROLLS'
+  | 'VAPORIZERS'
+  | 'CONCENTRATES'
+  | 'BEVERAGES'
+  | 'TINCTURES'
+  | 'EDIBLES'
+  | 'ACCESSORIES';

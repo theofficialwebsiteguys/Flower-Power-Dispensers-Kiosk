@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Product } from './product/product.model';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 
@@ -31,21 +31,39 @@ export class ProductsService {
   currentProductFilters$ = this.currentProductFilters.asObservable();
 
   constructor(private http: HttpClient, private route: Router) {
-    this.products.next(this.getProductsList());
+    this.loadProductsFromLocalStorage();
+  }
+
+  private loadProductsFromLocalStorage(): void {
+    const storedProducts = localStorage.getItem('products');
+    if (storedProducts) {
+      const parsedProducts: Product[] = JSON.parse(storedProducts);
+      this.products.next(parsedProducts); // Load products into BehaviorSubject
+    }
+  }
+
+  private saveProductsToLocalStorage(products: Product[]): void {
+    localStorage.setItem('products', JSON.stringify(products));
   }
 
   fetchProducts(): void {
-    // const payload = {
-    //   businessId: '1', // Replace with your business ID logic
-    //   businessName: 'Flower Power Dispensers', // Replace with your business name logic
-    // };
-    // this.http
-    //   .get<Product[]>('https://your-api-endpoint.com/products', {payload})
-    //   .subscribe((data) => {
-    //     this.products.next(data); // Updates the BehaviorSubject with new data
-    //   });
-  }
+    if (this.products.value.length > 0) {
+      console.log('Products already loaded from local storage.');
+      return;
+    }
 
+    this.http.get<Product[]>('http://localhost:3333/api/products/all-products').subscribe(
+      (products) => {
+        this.products.next(products); // Update BehaviorSubject
+        this.saveProductsToLocalStorage(products); // Save to local storage
+        console.log(products); // Verify all products are fetched
+      },
+      (error) => {
+        console.error('Error fetching products from backend:', error);
+      }
+    );
+  }
+  
   getProducts(): Observable<Product[]> {
     return this.products$;
   }
@@ -171,14 +189,13 @@ export class ProductsService {
   getCategories(): ProductCategory[] {
     return [
       'FLOWER',
-      'PRE-ROLL',
-      'CONCENTRATE',
-      'VAPORIZER',
-      'TOPICAL',
-      'TINCTURE',
-      'EDIBLE',
-      'SPECIAL',
-      'CONCIERGE'
+      'PRE_ROLLS',
+      'CONCENTRATES',
+      'VAPORIZERS',
+      'BEVERAGES',
+      'TINCTURES',
+      'EDIBLES',
+      'ACCESSORIES',
     ];
   }
 
