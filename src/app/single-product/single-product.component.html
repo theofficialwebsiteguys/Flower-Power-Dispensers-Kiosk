@@ -3,19 +3,25 @@
     <ion-icon name="arrow-back-outline"></ion-icon>
   </div>
   <div class="image-container">
-    <img [src]="currentProduct.image || 'assets/default.jpg'" alt="Product Image" />
+    <img
+      [src]="currentProduct.image || 'assets/default.jpg'"
+      alt="Product Image"
+    />
   </div>
   <div class="product-info">
     <p class="brand">{{ currentProduct.brand }}</p>
     <h2 class="title">{{ currentProduct.title }}</h2>
     <span class="price">${{ currentProduct.price }}</span>
-    <p class="strain">{{ currentProduct.strainType }} - THC: {{ currentProduct.thc }}%</p>
+    <p class="strain">
+      {{ currentProduct.strainType.toLowerCase() }} - THC:
+      {{ currentProduct.thc }}%
+    </p>
     <p class="description">
       {{ getDescription() }}
       <span class="see-more" (click)="toggleDescription()">
-        {{ showFullDescription ? 'See Less' : 'See More' }}
+        {{ showFullDescription ? "See Less" : "See More" }}
       </span>
     </p>
-    <span class="weight">{{ currentProduct.weight }} g</span>
+    <span class="weight">{{ currentProduct.weight }}</span>
   </div>
 </div>

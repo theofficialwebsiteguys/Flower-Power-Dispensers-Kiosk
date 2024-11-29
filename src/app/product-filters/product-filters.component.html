@@ -1,5 +1,5 @@
 <div class="button-container">
-  <ion-button (click)="setOpen(true)" color="dark">Sort + Filter</ion-button>
+  <ion-button (click)="setOpen(true)">Sort + Filter</ion-button>
 </div>
 
 <ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="setOpen(false)">
@@ -122,7 +122,6 @@
             [pin]="true"
             [value]="filters.potency.thc"
             [(ngModel)]="filters.potency.thc"
-            color="dark"
             (ionChange)="handleFilterUpdate()"
           ></ion-range>
         </ion-row>
