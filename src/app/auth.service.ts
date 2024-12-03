@@ -20,7 +20,9 @@ export class AuthService {
   }
 
   // API URLs (replace with your API endpoints)
-  private apiUrl = 'http://localhost:3333/api/users'; 
+  //private apiUrl = 'http://localhost:3333/api/users'; 
+  private apiUrl = 'https://dispensary-api-ac9613fa4c11.herokuapp.com/api/users'; 
+
 
    // Observable for user info
   getUserInfo(): any {

@@ -52,7 +52,7 @@ export class ProductsService {
       return;
     }
 
-    this.http.get<Product[]>('http://localhost:3333/api/products/all-products').subscribe(
+    this.http.get<Product[]>('https://dispensary-api-ac9613fa4c11.herokuapp.com/api/products/all-products').subscribe(
       (products) => {
         this.products.next(products); // Update BehaviorSubject
         this.saveProductsToLocalStorage(products); // Save to local storage
