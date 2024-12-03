@@ -185,7 +185,6 @@ export class AuthService {
       Authorization: sessionData?.token, // Use the stored token
     });
 
-    return; // TODO REMOVE
     console.log(sessionData);
     this.http
       .get<{ valid: boolean }>(`${this.apiUrl}/validate-session`, { headers })

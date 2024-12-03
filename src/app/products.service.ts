@@ -52,18 +52,20 @@ export class ProductsService {
       return;
     }
 
-    this.http.get<Product[]>('http://localhost:3333/api/products/all-products').subscribe(
-      (products) => {
-        this.products.next(products); // Update BehaviorSubject
-        this.saveProductsToLocalStorage(products); // Save to local storage
-        console.log(products); // Verify all products are fetched
-      },
-      (error) => {
-        console.error('Error fetching products from backend:', error);
-      }
-    );
+    this.http
+      .get<Product[]>('http://localhost:3333/api/products/all-products')
+      .subscribe(
+        (products) => {
+          this.products.next(products); // Update BehaviorSubject
+          this.saveProductsToLocalStorage(products); // Save to local storage
+          console.log(products); // Verify all products are fetched
+        },
+        (error) => {
+          console.error('Error fetching products from backend:', error);
+        }
+      );
   }
-  
+
   getProducts(): Observable<Product[]> {
     return this.products$;
   }
@@ -96,9 +98,13 @@ export class ProductsService {
             return (
               category === this.currentCategory.value &&
               (isEmpty(brands) || brands.includes(brand)) &&
-              (isEmpty(strains) || strains.includes(strainType)) &&
-              (isEmpty(weights) || weights.includes(weight)) &&
-              isInRange(Number(thc), thcRange)
+              (!strainType ||
+                isEmpty(strains) ||
+                strains.some((s) =>
+                  strainType.toUpperCase().split(' ').includes(s)
+                )) &&
+              (!weight || isEmpty(weights) || weights.includes(weight)) &&
+              (!thc || isInRange(Number(thc.split('%')[0]), thcRange))
             );
           })
           .sort(

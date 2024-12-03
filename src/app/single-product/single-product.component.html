@@ -14,7 +14,8 @@
     <span class="price">{{ currentProduct.price | currency }}</span>
     <p class="strain">
       {{ currentProduct.strainType }}
-      {{ currentProduct.thc ? "- " + currentProduct.thc : "" }}
+      {{ currentProduct.strainType && currentProduct.thc ? "-" : "" }}
+      {{ currentProduct.thc }}
     </p>
     <p class="description">
       {{ getDescription() }}
