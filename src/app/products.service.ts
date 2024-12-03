@@ -3,6 +3,7 @@ import { Product } from './product/product.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 import { ProductCategory } from './product-category/product-category.model';
 import {
@@ -53,7 +54,7 @@ export class ProductsService {
     }
 
     this.http
-      .get<Product[]>('http://localhost:3333/api/products/all-products')
+      .get<Product[]>(`${environment.apiUrl}/products/all-products`)
       .subscribe(
         (products) => {
           this.products.next(products); // Update BehaviorSubject

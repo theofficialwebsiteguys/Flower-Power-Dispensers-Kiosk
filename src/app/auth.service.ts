@@ -10,6 +10,7 @@ import {
   tap,
   throwError,
 } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -26,8 +27,7 @@ export class AuthService {
     }
   }
 
-  // API URLs (replace with your API endpoints)
-  private apiUrl = 'http://localhost:3333/api/users';
+  private apiUrl = `${environment.apiUrl}/users`;
 
   // Observable for user info
   getUserInfo(): any {
