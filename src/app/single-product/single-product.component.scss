@@ -113,3 +113,33 @@ button:hover,
 .back-button:hover {
   color: var(--ion-color-primary-shade);
 }
+
+.quantity-counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 16px 0;
+
+  button {
+    background-color: #ddd;
+    border: none;
+    padding: 8px 12px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+
+  span {
+    margin: 0 12px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+ion-button {
+  margin-top: 16px;
+}

@@ -13,8 +13,7 @@
       </p>
     </div>
 
-    <ion-button expand="block" href="/auth?mode=register"
-      >Sign Up for Free</ion-button
+    <ion-button expand="block" routerLink="/auth" [queryParams]="{ mode: 'register' }">Sign Up for Free</ion-button
     >
   </div>
 </ion-content>

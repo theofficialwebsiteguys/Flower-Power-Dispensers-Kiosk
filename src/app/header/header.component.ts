@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-header',
@@ -11,10 +12,12 @@ import { SettingsService } from '../settings.service';
 export class HeaderComponent {
   isLoggedIn = false;
   darkModeEnabled = false;
+  userPoints = 120;
 
   constructor(
     private authService: AuthService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -31,5 +34,10 @@ export class HeaderComponent {
   // Call the AuthService's logout function
   logout() {
     this.authService.logout();
+  }
+
+  goToCart() {
+    // Replace with your navigation logic
+    this.router.navigateByUrl('/cart');
   }
 }

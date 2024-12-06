@@ -10,6 +10,7 @@ import { ProductCategoriesComponent } from '../product-categories/product-catego
 import { ProductCategoryComponent } from '../product-category/product-category.component';
 import { ProductFiltersComponent } from '../product-filters/product-filters.component';
 import { BannerCarouselComponent } from '../banner-carousel/banner-carousel.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { BannerCarouselComponent } from '../banner-carousel/banner-carousel.comp
     ProductFiltersComponent,
     BannerCarouselComponent
   ],
-  imports: [CommonModule, IonicModule, FormsModule],
+  imports: [CommonModule, IonicModule, FormsModule, RouterModule],
   exports: [
     HeaderComponent,
     ProductListComponent,

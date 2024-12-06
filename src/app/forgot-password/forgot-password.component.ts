@@ -17,9 +17,9 @@ export class ForgotPasswordComponent {
   darkModeEnabled: boolean = false;
 
   constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private settingsService: SettingsService
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly settingsService: SettingsService
   ) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -39,13 +39,12 @@ export class ForgotPasswordComponent {
     }
 
     const email = this.forgotPasswordForm.value.email;
-    this.errorMessage = ''; // Clear previous errors
+    this.errorMessage = ''; 
 
-    // Call the AuthService to reset the password
     this.authService.sendPasswordReset(email).subscribe({
       next: () => {
-        this.emailSent = true; // Show confirmation message
-        this.errorMessage = ''; // Clear any previous error message
+        this.emailSent = true;
+        this.errorMessage = '';
       },
       error: (err) => {
         this.errorMessage = this.getErrorMessage(err);

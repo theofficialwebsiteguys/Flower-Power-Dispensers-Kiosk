@@ -1,0 +1,14 @@
+<ion-content>
+  <app-header></app-header>
+
+  <div *ngIf="!showCheckout">
+    <app-cart-items></app-cart-items>
+    <div class="checkout-container">
+      <ion-button class="checkout-button" (click)="checkout()">Checkout</ion-button>
+    </div>
+  </div>
+
+  <div *ngIf="showCheckout">
+    <app-checkout [checkoutUrl]="checkoutUrl" (back)="removeCheckout()"></app-checkout>
+  </div>
+</ion-content>

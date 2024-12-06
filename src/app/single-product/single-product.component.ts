@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { ProductsService } from '../products.service';
 
 import { Product } from '../product/product.model';
+import { CartService } from '../cart.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-single-product',
@@ -13,6 +15,7 @@ import { Product } from '../product/product.model';
 })
 export class SingleProductComponent implements OnInit {
   currentProduct: Product = {
+    id: '',
     category: '',
     title: '',
     brand: '',
@@ -25,9 +28,14 @@ export class SingleProductComponent implements OnInit {
   };
 
   showFullDescription = false;
+  quantity = 1; // Initialize quantity
+
+  isLoggedIn: boolean = false;
 
   constructor(
     private productService: ProductsService,
+    private cartService: CartService,
+    private authService: AuthService,
     private location: Location,
     private router: Router
   ) {}
@@ -36,6 +44,10 @@ export class SingleProductComponent implements OnInit {
     this.productService.currentProduct$.subscribe((product) => {
       if (product) this.currentProduct = product;
       else this.router.navigateByUrl('/home');
+    });
+
+    this.authService.isLoggedIn().subscribe(status => {
+      this.isLoggedIn = status;
     });
   }
 
@@ -55,4 +67,28 @@ export class SingleProductComponent implements OnInit {
   goBack() {
     this.location.back();
   }
+
+   // Increment quantity
+   incrementQuantity() {
+    this.quantity++;
+  }
+
+  // Decrement quantity (ensure it doesn't go below 1)
+  decrementQuantity() {
+    if (this.quantity > 1) {
+      this.quantity--;
+    }
+  }
+
+  // Add the current product to the cart
+  addToCart() {
+    const cartItem = {
+      ...this.currentProduct,
+      quantity: this.quantity,
+    };
+
+    this.cartService.addToCart(cartItem); // Use the CartService
+    alert('Item added to cart!');
+  }
+
 }

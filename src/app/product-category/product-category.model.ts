@@ -7,3 +7,8 @@ export type ProductCategory =
   | 'TINCTURES'
   | 'EDIBLES'
   | 'ACCESSORIES';
+
+  export interface CategoryWithImage {
+    category: ProductCategory;
+    imageUrl: string;
+  }

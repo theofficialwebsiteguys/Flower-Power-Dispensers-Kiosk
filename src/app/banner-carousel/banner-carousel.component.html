@@ -1,11 +1,11 @@
 <div class="carousel-container">
   <div
-    class="carousel-slide"
     *ngFor="let banner of banners; let i = index"
-    [class.active]="i === currentIndex"
+    [ngClass]="{'active': i === currentIndex}"
+    class="carousel-slide"
   >
     <div class="banner-content">
-      <img [src]="banner.image" alt="" />
+      <img [src]="banner.image" alt="Banner" />
     </div>
   </div>
 </div>

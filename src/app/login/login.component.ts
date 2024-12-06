@@ -14,14 +14,14 @@ export class LoginComponent {
   loginForm: FormGroup;
   loading = false;
   submitted = false;
-  error = ''; // Error message to display
+  error = '';
   darkModeEnabled: boolean = false;
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private settingsService: SettingsService
+    private readonly fb: FormBuilder,
+    private readonly router: Router,
+    private readonly authService: AuthService,
+    private readonly settingsService: SettingsService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -30,50 +30,34 @@ export class LoginComponent {
   }
 
   ngOnInit() {
-    this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
-      this.darkModeEnabled = isDarkModeEnabled;
-    });
+    this.settingsService.isDarkModeEnabled$.subscribe(mode => this.darkModeEnabled = mode);
   }
+
 
   onSubmit() {
     this.submitted = true;
 
-    // Exit early if the form is invalid
     if (this.loginForm.invalid) {
       this.error = 'Please fill in all required fields correctly.';
       return;
     }
 
     this.loading = true;
-    this.error = ''; // Clear any existing errors
+    this.error = ''; 
 
-    // Build the login payload
-    const loginPayload = {
-      email: this.loginForm.get('email')?.value,
-      password: this.loginForm.get('password')?.value,
-    };
-
-    // Call the AuthService's login method
-    this.authService.login(loginPayload).subscribe({
-      next: () => {
-        this.loading = false;
-        this.router.navigate(['/rewards']); // Redirect after successful login
-      },
+    this.authService.login(this.loginForm.value).subscribe({
+      next: () => this.router.navigate(['/rewards']),
       error: (err) => {
         this.loading = false;
-        this.error = this.getErrorMessage(err); // Set user-friendly error message
+        this.error = this.getErrorMessage(err);
       },
     });
   }
 
   private getErrorMessage(err: any): string {
-    if (err.status === 401) {
-      return 'Invalid email or password. Please try again.';
-    } else if (err.status === 500) {
-      return 'Server error. Please try again later.';
-    } else if (err.status === 0) {
-      return 'Network error. Please check your internet connection.';
-    }
+    if (err.status === 401) return 'Invalid email or password. Please try again.';
+    if (err.status === 500) return 'Server error. Please try again later.';
+    if (err.status === 0) return 'Network error. Please check your internet connection.';
     return 'An unexpected error occurred. Please try again.';
   }
 }

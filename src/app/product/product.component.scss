@@ -31,3 +31,33 @@ img {
 .capitalize {
   text-transform: capitalize;
 }
+
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  justify-content: flex-end;
+
+  button {
+    background-color: #ddd;
+    border: none;
+    padding: 5px 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #ccc;
+    }
+  }
+
+  span {
+    margin: 0 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+}
+
+ion-button {
+  margin-top: 10px;
+}

@@ -2,46 +2,22 @@ import { Component, OnInit } from '@angular/core';
 
 import { ProductsService } from '../products.service';
 
-import { ProductCategory } from '../product-category/product-category.model';
+import { CategoryWithImage, ProductCategory } from '../product-category/product-category.model';
 import { Product } from '../product/product.model';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-card-slider',
   templateUrl: './card-slider.component.html',
   styleUrls: ['./card-slider.component.scss'],
 })
-export class CardSliderComponent {
-  categories: { title: string; category?: ProductCategory }[] = [
-    {
-      title: 'Flower',
-      category: 'FLOWER',
-    },
-    {
-      title: 'Pre-Rolls',
-      category: 'PRE_ROLLS',
-    },
-    {
-      title: 'Edibles',
-      category: 'EDIBLES',
-    },
-    {
-      title: 'Vaporizers',
-      category: 'VAPORIZERS',
-    },
-    {
-      title: 'Accessories',
-      category: 'ACCESSORIES',
-    },
-
-    // Add more categories as needed
-  ];
-
+export class CardSliderComponent implements OnInit {
   products: Product[] = [];
+  categories: CategoryWithImage[] = [];
 
-  constructor(private productService: ProductsService) {}
+  constructor(private readonly productService: ProductsService) {}
 
   ngOnInit() {
+    this.categories = this.productService.getCategories();
     this.productService.getProducts().subscribe((products) => {
       this.products = products;
       console.log(this.products);
@@ -56,7 +32,6 @@ export class CardSliderComponent {
   }
 
   updateProductDisplay(product: Product) {
-    // Navigate to the desired route, e.g., /product-details/:id
     this.productService.updateCurrentProduct(product);
   }
 }

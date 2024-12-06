@@ -163,39 +163,34 @@ export class AuthService {
   }
 
   resetPassword(password: string, token: string | null): Observable<void> {
-    return this.http.post<void>(`${this.apiUrl}/reset-password`, {
-      password,
-      token,
-    });
+    return this.http.post<void>(`${this.apiUrl}/reset-password?token=${token}`, { password });
   }
 
   validateSession(): void {
     const sessionData = this.getSessionData();
 
     if (!sessionData || this.isTokenExpired(sessionData.expiry)) {
-      // No session or expired session
-      this.authStatus.next(false); // Notify subscribers that the user is logged out
+      this.authStatus.next(false); 
       this.removeToken();
       this.removeUser();
       return;
     }
 
-    // If token exists, validate it against the backend
     const headers = new HttpHeaders({
-      Authorization: sessionData?.token, // Use the stored token
+      Authorization: sessionData?.token, 
     });
 
     console.log(sessionData);
     this.http
       .get<{ valid: boolean }>(`${this.apiUrl}/validate-session`, { headers })
       .pipe(
-        map((response) => response.valid), // Transform the response to just the boolean
+        map((response) => response.valid), 
         tap((isValid) => {
           if (isValid) {
-            this.authStatus.next(true); // Session is valid
+            this.authStatus.next(true); 
           } else {
-            this.authStatus.next(false); // Session is invalid
-            this.removeToken(); // Clear invalid session data
+            this.authStatus.next(false); 
+            this.removeToken();
             this.removeUser();
           }
         })
@@ -204,8 +199,8 @@ export class AuthService {
   }
 
   toggleUserNotifications(userId: string): Observable<any> {
-    const sessionData = localStorage.getItem('sessionData'); // Retrieve the session data
-    const token = sessionData ? JSON.parse(sessionData).token : null; // Extract the token
+    const sessionData = localStorage.getItem('sessionData'); 
+    const token = sessionData ? JSON.parse(sessionData).token : null; 
 
     if (!token) {
       this.logout();
@@ -213,16 +208,16 @@ export class AuthService {
     }
 
     const headers = new HttpHeaders({
-      Authorization: token, // Add Authorization header
+      Authorization: token, 
     });
 
-    const payload = { userId }; // Pass the userId in the request body
+    const payload = { userId };
 
     return this.http
       .put(`${this.apiUrl}/toggle-notifications`, payload, { headers })
       .pipe(
         tap((response: any) => {
-          // Call another function here
+
           this.storeUserInfo(response.user);
         }),
         catchError((error) => {
@@ -234,16 +229,13 @@ export class AuthService {
 
   validateResetToken(token: string) {
     return this.http
-      .get<{ valid: boolean; user?: any }>(
-        `${this.apiUrl}/validate-reset-token`,
-        {
-          params: { token }, // Pass token as a query parameter
-        }
-      )
+      .get<{ success: boolean; message: string }>(`${this.apiUrl}/validate-reset-token`, {
+        params: { token }
+      })
       .pipe(
         tap((response) => {
-          if (response.valid && response.user) {
-            this.storeUserInfo(response.user); // Optional: Save user info if needed
+          if (response.success) {
+            console.log('Reset token validation successful:', response.message);
           }
         }),
         catchError((error) => {
@@ -252,4 +244,6 @@ export class AuthService {
         })
       );
   }
+  
+
 }

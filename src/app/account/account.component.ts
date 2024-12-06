@@ -10,42 +10,60 @@ import { SettingsService } from '../settings.service';
 })
 export class AccountComponent implements OnInit {
   @Input() user: any;
-
-  allowNotifications: boolean = false; // Tracks the current notification setting
+  allowNotifications: boolean = false;
   darkModeEnabled: boolean = false;
-  userId: string = ''; // Store the current user's ID
+
+  userInfo: any[] = [];
+  settings: any[] = [];
+  isLoggedIn: boolean = false;
 
   constructor(
-    private authService: AuthService,
-    private settingsService: SettingsService
+    private readonly authService: AuthService,
+    private readonly settingsService: SettingsService
   ) {}
 
   ngOnInit(): void {
-    // Retrieve the user and their notification settings on component load
-    const user = this.authService.getCurrentUser();
-
-    if (user) {
-      this.userId = user.id;
-      this.allowNotifications = user.allow_notifications; // Set toggle state based on user data
-    } else {
-      // Handle cases where the user is not logged in
-      this.authService.validateSession();
-      this.authService.getUserInfo().subscribe((userInfo: any) => {
-        if (userInfo) {
-          this.userId = userInfo.id;
-          this.allowNotifications = userInfo.allow_notifications;
-        }
-      });
+    if (this.user) {
+      this.populateUserInfo(this.user);
+      this.darkModeEnabled = this.settingsService.getDarkModeEnabled();
+      this.setupSettings();
     }
-
-    this.darkModeEnabled = this.settingsService.getDarkModeEnabled();
   }
 
-  onToggleNotifications(event: any): void {
-    this.authService.toggleUserNotifications(this.userId).subscribe({
+  private populateUserInfo(user: any) {
+    this.userInfo = [
+      {
+        icon: 'person-outline',
+        label: 'Name',
+        value: `${user.fname} ${user.lname}`,
+      },
+      { icon: 'mail-outline', label: 'Email', value: user.email },
+      { icon: 'call-outline', label: 'Phone', value: user.phone },
+    ];
+  }
+
+  private setupSettings() {
+    this.settings = [
+      {
+        id: 'notifications',
+        label: 'Notifications',
+        value: this.allowNotifications,
+        action: (value: boolean) => this.onToggleNotifications(value),
+      },
+      {
+        id: 'darkMode',
+        label: 'Dark Mode',
+        value: this.darkModeEnabled,
+        action: (value: boolean) => this.onToggleDarkMode(value),
+      },
+    ];
+  }
+
+  onToggleNotifications(value: boolean): void {
+    this.authService.toggleUserNotifications(this.user.id).subscribe({
       next: () => {
         console.log('Notification setting updated successfully');
-        this.allowNotifications = event.detail.checked;
+        this.allowNotifications = value;
       },
       error: (err) => {
         console.error('Failed to update notification setting:', err);
@@ -53,8 +71,12 @@ export class AccountComponent implements OnInit {
     });
   }
 
-  onToggleDarkMode(event: any) {
-    this.darkModeEnabled = event.detail.checked;
+  onToggleDarkMode(value: boolean): void {
+    this.darkModeEnabled = value;
     this.settingsService.setDarkModeEnabled(this.darkModeEnabled);
+  }
+
+  logout() {
+    this.authService.logout();
   }
 }

@@ -1,7 +1,7 @@
 <div *ngFor="let category of categories" class="category-section">
   <div class="section-header">
-    <h2>{{ category.title }}</h2>
-    <a (click)="updateCategory(category.category)" class="view-all" *ngIf="category.title !== 'Concierge Picks' && category.title !== 'Specials'">
+    <h2>{{ category.category === "PRE_ROLLS" ? "Pre Rolls" : category.category.toLowerCase() }}</h2>
+    <a (click)="updateCategory(category.category)" class="view-all">
       <ion-icon name="arrow-forward-outline" class="arrow-icon"></ion-icon>
     </a>
   </div>
@@ -11,7 +11,7 @@
         <div class="slide"  *ngIf="product.category == category.category">
           <div class="card" (click)="updateProductDisplay(product)">
             <div class="image-container">
-              <img [src]="product.image" alt="Product Image" />
+              <img [src]="product.image" alt="Product" />
             </div>
           </div>
         </div>
