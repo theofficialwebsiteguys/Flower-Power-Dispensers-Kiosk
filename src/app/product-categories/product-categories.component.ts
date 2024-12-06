@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { ProductsService } from '../products.service';
 
-import { ProductCategory } from '../product-category/product-category.model';
+import { CategoryWithImage } from '../product-category/product-category.model';
 
 @Component({
   selector: 'app-product-categories',
@@ -12,7 +12,7 @@ import { ProductCategory } from '../product-category/product-category.model';
 export class ProductCategoriesComponent implements OnInit {
   constructor(private productService: ProductsService) {}
 
-  categories: ProductCategory[] = [];
+  categories: CategoryWithImage[] = [];
 
   ngOnInit() {
     this.categories = this.productService.getCategories();

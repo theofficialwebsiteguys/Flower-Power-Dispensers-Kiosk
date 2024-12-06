@@ -1,15 +1,24 @@
 <ion-item (click)="updateProductDisplay()">
   <ion-row class="container">
-    <img [src]="product.image" />
+    <img [src]="product.image" alt="Product" />
     <ion-label class="info">
       <p>{{ product.brand }}</p>
       <h1>{{ product.title }}</h1>
-      <p class="capitalize">{{ product.strainType.toLowerCase() }}</p>
+      <p class="capitalize">{{ product.strainType | lowercase }}</p>
       <p>{{ product.thc }}</p>
       <ion-row class="weightAndPrice">
         <h3>{{ product.weight }}</h3>
         <h2>{{ product.price | currency }}</h2>
       </ion-row>
+
+      <ng-container *ngIf="isLoggedIn">
+        <ion-row class="quantity-controls">
+          <button (click)="adjustQuantity(-1)">-</button>
+          <span>{{ quantity }}</span>
+          <button (click)="adjustQuantity(1)">+</button>
+        </ion-row>
+        <ion-button expand="block" color="primary" (click)="addToCart()">Add to Cart</ion-button>
+      </ng-container>
     </ion-label>
   </ion-row>
 </ion-item>

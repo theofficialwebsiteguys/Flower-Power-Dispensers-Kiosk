@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:3333/api',
+  venue_id: 'df759ba5e7360809',
 };
 
 /*

@@ -7,7 +7,7 @@
     </p>
   </div>
 
-  <ion-button expand="block" href="/auth?mode=register"
+  <ion-button expand="block" routerLink="/auth" [queryParams]="{ mode: 'register' }"
     >Sign Up for Free</ion-button
   >
 

@@ -57,7 +57,7 @@
 
       <!-- Forgot Password -->
       <div class="forgot-password">
-        <a href="/auth?mode=forgot-password">Forgot your password?</a>
+        <a routerLink="/auth" [queryParams]="{ mode: 'forgot-password' }">Forgot your password?</a>
       </div>
 
       <!-- Submit Button -->
@@ -73,7 +73,7 @@
 
     <p class="login-link">
       Don’t have an account?
-      <a href="/auth?mode=register">Sign Up</a>
+      <a routerLink="/auth" [queryParams]="{ mode: 'register' }">Sign Up</a>
     </p>
   </div>
 </div>

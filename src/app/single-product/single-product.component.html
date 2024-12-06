@@ -29,4 +29,18 @@
     </p>
     <span class="weight">{{ currentProduct.weight }}</span>
   </div>
+
+  <ng-container *ngIf="isLoggedIn">
+    <div class="quantity-counter">
+      <button (click)="decrementQuantity()">-</button>
+      <span>{{ quantity }}</span>
+      <button (click)="incrementQuantity()">+</button>
+     </div>
+  
+  
+    <ion-button expand="block" (click)="addToCart()">
+      Add to Cart
+    </ion-button>
+  </ng-container>
+
 </div>

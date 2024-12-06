@@ -1,0 +1,25 @@
+<div class="cart-container">
+  <div class="cart-item" *ngFor="let item of cartItems">
+    <div class="item-image">
+      <img [src]="item.image" alt="{{ item.title }}" />
+    </div>
+    <div class="item-details">
+      <h4>{{ item.title }}</h4>
+      <div class="item-price">{{ item.price | currency }}</div>
+      <div class="quantity-controls">
+        <button (click)="updateQuantity(item, -1)">-</button>
+        <span>{{ item.quantity }}</span>
+        <button (click)="updateQuantity(item, 1)">+</button>
+      </div>
+    </div>
+  </div>
+
+  <ion-button class="add-more-button" routerLink="/home"
+    >+ Add more items</ion-button
+  >
+
+  <div class="subtotal">
+    <span>Subtotal</span>
+    <span>{{ calculateSubtotal() | currency }}</span>
+  </div>
+</div>

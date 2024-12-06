@@ -241,7 +241,7 @@
 
     <p class="login-link">
       Already have an account?
-      <a href="/auth?mode=login">Login</a>
+      <a routerLink="/auth" [queryParams]="{ mode: 'login' }">Login</a>
     </p>
   </div>
 </div>

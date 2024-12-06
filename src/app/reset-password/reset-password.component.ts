@@ -1,7 +1,6 @@
-import { HttpClient } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -12,14 +11,13 @@ import { AuthService } from '../auth.service';
 export class ResetPasswordComponent  implements OnInit {
 
   resetPasswordForm: FormGroup;
-  token: string | null = "";
-  errorMessage: string | null = null; // For error messages
+  @Input() token: string | null = "";
+  errorMessage: string | null = null;
 
   constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private authService: AuthService,
-    private router: Router
+    private readonly fb: FormBuilder,
+    private readonly authService: AuthService,
+    private readonly router: Router
   ) {
     this.resetPasswordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -27,30 +25,28 @@ export class ResetPasswordComponent  implements OnInit {
     });
   }
 
-  ngOnInit() {
-    // Get the token from the query parameters
-    this.route.queryParamMap.subscribe((params) => {
-      this.token = params.get('token');
+  ngOnInit(): void {
+    if (this.token) {
+      this.authService.validateResetToken(this.token).subscribe({
+        next: (response) => {
+          if (response.success) {
+            console.log(response.message);
+          } else {
+            this.handleError('Invalid or expired reset token.');
+          }
+        },
+        error: () => {
+          this.handleError('Failed to validate the reset token. Please try again.');
+        },
+      });
+    } else {
+      this.handleError('Invalid or missing reset token.');
+    }
+  }
 
-      if (this.token) {
-        // Validate the token with the backend
-        this.authService.validateResetToken(this.token).subscribe({
-          next: (response) => {
-            if (!response.valid) {
-              this.errorMessage = 'Invalid or expired reset token.';
-              this.router.navigateByUrl('/rewards');
-            }
-          },
-          error: () => {
-            this.errorMessage = 'Failed to validate the reset token. Please try again.';
-            this.router.navigateByUrl('/rewards');
-          },
-        });
-      } else {
-        this.errorMessage = 'Invalid or missing reset token.';
-        this.router.navigateByUrl('/rewards');
-      }
-    });
+  private handleError(message: string): void {
+    this.errorMessage = message;
+    this.router.navigateByUrl('/rewards'); // Redirecting to another page if error occurs
   }
 
   onSubmit() {
@@ -66,8 +62,7 @@ export class ResetPasswordComponent  implements OnInit {
       return;
     }
 
-    // Call the AuthService to reset the password
-    this.errorMessage = null; // Clear previous errors
+    this.errorMessage = null; 
     this.authService.resetPassword(newPassword, this.token).subscribe({
       next: () => {
         alert('Password reset successful!');

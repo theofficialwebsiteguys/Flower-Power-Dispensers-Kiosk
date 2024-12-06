@@ -1,5 +1,5 @@
 <div class="points-container">
-  <!-- Points Header -->
+
   <div class="points-header">
     <span class="points-value">{{ points }} pts</span>
     <p class="membership-status">
@@ -7,23 +7,16 @@
     </p>
   </div>
 
-  <!-- Progress Bar -->
   <div class="progress-bar-container">
     <div class="progress-bar" [style.width.%]="progressPercentage"></div>
   </div>
 
-  <!-- Progress Steps -->
   <div class="progress-steps">
-    <span>0</span>
-    <span>1500</span>
-    <span>3000</span>
-    <span>4500</span>
-    <span>{{ maxPoints }}</span>
+    <span *ngFor="let step of progressSteps">{{ step }}</span>
   </div>
 
   <app-redeem-products></app-redeem-products>
 
-  <!-- Membership Details -->
   <div class="rewards-details">
     <div class="reward-item">
       <ion-icon name="medal-outline"></ion-icon>

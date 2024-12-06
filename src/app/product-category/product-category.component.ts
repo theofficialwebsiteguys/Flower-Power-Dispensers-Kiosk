@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 import { ProductsService } from '../products.service';
 
-import { ProductCategory } from './product-category.model';
+import { CategoryWithImage, ProductCategory } from './product-category.model';
 
 @Component({
   selector: 'app-product-category',
@@ -12,7 +12,7 @@ import { ProductCategory } from './product-category.model';
 export class ProductCategoryComponent implements OnInit {
   constructor(private productService: ProductsService) {}
 
-  @Input() category: ProductCategory = 'FLOWER';
+  @Input() category: CategoryWithImage = {category: 'FLOWER', imageUrl: ''};
 
   ngOnInit() {}
 

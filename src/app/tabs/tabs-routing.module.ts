@@ -33,6 +33,11 @@ const routes: Routes = [
           import('../auth/auth.module').then((m) => m.AuthPageModule),
       },
       {
+        path: 'cart',
+        loadChildren: () =>
+          import('../cart/cart.module').then((m) => m.CartPageModule),
+      },
+      {
         path: '',
         redirectTo: '/home',
         pathMatch: 'full',
