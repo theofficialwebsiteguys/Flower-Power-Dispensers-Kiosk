@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   BehaviorSubject,
@@ -11,6 +11,7 @@ import {
   throwError,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { FcmService } from './fcm.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,7 @@ export class AuthService {
 
   private authStatus = new BehaviorSubject<boolean>(this.hasToken()); // Observable for auth status
 
-  constructor(private http: HttpClient, private router: Router) {
+  constructor(private http: HttpClient, private router: Router, @Inject(FcmService) private fcmService: FcmService) {
     const user = localStorage.getItem('user_info');
     if (user) {
       this.userSubject.next(JSON.parse(user));
@@ -78,6 +79,8 @@ export class AuthService {
             // Save the session details or token
             this.storeSessionData(response.sessionId, response.expiresAt);
             this.authStatus.next(true); // Notify subscribers of auth status
+            this.router.navigateByUrl('/rewards')
+            this.fcmService.initPushNotifications(credentials.email);
           }
           if (response.user) {
             this.storeUserInfo(response.user); // Save user information locally
@@ -170,26 +173,26 @@ export class AuthService {
     const sessionData = this.getSessionData();
 
     if (!sessionData || this.isTokenExpired(sessionData.expiry)) {
-      this.authStatus.next(false); 
+      this.authStatus.next(false);
       this.removeToken();
       this.removeUser();
       return;
     }
 
     const headers = new HttpHeaders({
-      Authorization: sessionData?.token, 
+      Authorization: sessionData?.token,
     });
 
     console.log(sessionData);
     this.http
       .get<{ valid: boolean }>(`${this.apiUrl}/validate-session`, { headers })
       .pipe(
-        map((response) => response.valid), 
+        map((response) => response.valid),
         tap((isValid) => {
           if (isValid) {
-            this.authStatus.next(true); 
+            this.authStatus.next(true);
           } else {
-            this.authStatus.next(false); 
+            this.authStatus.next(false);
             this.removeToken();
             this.removeUser();
           }
@@ -199,8 +202,8 @@ export class AuthService {
   }
 
   toggleUserNotifications(userId: string): Observable<any> {
-    const sessionData = localStorage.getItem('sessionData'); 
-    const token = sessionData ? JSON.parse(sessionData).token : null; 
+    const sessionData = localStorage.getItem('sessionData');
+    const token = sessionData ? JSON.parse(sessionData).token : null;
 
     if (!token) {
       this.logout();
@@ -208,7 +211,7 @@ export class AuthService {
     }
 
     const headers = new HttpHeaders({
-      Authorization: token, 
+      Authorization: token,
     });
 
     const payload = { userId };
@@ -244,6 +247,6 @@ export class AuthService {
         })
       );
   }
-  
+
 
 }

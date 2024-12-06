@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
 
@@ -51,7 +50,7 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
   ) {
     this.registerForm = this.fb.group(
       {
@@ -164,7 +163,7 @@ export class RegisterComponent {
       fname: formData.firstName,
       lname: formData.lastName,
       email: formData.email,
-      dob: formData.dob,
+      dob: dob,
       country: formData.countryCode,
       phone: formData.phone,
       password: formData.password,

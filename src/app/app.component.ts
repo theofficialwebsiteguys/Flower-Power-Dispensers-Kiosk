@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ProductsService } from './products.service';
 import { AuthService } from './auth.service';
 import { SettingsService } from './settings.service';
+import { FcmService } from './fcm.service';
 
 @Component({
   selector: 'app-root',
@@ -24,13 +25,15 @@ export class AppComponent {
   constructor(
     private productService: ProductsService,
     private authService: AuthService,
-    private settingsService: SettingsService
-  ) {}
+    private settingsService: SettingsService,
+    private fcmService: FcmService
+  ) { }
 
   ngOnInit() {
     this.productService.fetchProducts();
     this.authService.validateSession();
     this.settingsService.updateTheme();
+    //this.fcmService.initPushNotifications('test@gmail.com')
   }
 
   onCloseSplash() {
