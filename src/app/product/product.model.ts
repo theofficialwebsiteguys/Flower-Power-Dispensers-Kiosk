@@ -1,9 +1,11 @@
+import { ProductCategory } from "../product-category/product-category.model";
+
 export type Strain = 'HYBRID' | 'INDICA' | 'SATIVA';
 
 export type Product = {
   [key: string]: any;
   id: string;
-  category: string; // .cannabisComplianceType OR .cannabisType
+  category: ProductCategory; // .cannabisComplianceType OR .cannabisType
   title: string; // .name
   desc: string; // .description
   brand: string;  //.brand.name

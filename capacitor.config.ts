@@ -4,7 +4,6 @@ const config: CapacitorConfig = {
   appId: 'com.websiteguys.flowerpower',
   appName: 'flower-power-dispensers',
   webDir: 'www',
-  bundledWebRuntime: false,
   plugins: {
     SplashScreen: {
       launchShowDuration: 0, // Disables Capacitor's default splash screen to use custom Angular component

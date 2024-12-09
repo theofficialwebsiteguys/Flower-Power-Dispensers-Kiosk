@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from './product/product.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { ProductCategory, CategoryWithImage } from './product-category/product-category.model';
@@ -195,21 +195,49 @@ export class ProductsService {
 
   getCategories(): CategoryWithImage[] {
     return [
-      { category: 'FLOWER', imageUrl: 'assets/icons/flower-icon.png' },
-      { category: 'PRE_ROLLS', imageUrl: '' },
+      { category: 'FLOWER', imageUrl: 'assets/icons/flower-icon-resized.png' },
+      { category: 'PRE_ROLLS', imageUrl: 'assets/icons/preroll-icon-resized.png' },
       { category: 'CONCENTRATES', imageUrl: '' },
       { category: 'VAPORIZERS', imageUrl: '' },
-      { category: 'BEVERAGES', imageUrl: 'assets/icons/beverage-icon.png' },
+      { category: 'BEVERAGES', imageUrl: 'assets/icons/beverage-icon-resized.png' },
       { category: 'TINCTURES', imageUrl: '' },
       { category: 'EDIBLES', imageUrl: '' },
-      { category: 'ACCESSORIES', imageUrl: '' },
+      { category: 'ACCESSORIES', imageUrl: 'assets/icons/bong-icon-resized.png' },
     ];
   }
 
-
+  getSimilarItems(): Observable<Product[]> {
+    return this.currentProduct$.pipe(
+      map((currentProduct) => {
+        console.log('Current Product:', currentProduct); // Debugging the current product
+        return currentProduct?.category; // Extract the category
+      }),
+      switchMap((category) => {
+        console.log('Current Category:', category); // Debugging the category
+  
+        // If no category is present, return an empty array
+        if (!category) {
+          return of([]);
+        }
+  
+        return this.products$.pipe(
+          map((productArray) => {
+            console.log('All Products:', productArray); // Debugging all products
+            const filteredProducts = productArray.filter(
+              (product) => product.category === category
+            );
+            console.log('Filtered Products:', filteredProducts); // Debugging filtered products
+            const shuffledProducts = filteredProducts.sort(() => Math.random() - 0.5);
+            return shuffledProducts.slice(0, 5); // Return up to 5 products
+          })
+        );
+      })
+    );
+  }
 
   updateCurrentProduct(product: Product) {
     this.currentProduct.next(product);
+    this.updateCategory(product.category)
     console.log(product);
     this.route.navigateByUrl('/product-display');
   }

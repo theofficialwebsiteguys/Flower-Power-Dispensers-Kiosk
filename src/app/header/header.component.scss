@@ -17,3 +17,12 @@ img {
   margin-left: 8px;
   color: var(--ion-color-primary);
 }
+
+.heading-container {
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Ensure it stays above other content */
+  background: #fff; /* Ensure the header has a background color */
+  padding: 10px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add subtle shadow for separation */
+}

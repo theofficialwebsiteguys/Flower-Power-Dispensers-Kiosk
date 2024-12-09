@@ -3,80 +3,130 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  height: 100%;
-  padding: 20px;
+  padding: 16px;
   background: #f7f8fa;
   text-align: center;
+  height: auto; /* Adjust height for content */
+}
+
+.guest-header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.guest-header p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.4;
+  margin: 0 16px 16px;
+}
+
+ion-button {
+  width: 100%;
+  max-width: 280px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 16px;
+  --background: var(--ion-color-primary);
+  --background-hover: var(--ion-color-primary-tint);
+  --border-radius: 8px;
+  --box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.rewards-details {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.reward-item {
+  background: #fff;
+  padding: 16px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.reward-item:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px); /* Subtle lift on hover */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+ion-icon {
+  font-size: 2.4rem;
+  color: var(--ion-color-primary);
+  margin-bottom: 8px;
+}
+
+.reward-header {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.reward-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.reward-list li {
+  position: relative;
+  font-size: 0.9rem;
+  color: #666;
+  padding-left: 25px;
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.reward-list li:before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--ion-color-primary);
+  font-size: 1.2rem;
+}
+
+@media screen and (min-width: 768px) {
+  .guest-container {
+    padding: 24px;
+  }
 
   .guest-header h1 {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #333;
+    font-size: 2rem;
   }
 
   .guest-header p {
-    font-size: 1rem;
-    color: #666;
-    margin-top: 10px;
+    font-size: 1.1rem;
   }
 
   ion-button {
-    width: 100%;
-    max-width: 300px;
-    margin-bottom: 20px;
-    font-size: 1rem;
-    font-weight: 600;
+    max-width: 320px;
+    font-size: 1.1rem;
   }
 
   .rewards-details {
-    display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    justify-content: space-between;
     gap: 20px;
-    width: 100%;
+  }
 
-    .reward-item {
-      padding: 20px;
-      border-radius: 10px;
-      background: #fff;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      text-align: center;
-
-      ion-icon {
-        font-size: 2rem;
-        color: var(--ion-color-primary);
-        margin-bottom: 10px;
-      }
-
-      h3 {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #333;
-        margin-bottom: 10px;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-        text-align: left;
-
-        li {
-          position: relative;
-          font-size: 0.9rem;
-          color: #666;
-          padding-left: 25px;
-          margin-bottom: 10px;
-
-          &:before {
-            content: "•";
-            position: absolute;
-            left: 0;
-            top: 0;
-            color: var(--ion-color-primary);
-            font-size: 1.2rem;
-          }
-        }
-      }
-    }
+  .reward-item {
+    flex: 1;
+    max-width: 45%; /* Allow for two items side by side on larger screens */
   }
 }

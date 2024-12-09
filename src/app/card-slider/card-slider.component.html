@@ -8,10 +8,16 @@
   <div class="slider-container">
     <div class="slider">
       <ng-container *ngFor="let product of products">
-        <div class="slide"  *ngIf="product.category == category.category">
+        <div class="slide" *ngIf="product.category == category.category">
           <div class="card" (click)="updateProductDisplay(product)">
             <div class="image-container">
               <img [src]="product.image" alt="Product" />
+              <div class="card-details">
+                <p class="product-title">
+                  {{ product.title | slice:0:35 }}{{ product.title.length > 35 ? '...' : '' }}
+                </p>                
+                <p class="product-price">{{ product.price | currency }}</p>
+              </div>
             </div>
           </div>
         </div>

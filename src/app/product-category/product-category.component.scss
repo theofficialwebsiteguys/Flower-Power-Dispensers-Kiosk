@@ -1,15 +1,34 @@
 .container {
-  color: black;
-  background: none;
-  text-transform: capitalize;
-  text-wrap: nowrap;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 6px; /* Space between the icon and text */
+  background: none; /* Remove background */
+  border: none; /* No borders */
+  cursor: pointer; /* Make clickable */
+  transition: transform 0.2s ease; /* Smooth scaling animation */
+}
+
+.container:hover,
+.container:active {
+  transform: scale(1.1); /* Slight scaling for interactivity */
 }
 
 img {
-  height: 100%;
-  width: 100%;
+  height: 64px; /* Consistent size for icons */
+  width: 64px;
+  object-fit: contain; /* Keep the aspect ratio of icons */
 }
 
 p {
-  margin: 6px 0 0 0;
+  font-size: 14px; /* Ensure text is legible */
+  font-weight: 600; /* Slightly bold text */
+  color: #333; /* Neutral dark text color */
+  margin: 0;
+  text-transform: capitalize; /* Ensure clean category names */
+  white-space: nowrap; /* Prevent text from wrapping to a new line */
+  overflow: hidden; /* Handle text overflow gracefully */
+  text-overflow: ellipsis; /* Add ellipsis if text is too long */
 }
