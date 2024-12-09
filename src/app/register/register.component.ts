@@ -175,7 +175,7 @@ export class RegisterComponent {
       },
       error: (err) => {
         this.loading = false;
-        this.error = err.message;
+        this.error = 'Unable to register a new user at this time. Please try again later.';
       },
     });
   }

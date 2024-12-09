@@ -16,7 +16,7 @@ export class ProductComponent implements OnInit {
 
   @Input() product: Product = {
     id: '',
-    category: '',
+    category: 'FLOWER',
     title: '',
     brand: '',
     desc: '',

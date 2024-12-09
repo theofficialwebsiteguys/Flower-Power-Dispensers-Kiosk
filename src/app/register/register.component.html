@@ -181,7 +181,7 @@
           />
         </div>
         <div
-          *ngIf="submitted && registerForm.get('dob')?.invalid"
+          *ngIf="submitted && (registerForm.get('month')?.invalid || registerForm.get('day')?.invalid || registerForm.get('year')?.invalid )"
           class="form-error"
         >
           Date of Birth is required and you must be 18+ years old.
