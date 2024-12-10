@@ -32,7 +32,7 @@ body {
     background-color: var(--ion-color-dark);
     --ion-background-color: var(--ion-color-dark);
 
-    *,
+    *:not(img),
     .product-detail {
       color: var(--ion-color-dark-contrast);
       background-color: var(--ion-color-dark);
@@ -79,6 +79,32 @@ body {
 
     .arrow-icon {
       color: var(--ion-color-dark-contrast);
+    }
+
+    .category-section {
+      * {
+        background-color: transparent;
+      }
+
+      img {
+        background-color: var(--ion-color-light);
+      }
+
+      &:nth-child(odd) {
+        background-color: var(--ion-color-secondary) !important;
+        .section-header h2,
+        .arrow-icon {
+          color: var(--ion-color-dark);
+        }
+      }
+
+      &:nth-child(4n-1) {
+        background-color: var(--ion-color-primary) !important;
+        .section-header h2,
+        .arrow-icon {
+          color: var(--ion-color-dark-contrast);
+        }
+      }
     }
 
     .checkbox-container .checkbox-wrapper {
@@ -212,6 +238,10 @@ body {
 
     .login-container {
       background-color: var(--ion-color-dark);
+    }
+
+    .points-display {
+      color: var(--ion-color-secondary) !important;
     }
   }
 }

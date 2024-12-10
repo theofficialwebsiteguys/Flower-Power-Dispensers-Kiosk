@@ -5,6 +5,7 @@
   justify-content: center;
   text-align: center;
   gap: 6px; /* Space between the icon and text */
+  color: #333; /* Neutral dark text color */
   background: none; /* Remove background */
   border: none; /* No borders */
   cursor: pointer; /* Make clickable */
@@ -25,7 +26,6 @@ img {
 p {
   font-size: 14px; /* Ensure text is legible */
   font-weight: 600; /* Slightly bold text */
-  color: #333; /* Neutral dark text color */
   margin: 0;
   text-transform: capitalize; /* Ensure clean category names */
   white-space: nowrap; /* Prevent text from wrapping to a new line */
