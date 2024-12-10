@@ -8,7 +8,7 @@
   <div class="slider-container">
     <div class="slider">
       <ng-container *ngFor="let product of products">
-        <div class="slide" *ngIf="product.category == category.category">
+        <div class="slide" *ngIf="product.category === category.category">
           <div class="card" (click)="updateProductDisplay(product)">
             <div class="image-container">
               <img [src]="product.image" alt="Product" />
