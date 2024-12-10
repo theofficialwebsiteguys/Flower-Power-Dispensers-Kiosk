@@ -73,11 +73,10 @@
   gap: 20px;
 }
 
-$slide-dimension: 200px;
 .slide {
   flex: 0 0 auto;
-  width: $slide-dimension;
-  height: $slide-dimension;
+  width: 196px;
+  height: 284px;
 }
 
 .card {
