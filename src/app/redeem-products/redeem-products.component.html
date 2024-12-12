@@ -3,7 +3,7 @@
     <div class="slide" *ngFor="let product of products">
       <div class="card">
         <div class="image-container">
-          <img src="assets/default.jpg" alt="Product Image" />
+          <img [src]="product.imageUrl" alt="Product Image" />
           <div class="points-badge">{{ product.points }} Points</div>
         </div>
       </div>

@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 export class HeaderComponent {
   isLoggedIn = false;
   darkModeEnabled = false;
-  userPoints = 120;
+  userPoints = 0;
 
   constructor(
     private authService: AuthService,
@@ -24,6 +24,12 @@ export class HeaderComponent {
     // Subscribe to the authentication status
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
+      if(this.isLoggedIn){
+        this.authService.getUserInfo().subscribe((userInfo: any) => {
+          if(userInfo)
+            this.userPoints = userInfo.points;
+        });
+      }
     });
     this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
       this.darkModeEnabled = isDarkModeEnabled;

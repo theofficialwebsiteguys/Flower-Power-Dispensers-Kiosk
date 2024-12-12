@@ -42,5 +42,8 @@
       Add to Cart
     </ion-button>
   </ng-container>
-
+  
+  <ion-button expand="block" routerLink="/auth" [queryParams]="{ mode: 'register' }" *ngIf="!isLoggedIn">
+    Register to Add to Cart
+  </ion-button>
 </div>

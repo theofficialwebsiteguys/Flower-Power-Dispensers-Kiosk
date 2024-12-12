@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { Observable, of } from 'rxjs';
 
 import { ProductsService } from '../products.service';
@@ -21,18 +21,29 @@ export class ProductListComponent implements OnInit {
   products$: Observable<Product[]> = of([]);
 
   ngOnInit() {
+    this.updateProducts();
+
     this.productService.currentCategory$.subscribe((category) => {
-      this.currentCategory = category; // Automatically updates whenever the category changes in the service
-      if(this.showSimilarItems){
-        this.products$ = this.productService.getSimilarItems();
-      }else{
-        this.products$ = this.productService.getFilteredProducts();
-      }
+      this.currentCategory = category; 
+      this.updateProducts();
     });
 
     this.productService.currentProductFilters$.subscribe(() => {
-      this.products$ = this.productService.getFilteredProducts();
+      this.updateProducts();
     });
+  }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['showSimilarItems']) {
+      this.updateProducts();
+    }
+  }
+
+  private updateProducts() {
+    if (this.showSimilarItems) {
+      this.products$ = this.productService.getSimilarItems();
+    } else {
+      this.products$ = this.productService.getFilteredProducts();
+    }
   }
 }

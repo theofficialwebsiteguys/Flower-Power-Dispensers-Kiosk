@@ -24,6 +24,8 @@ import { Router } from '@angular/router';
 export class AppComponent {
   showSplashScreen: boolean = true;
 
+  isLoggedIn: boolean = false;
+
   constructor(
     private productService: ProductsService,
     private authService: AuthService,
@@ -55,6 +57,11 @@ export class AppComponent {
     this.productService.fetchProducts();
     this.authService.validateSession();
     this.settingsService.updateTheme();
+    this.authService.isLoggedIn().subscribe((status) => {
+      this.isLoggedIn = status;
+      if(this.isLoggedIn)
+        this.showSplashScreen = false;
+    });
     //this.fcmService.initPushNotifications('test@gmail.com')
   }
 
