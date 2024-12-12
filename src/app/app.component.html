@@ -1,7 +1,7 @@
 <ion-app>
   <app-splash-screen
-    *ngIf="!showSplashScreen"
+    *ngIf="showSplashScreen"
     (closeSplash)="onCloseSplash()"
   ></app-splash-screen>
-  <ion-router-outlet *ngIf="showSplashScreen" @fadeIn></ion-router-outlet>
+  <ion-router-outlet *ngIf="!showSplashScreen" @fadeIn></ion-router-outlet>
 </ion-app>

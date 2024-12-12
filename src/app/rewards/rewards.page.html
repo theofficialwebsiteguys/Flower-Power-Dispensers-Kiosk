@@ -3,7 +3,7 @@
 <ion-content [fullscreen]="true">
   <!-- Show rewards content if user is logged in -->
   <div *ngIf="isLoggedIn; else guestContent">
-    <app-points [points]="1000"></app-points>
+    <app-points [points]="user.points" [isExclusiveMember]="user.premium"></app-points>
     <!-- Pass user to AccountComponent -->
     <app-account [user]="user"></app-account>
     <app-review></app-review>

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from './product/product.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { ProductCategory, CategoryWithImage } from './product-category/product-category.model';
@@ -206,34 +206,26 @@ export class ProductsService {
     ];
   }
 
+  //combineLatest combines use of 2 observables
   getSimilarItems(): Observable<Product[]> {
-    return this.currentProduct$.pipe(
-      map((currentProduct) => {
-        console.log('Current Product:', currentProduct); // Debugging the current product
-        return currentProduct?.category; // Extract the category
-      }),
-      switchMap((category) => {
-        console.log('Current Category:', category); // Debugging the category
+    return combineLatest([this.currentProduct$, this.products$]).pipe(
+      map(([currentProduct, productArray]) => {
   
-        // If no category is present, return an empty array
-        if (!category) {
-          return of([]);
+        if (!currentProduct || !currentProduct.category || !currentProduct.brand) {
+          return []; 
         }
   
-        return this.products$.pipe(
-          map((productArray) => {
-            console.log('All Products:', productArray); // Debugging all products
-            const filteredProducts = productArray.filter(
-              (product) => product.category === category
-            );
-            console.log('Filtered Products:', filteredProducts); // Debugging filtered products
-            const shuffledProducts = filteredProducts.sort(() => Math.random() - 0.5);
-            return shuffledProducts.slice(0, 5); // Return up to 5 products
-          })
+        const { category, brand } = currentProduct;
+
+        const filteredProducts = productArray.filter((product) => 
+          product.category === category && product.brand === brand && product.id != currentProduct.id
         );
+  
+        return filteredProducts.slice(0, 5);
       })
     );
   }
+
 
   updateCurrentProduct(product: Product) {
     this.currentProduct.next(product);

@@ -99,21 +99,21 @@ export class CartService {
       cartPayload.cartId = existingCartID; // Add cartId to payload if it exists
     }
   
-    // Make the API call
-    // this.http.post<any>('https://api.dispenseapp.com/2023-03/carts', cartPayload).subscribe(
-    //   (response) => {
-    //     if (response.cartID) {
-    //       localStorage.setItem('cartID', response.cartID); // Save cartID if a new cart was created
-    //     }
-    //     if(response.checkoutUrl){
-    //       return response.checkoutUrl;
-    //     }
-    //     console.log('Cart processed successfully', response);
-    //   },
-    //   (error) => {
-    //     console.error('Error processing cart', error);
-    //   }
-    // );
+    //Make the API call
+    this.http.post<any>('https://api.dispenseapp.com/2023-03/carts', cartPayload).subscribe(
+      (response) => {
+        if (response.cartID) {
+          localStorage.setItem('cartID', response.cartID); // Save cartID if a new cart was created
+        }
+        if(response.checkoutUrl){
+          return response.checkoutUrl;
+        }
+        console.log('Cart processed successfully', response);
+      },
+      (error) => {
+        console.error('Error processing cart', error);
+      }
+    );
 
     return '';
   }
