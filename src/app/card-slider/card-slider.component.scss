@@ -2,23 +2,26 @@
   position: relative;
   width: 100%;
   height: 100%;
-}
 
-.image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 }
 
 .card-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   position: absolute;
   bottom: 0;
   left: 0;
   width: 100%;
+  height: 80px;
   padding: 10px;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5));
-  color: #fff;
+  color: var(--ion-color-light);
   text-align: center;
 }
 
@@ -35,41 +38,44 @@
   color: var(--ion-color-secondary);
 }
 
-
 .category-section {
-  margin-bottom: 20px; 
+  padding: 20px 24px 16px;
+
+  &:nth-child(odd) {
+    background-color: rgba(var(--ion-color-secondary-rgb), 0.7) !important;
+  }
+  &:nth-child(4n-1) {
+    background-color: rgba(var(--ion-color-primary-rgb), 0.6) !important;
+  }
 }
 
 .section-header {
   display: flex;
   align-items: center;
-  padding: 0 10px;
-  margin-bottom: 10px;
 }
 
 .section-header h2 {
   font-size: 1.7em;
   text-transform: capitalize;
-  margin: 10px;
+  margin: 0 6px 0 0;
 }
 
 .slider-container {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 10px;
-  margin: 10px;
   scrollbar-width: none; /* Hides scrollbar on Firefox */
+  padding: 20px 0;
 }
 
 .slider {
   display: flex;
-  gap: 10px;
+  gap: 20px;
 }
 
 .slide {
   flex: 0 0 auto;
-  width: 160px;
-  // height: 100%;
+  width: 196px;
+  height: 284px;
 }
 
 .card {
@@ -82,35 +88,22 @@
   position: relative;
   transform: scale(1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
 
-.card:hover {
-  transform: scale(1.05); /* Slight zoom-in effect */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.15); /* Larger shadow on hover */
+  &:hover {
+    transform: scale(1.05); /* Slight zoom-in effect */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2), 0 4px 6px rgba(0, 0, 0, 0.15); /* Larger shadow on hover */
+  }
 }
-
-.card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(145deg, rgba(0, 255, 135, 0.15), rgba(0, 195, 255, 0.15));
-  opacity: 0.5; /* Subtle glowing effect */
-  pointer-events: none; /* Avoid interfering with user interactions */
-}
-
 
 .arrow-icon {
   font-size: 1.8em;
   color: black;
 }
 
-.product-title{
+.product-title {
   text-align: left;
 }
 
-.product-price{
+.product-price {
   text-align: right;
 }

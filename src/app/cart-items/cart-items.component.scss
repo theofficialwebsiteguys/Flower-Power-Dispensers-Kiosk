@@ -36,12 +36,16 @@
         align-items: center;
         justify-content: flex-end;
 
-        button, span {
-          font-size: 14px;
+        button,
+        span {
+          font-size: 20px;
         }
 
         button {
           border: none;
+          width: 32px;
+          height: 32px;
+          color: var(--ion-color-dark);
           background-color: #e0e0e0;
           padding: 4px 8px;
           margin: 0 4px;
@@ -51,6 +55,13 @@
           &:hover {
             background-color: #d6d6d6;
           }
+        }
+
+        span {
+          min-width: 24px;
+          margin: 0 12px;
+          font-weight: bold;
+          text-align: center;
         }
       }
     }
