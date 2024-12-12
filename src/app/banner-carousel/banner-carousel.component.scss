@@ -33,3 +33,9 @@
     height: auto;
   }
 }
+
+@media screen and (min-width: 600px) {
+  .carousel-container {
+    height: 350px;
+  }
+}

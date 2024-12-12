@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./points.component.scss'],
 })
 export class PointsComponent {
-  @Input() points: number = 1200;
+  @Input() points: number = 0;
   maxPoints: number = 6000;
-  isExclusiveMember: boolean = false;
+  @Input() isExclusiveMember: boolean = false;
 
   get progressPercentage(): number {
     return (this.points / this.maxPoints) * 100;

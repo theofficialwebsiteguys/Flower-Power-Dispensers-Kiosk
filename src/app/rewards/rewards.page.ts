@@ -19,7 +19,6 @@ export class RewardsPage implements OnInit {
   ngOnInit() {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
-      // this.user = this.authService.getUserInfo();
       this.authService.getUserInfo().subscribe((userInfo: any) => {
         this.user = userInfo;
       });

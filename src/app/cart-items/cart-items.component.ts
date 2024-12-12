@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CartItem, CartService } from '../cart.service';
 
 @Component({
@@ -8,13 +8,14 @@ import { CartItem, CartService } from '../cart.service';
 })
 export class CartItemsComponent implements OnInit {
 
-  cartItems: CartItem[] = [];
+  @Input() items: CartItem[] = []
+
 
   constructor(private readonly cartService: CartService){}
 
   ngOnInit(): void {
     this.cartService.cart$.subscribe((cart) => {
-      this.cartItems = cart;
+      this.items = cart;
     });
   }
 
@@ -23,7 +24,7 @@ export class CartItemsComponent implements OnInit {
   }
 
   calculateSubtotal(): number {
-    return this.cartItems.reduce(
+    return this.items.reduce(
       (total, item) => total + Number(item.price) * item.quantity,
       0
     );

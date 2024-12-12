@@ -55,7 +55,7 @@ export class LoginComponent {
   }
 
   private getErrorMessage(err: any): string {
-    if (err.status === 401) return 'Invalid email or password. Please try again.';
+    if (err.status === 400) return 'Invalid email or password. Please try again.';
     if (err.status === 500) return 'Server error. Please try again later.';
     if (err.status === 0) return 'Network error. Please check your internet connection.';
     return 'An unexpected error occurred. Please try again.';
