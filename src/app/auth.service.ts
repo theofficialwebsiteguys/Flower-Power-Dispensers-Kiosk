@@ -185,20 +185,30 @@ export class AuthService {
 
     console.log(sessionData);
     this.http
-      .get<{ valid: boolean }>(`${this.apiUrl}/validate-session`, { headers })
-      .pipe(
-        map((response) => response.valid),
-        tap((isValid) => {
-          if (isValid) {
-            this.authStatus.next(true);
-          } else {
-            this.authStatus.next(false);
-            this.removeToken();
-            this.removeUser();
-          }
-        })
-      )
-      .subscribe();
+  .get<any>(`${this.apiUrl}/validate-session`, { headers })
+  .pipe(
+    tap((response) => {
+      if (response.valid) {
+        this.authStatus.next(true);
+      } else {
+        console.error('Authentication failed:', response.error || 'Unknown error');
+        if (response.details) {
+          console.error('Details:', response.details);
+        }
+        this.authStatus.next(false);
+        this.logout();
+      }
+    }),
+    catchError((error) => {
+      console.error('HTTP request error:', error);
+      this.authStatus.next(false);
+      this.logout();
+      return throwError(error);
+    })
+  )
+  .subscribe();
+
+  
   }
 
   toggleUserNotifications(userId: string): Observable<any> {

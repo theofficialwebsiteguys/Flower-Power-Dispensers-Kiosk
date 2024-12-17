@@ -9,6 +9,6 @@
   </div>
 
   <div *ngIf="showCheckout">
-    <app-checkout [checkoutUrl]="checkoutUrl" (back)="removeCheckout()"></app-checkout>
+    <app-checkout *ngIf="checkoutUrl" [checkoutUrl]="checkoutUrl" (back)="removeCheckout()"></app-checkout>
   </div>
 </ion-content>
