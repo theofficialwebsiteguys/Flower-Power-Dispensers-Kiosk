@@ -1,7 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, map, Observable, switchMap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 export interface CartItem {
   id: string;
@@ -25,7 +26,7 @@ export class CartService {
   private cartSubject = new BehaviorSubject<CartItem[]>(this.getCart());
   cart$ = this.cartSubject.asObservable(); // Observable for the cart
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private authService: AuthService) {
     // Initialize cart in localStorage if it doesn't exist
     if (!localStorage.getItem(this.cartKey)) {
       localStorage.setItem(this.cartKey, JSON.stringify([]));
@@ -81,7 +82,7 @@ export class CartService {
   }
 
 
-  checkout(): string {
+  checkout(): Observable<any> {
     const cartItems = this.getCart(); // Retrieve the cart from localStorage
   
     // Build the cart payload
@@ -98,24 +99,29 @@ export class CartService {
     if (existingCartID) {
       cartPayload.cartId = existingCartID; // Add cartId to payload if it exists
     }
-  
-    //Make the API call
-    this.http.post<any>('https://api.dispenseapp.com/2023-03/carts', cartPayload).subscribe(
-      (response) => {
-        if (response.cartID) {
-          localStorage.setItem('cartID', response.cartID); // Save cartID if a new cart was created
-        }
-        if(response.checkoutUrl){
-          return response.checkoutUrl;
-        }
-        console.log('Cart processed successfully', response);
-      },
-      (error) => {
-        console.error('Error processing cart', error);
-      }
-    );
 
-    return '';
+    const headers = new HttpHeaders({
+      'x-dispense-api-key': environment.flower_power_api_key,
+    });
+  
+    return this.http.post<any>('https://api.dispenseapp.com/2023-03/carts', cartPayload, { headers }).pipe(
+      switchMap((response) => {
+        if (response.cartID) {
+          localStorage.setItem('cartID', response.cartID);
+        }
+  
+        if (response.checkoutUrl) {
+          return this.authService.getUserInfo().pipe(
+            map((userInfo: any) => {
+              const token = userInfo.alpineToken;
+              return `${response.checkoutUrl}?auth=${token}`;
+            })
+          );
+        } else {
+          return throwError(() => new Error('No checkout URL provided in response'));
+        }
+      })
+    );
   }
   
 

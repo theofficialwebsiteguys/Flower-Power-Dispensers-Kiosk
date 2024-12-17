@@ -4,7 +4,7 @@
 
 <div class="iframe-container">
   <iframe
-    [src]="checkoutUrl"
+  *ngIf="sanitizedUrl" [src]="sanitizedUrl"
     frameborder="0"
     allowfullscreen
     allow="payment"
