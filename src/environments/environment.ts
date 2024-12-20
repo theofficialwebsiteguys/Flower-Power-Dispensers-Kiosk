@@ -6,7 +6,7 @@ export const environment = {
   production: false,
   apiUrl: 'http://localhost:3333/api',
   venue_id: 'df759ba5e7360809',
-  flower_power_api_key: 'c2f270b6-6452-4090-bcf7-20d2e97ac405'
+  flower_power_api_key: '564ee591-42df-46d9-91c0-ff3507e316ec'
 };
 
 /*
