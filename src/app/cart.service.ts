@@ -86,12 +86,14 @@ export class CartService {
     const cartItems = this.getCart(); // Retrieve the cart from localStorage
   
     // Build the cart payload
+
+    console.log(cartItems)
     const cartPayload: any = {
       items: cartItems.map(item => ({
         productId: item.id, // Map to the correct property for the API
         quantity: item.quantity,
       })),
-      venueId: environment.venue_id, // Replace with the appropriate venueId
+      venueId: environment.venueId, // Replace with the appropriate venueId
     };
   
     // Check if cartID exists in localStorage

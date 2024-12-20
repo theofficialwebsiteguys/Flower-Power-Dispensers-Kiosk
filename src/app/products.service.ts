@@ -54,7 +54,9 @@ export class ProductsService {
     }
 
     this.http
-      .get<Product[]>(`${environment.apiUrl}/products/all-products`)
+      .get<Product[]>(`${environment.apiUrl}/products/all-products`, {
+        params: { venueId: environment.venueId } 
+      })
       .subscribe(
         (products) => {
           this.products.next(products); // Update BehaviorSubject
@@ -195,14 +197,14 @@ export class ProductsService {
 
   getCategories(): CategoryWithImage[] {
     return [
-      { category: 'FLOWER', imageUrl: 'assets/icons/flower-icon-resized.png' },
-      { category: 'PRE_ROLLS', imageUrl: 'assets/icons/preroll-icon-resized.png' },
-      { category: 'CONCENTRATES', imageUrl: '' },
-      { category: 'VAPORIZERS', imageUrl: '' },
-      { category: 'BEVERAGES', imageUrl: 'assets/icons/beverage-icon-resized.png' },
-      { category: 'TINCTURES', imageUrl: '' },
-      { category: 'EDIBLES', imageUrl: '' },
-      { category: 'ACCESSORIES', imageUrl: 'assets/icons/bong-icon-resized.png' },
+      { category: 'FLOWER', imageUrl: 'assets/icons/flower.png' },
+      { category: 'PRE_ROLLS', imageUrl: 'assets/icons/prerolls.png' },
+      { category: 'CONCENTRATES', imageUrl: 'assets/icons/concentrates.png' },
+      { category: 'VAPORIZERS', imageUrl: 'assets/icons/vaporizers.png' },
+      { category: 'BEVERAGES', imageUrl: 'assets/icons/beverages.png' },
+      { category: 'TINCTURES', imageUrl: 'assets/icons/tinctures.png' },
+      { category: 'EDIBLES', imageUrl: 'assets/icons/edibles.png' },
+      { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
     ];
   }
 

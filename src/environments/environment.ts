@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   apiUrl: 'http://localhost:3333/api',
-  venue_id: 'df759ba5e7360809',
+  venueId: '836944c298d40676',
   flower_power_api_key: '564ee591-42df-46d9-91c0-ff3507e316ec'
 };
 
