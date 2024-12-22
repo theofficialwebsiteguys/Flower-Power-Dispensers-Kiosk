@@ -13,11 +13,11 @@
 
       <ng-container *ngIf="isLoggedIn">
         <ion-row class="quantity-controls">
-          <button (click)="adjustQuantity(-1)">-</button>
+          <button (click)="adjustQuantity(-1, $event)">-</button>
           <span>{{ quantity }}</span>
-          <button (click)="adjustQuantity(1)">+</button>
+          <button (click)="adjustQuantity(1, $event)">+</button>
         </ion-row>
-        <ion-button expand="block" color="primary" (click)="addToCart()">Add to Cart</ion-button>
+        <ion-button expand="block" color="primary" (click)="addToCart($event)">Add to Cart</ion-button>
       </ng-container>
     </ion-label>
   </ion-row>

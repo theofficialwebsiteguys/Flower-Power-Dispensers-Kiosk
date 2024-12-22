@@ -86,8 +86,6 @@ export class CartService {
     const cartItems = this.getCart(); // Retrieve the cart from localStorage
   
     // Build the cart payload
-
-    console.log(cartItems)
     const cartPayload: any = {
       items: cartItems.map(item => ({
         productId: item.id, // Map to the correct property for the API
@@ -96,12 +94,13 @@ export class CartService {
       venueId: environment.venueId, // Replace with the appropriate venueId
     };
   
+
     // Check if cartID exists in localStorage
     const existingCartID = localStorage.getItem('cartID');
     if (existingCartID) {
       cartPayload.cartId = existingCartID; // Add cartId to payload if it exists
     }
-
+    console.log(cartPayload)
     const headers = new HttpHeaders({
       'x-dispense-api-key': environment.flower_power_api_key,
     });

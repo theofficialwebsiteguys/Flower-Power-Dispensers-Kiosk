@@ -154,3 +154,18 @@ button:hover,
 ion-button {
   margin-top: 16px;
 }
+
+.custom-toast {
+  --background: #333333; /* Dark grey background */
+  --color: #ffffff; /* Ensure text color is white */
+  font-family: 'Arial', sans-serif;
+  font-size: 1.2rem; /* Slightly larger font size */
+  padding: 16px 24px; /* More padding for a bigger appearance */
+  border-radius: 12px; /* Rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+  margin: 0 16px; /* Add horizontal margin for spacing */
+  max-width: calc(100% - 32px); /* Ensure it fits on small screens */
+  position: relative;
+  margin-bottom: 50px;
+  color: var(--color); /* Explicitly apply the white color */
+}

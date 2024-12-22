@@ -34,15 +34,25 @@ export class ProductComponent implements OnInit {
     this.authService.isLoggedIn().subscribe(status => this.isLoggedIn = status);
   }
 
+  ngOnDestroy(){
+    this.quantity = 1;
+  }
+
   updateProductDisplay() {
     this.productService.updateCurrentProduct(this.product);
   }
 
-  adjustQuantity(amount: number) {
+  adjustQuantity(amount: number, event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
     this.quantity = Math.max(1, this.quantity + amount);
   }
 
-  addToCart() {
+  addToCart(event?: Event) {
+    if (event) {
+      event.stopPropagation();
+    }
     const cartItem: CartItem = { ...this.product, quantity: this.quantity };
     this.cartService.addToCart(cartItem);
     alert('Item added to cart!');
