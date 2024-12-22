@@ -78,7 +78,6 @@
         </div>
       </div>
 
-      <!-- Phone Group -->
       <div class="form-group phone-group">
         <div class="country-code">
           <label for="countryCode" class="required">Phone</label>
@@ -96,7 +95,7 @@
             </ion-select-option>
           </ion-select>
         </div>
-
+      
         <div class="phone-number">
           <input
             type="tel"
@@ -106,14 +105,17 @@
             placeholder="Enter your phone number"
             required
           />
-          <div
-            *ngIf="submitted && registerForm.get('phone')?.invalid"
-            class="form-error"
-          >
-            Phone number is required and must be valid.
-          </div>
+        </div>
+      
+        <!-- Error message for the entire section -->
+        <div
+          *ngIf="submitted && registerForm.get('phone')?.invalid"
+          class="form-error"
+        >
+          Phone number is required and must be valid.
         </div>
       </div>
+      
 
       <!-- DOB -->
       <div class="form-group">

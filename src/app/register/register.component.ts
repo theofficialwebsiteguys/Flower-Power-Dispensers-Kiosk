@@ -93,6 +93,7 @@ export class RegisterComponent {
   }
 
   ngOnInit() {
+    window.addEventListener('resize', this.handleKeyboard.bind(this));
     // Track changes in the form to determine if any input is entered
     this.registerForm.valueChanges.subscribe(() => {
       this.isFormTouched = true;
@@ -100,6 +101,19 @@ export class RegisterComponent {
     this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
       this.darkModeEnabled = isDarkModeEnabled;
     });
+  }
+
+  ngOnDestroy() {
+    // Reset the form when navigating away
+    this.resetForm();
+    window.removeEventListener('resize', this.handleKeyboard.bind(this));
+  }
+
+  handleKeyboard() {
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement && activeElement.tagName === 'INPUT') {
+      activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   onSubmit() {
@@ -172,12 +186,23 @@ export class RegisterComponent {
     this.authService.register(userData).subscribe({
       next: () => {
         this.loading = false;
+        this.resetForm();
       },
       error: (err) => {
         this.loading = false;
         this.error = 'Unable to register a new user at this time. Please try again later.';
       },
     });
+  }
+
+  resetForm() {
+    this.registerForm.reset(); // Reset the form fields
+    this.submitted = false; // Reset submission state
+    this.error = ''; // Clear any errors
+    this.isFormTouched = false; // Reset the touch state
+    this.dobEmptyError = false;
+    this.dobInvalidError = false;
+    this.underageError = false;
   }
 
   onCountryCodeChange() {
