@@ -22,20 +22,20 @@ export interface CartItem {
   providedIn: 'root',
 })
 export class CartService {
-  private cartKey = 'cart'; // Key for storing the cart in localStorage
+  private cartKey = 'cart'; // Key for storing the cart in sessionStorage
   private cartSubject = new BehaviorSubject<CartItem[]>(this.getCart());
   cart$ = this.cartSubject.asObservable(); // Observable for the cart
 
   constructor(private http: HttpClient, private authService: AuthService) {
-    // Initialize cart in localStorage if it doesn't exist
-    if (!localStorage.getItem(this.cartKey)) {
-      localStorage.setItem(this.cartKey, JSON.stringify([]));
+    // Initialize cart in sessionStorage if it doesn't exist
+    if (!sessionStorage.getItem(this.cartKey)) {
+      sessionStorage.setItem(this.cartKey, JSON.stringify([]));
     }
   }
 
-  // Get the cart items from localStorage
+  // Get the cart items from sessionStorage
   getCart(): CartItem[] {
-    const cart = localStorage.getItem(this.cartKey);
+    const cart = sessionStorage.getItem(this.cartKey);
     return cart ? JSON.parse(cart) : [];
   }
 
@@ -83,7 +83,7 @@ export class CartService {
 
 
   checkout(): Observable<any> {
-    const cartItems = this.getCart(); // Retrieve the cart from localStorage
+    const cartItems = this.getCart(); // Retrieve the cart from sessionStorage
   
     // Build the cart payload
 
@@ -96,8 +96,8 @@ export class CartService {
       venueId: environment.venueId, // Replace with the appropriate venueId
     };
   
-    // Check if cartID exists in localStorage
-    const existingCartID = localStorage.getItem('cartID');
+    // Check if cartID exists in sessionStorage
+    const existingCartID = sessionStorage.getItem('cartID');
     if (existingCartID) {
       cartPayload.cartId = existingCartID; // Add cartId to payload if it exists
     }
@@ -109,7 +109,7 @@ export class CartService {
     return this.http.post<any>('https://api.dispenseapp.com/2023-03/carts', cartPayload, { headers }).pipe(
       switchMap((response) => {
         if (response.cartID) {
-          localStorage.setItem('cartID', response.cartID);
+          sessionStorage.setItem('cartID', response.cartID);
         }
   
         if (response.checkoutUrl) {
@@ -127,9 +127,9 @@ export class CartService {
   }
   
 
-  // Save the cart back to localStorage and notify subscribers
+  // Save the cart back to sessionStorage and notify subscribers
   private saveCart(cart: CartItem[]) {
-    localStorage.setItem(this.cartKey, JSON.stringify(cart));
+    sessionStorage.setItem(this.cartKey, JSON.stringify(cart));
     this.cartSubject.next(cart); // Emit the updated cart
   }
 }
