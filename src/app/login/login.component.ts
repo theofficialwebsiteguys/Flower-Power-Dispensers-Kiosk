@@ -33,6 +33,16 @@ export class LoginComponent {
     this.settingsService.isDarkModeEnabled$.subscribe(mode => this.darkModeEnabled = mode);
   }
 
+  ngOnDestroy() {
+    this.resetForm();
+  }
+
+  resetForm() {
+    this.loginForm.reset(); // Reset the form fields
+    this.submitted = false; // Reset submission state
+    this.error = ''; // Clear any errors
+    this.loading = false;
+  }
 
   onSubmit() {
     this.submitted = true;
@@ -46,7 +56,10 @@ export class LoginComponent {
     this.error = ''; 
 
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => this.router.navigate(['/rewards']),
+      next: () => {
+        this.resetForm();
+        this.router.navigate(['/rewards'])
+      },
       error: (err) => {
         this.loading = false;
         this.error = this.getErrorMessage(err);
