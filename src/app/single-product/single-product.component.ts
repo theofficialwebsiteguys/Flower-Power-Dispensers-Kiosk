@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { ToastController } from '@ionic/angular';
 
 import { ProductsService } from '../products.service';
 
@@ -24,6 +25,7 @@ export class SingleProductComponent implements OnInit {
     thc: '',
     weight: '',
     price: '',
+    quantity: 0,
     image: '',
   };
 
@@ -37,18 +39,27 @@ export class SingleProductComponent implements OnInit {
     private cartService: CartService,
     private authService: AuthService,
     private location: Location,
-    private router: Router
+    private router: Router,
+    private toastController: ToastController // Inject ToastController
   ) {}
 
   ngOnInit() {
     this.productService.currentProduct$.subscribe((product) => {
-      if (product) this.currentProduct = product;
-      else this.router.navigateByUrl('/home');
+      if (product) {
+        this.currentProduct = product;
+        this.quantity = 1; // Reset quantity when the product changes
+      } else {
+        this.router.navigateByUrl('/home');
+      }
     });
 
     this.authService.isLoggedIn().subscribe(status => {
       this.isLoggedIn = status;
     });
+  }
+
+  ngOnDestroy(){
+    this.quantity = 1;
   }
 
   toggleDescription() {
@@ -68,27 +79,36 @@ export class SingleProductComponent implements OnInit {
     this.location.back();
   }
 
-   // Increment quantity
-   incrementQuantity() {
-    this.quantity++;
+  incrementQuantity() {
+    if (this.quantity < this.currentProduct['quantity'] ) {
+      this.quantity++;
+    }
   }
 
-  // Decrement quantity (ensure it doesn't go below 1)
   decrementQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
     }
   }
 
-  // Add the current product to the cart
-  addToCart() {
+  async addToCart() {
     const cartItem = {
       ...this.currentProduct,
       quantity: this.quantity,
     };
-
+  
     this.cartService.addToCart(cartItem); // Use the CartService
-    alert('Item added to cart!');
+  
+    // Display a toast message with a clickable button
+    const toast = await this.toastController.create({
+      message: 'Item added to cart!',
+      duration: 3000,
+      position: 'bottom',
+      cssClass: 'custom-toast', // Apply custom styles
+    });
+  
+    toast.present();
   }
-
+  
+  
 }
