@@ -76,11 +76,10 @@ export class RegisterComponent {
             Validators.required,
             Validators.pattern(
               new RegExp(
-                `^(19[0-9][0-9]|20[0-${this.currentYear % 10}][0-${Math.floor(
-                  (this.currentYear % 100) / 10
-                )}])$`
+                `^(19[0-9][0-9]|20[0-9][0-9]|20${Math.floor(this.currentYear / 10)}[0-${this.currentYear % 10}])$`
               )
-            ),
+            )
+            
           ],
         ], // YYYY
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -93,6 +92,7 @@ export class RegisterComponent {
   }
 
   ngOnInit() {
+    window.addEventListener('resize', this.handleKeyboard.bind(this));
     // Track changes in the form to determine if any input is entered
     this.registerForm.valueChanges.subscribe(() => {
       this.isFormTouched = true;
@@ -100,6 +100,19 @@ export class RegisterComponent {
     this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
       this.darkModeEnabled = isDarkModeEnabled;
     });
+  }
+
+  ngOnDestroy() {
+    // Reset the form when navigating away
+    this.resetForm();
+    window.removeEventListener('resize', this.handleKeyboard.bind(this));
+  }
+
+  handleKeyboard() {
+    const activeElement = document.activeElement as HTMLElement;
+    if (activeElement && activeElement.tagName === 'INPUT') {
+      activeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
   }
 
   onSubmit() {
@@ -134,6 +147,9 @@ export class RegisterComponent {
     const dobString = `${year}-${month}-${day}`;
     const dob = new Date(dobString);
 
+    console.log(dob);
+    console.log(isNaN(dob.getTime()))
+
     if (isNaN(dob.getTime())) {
       this.dobInvalidError = true;
       this.loading = false;
@@ -143,6 +159,7 @@ export class RegisterComponent {
     }
 
     const age = this.calculateAge(dob);
+    console.log(age)
     if (age < 21) {
       this.underageError = true;
       this.loading = false;
@@ -172,12 +189,37 @@ export class RegisterComponent {
     this.authService.register(userData).subscribe({
       next: () => {
         this.loading = false;
+        this.resetForm();
       },
       error: (err) => {
         this.loading = false;
-        this.error = 'Unable to register a new user at this time. Please try again later.';
+    
+        const errorMessage = err.error.error; // Assuming `err.error` is the string you provided
+    
+        if (err.status === 500) {
+          if (errorMessage.includes('SequelizeUniqueConstraintError')) {
+            this.error = 'This user already exists in the system.';
+          } else if (errorMessage.includes('SequelizeValidationError')) {
+            this.error = 'The provided phone or email is invalid.';
+          } else {
+            this.error = 'An unexpected error occurred. Please try again later.';
+          }
+        } else {
+          this.error = 'Unable to register a new user at this time. Please try again later.';
+        }
       },
     });
+    
+  }
+
+  resetForm() {
+    this.registerForm.reset(); // Reset the form fields
+    this.submitted = false; // Reset submission state
+    this.error = ''; // Clear any errors
+    this.isFormTouched = false; // Reset the touch state
+    this.dobEmptyError = false;
+    this.dobInvalidError = false;
+    this.underageError = false;
   }
 
   onCountryCodeChange() {

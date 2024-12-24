@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-forgot-password',
@@ -19,7 +20,8 @@ export class ForgotPasswordComponent {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
+    private location: Location
   ) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -50,6 +52,10 @@ export class ForgotPasswordComponent {
         this.errorMessage = this.getErrorMessage(err);
       },
     });
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   private getErrorMessage(err: any): string {

@@ -32,24 +32,24 @@ export class ProductsService {
   currentProductFilters$ = this.currentProductFilters.asObservable();
 
   constructor(private http: HttpClient, private route: Router) {
-    this.loadProductsFromLocalStorage();
+    this.loadProductsFromSessionStorage();
   }
 
-  private loadProductsFromLocalStorage(): void {
-    const storedProducts = localStorage.getItem('products');
+  private loadProductsFromSessionStorage(): void {
+    const storedProducts = sessionStorage.getItem('products');
     if (storedProducts) {
       const parsedProducts: Product[] = JSON.parse(storedProducts);
       this.products.next(parsedProducts); // Load products into BehaviorSubject
     }
   }
 
-  private saveProductsToLocalStorage(products: Product[]): void {
-    localStorage.setItem('products', JSON.stringify(products));
+  private saveProductsToSessionStorage(products: Product[]): void {
+    sessionStorage.setItem('products', JSON.stringify(products));
   }
 
   fetchProducts(): void {
     if (this.products.value.length > 0) {
-      console.log('Products already loaded from local storage.');
+      console.log('Products already loaded from session storage.');
       return;
     }
 
@@ -60,7 +60,7 @@ export class ProductsService {
       .subscribe(
         (products) => {
           this.products.next(products); // Update BehaviorSubject
-          this.saveProductsToLocalStorage(products); // Save to local storage
+          this.saveProductsToSessionStorage(products); // Save to session storage
           console.log(products); // Verify all products are fetched
         },
         (error) => {
