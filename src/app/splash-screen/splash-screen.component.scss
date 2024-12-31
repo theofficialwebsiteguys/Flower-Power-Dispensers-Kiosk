@@ -1,61 +1,56 @@
 .splash-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 80vh;
+  position: relative;
+
+  .logo-container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-    position: relative;
-  
-    .logo {
-      width: 60%;
+    width: 100%;
+  }
+
+  .logo {
+    width: 60%;
+  }
+
+  .age-verification {
+    position: absolute; // Make it independent of the main layout
+    top: calc(50% + 80px); // Place it below the logo
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    .verification-text {
+      font-size: 1.2rem; // Adjust font size to fit
+      color: black;
       margin-bottom: 20px;
+      white-space: nowrap; // Force the text to stay on one line
     }
-  
-    .age-verification {
+
+    .button-group {
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      position: absolute;
-      top: 50%;
-  
-      p {
-        color: black;
+      gap: 20px;
+
+      ion-button {
+        width: 120px;
+        height: 50px;
         font-size: 1.2rem;
-        margin-bottom: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
       }
-  
-      .button-group {
-        display: flex;
-        gap: 20px;
-  
-        .yes-btn,
-        .no-btn {
-          border-radius: 5px;
-          width: 100px;
-          height: 50px;
-          color: white;
-          font-size: 1.2rem;
-          border: none;
-          cursor: pointer;
-        }
-  
-        .yes-btn {
-          --background: #25463D;
-        }
-  
-        .no-btn {
-          --background: #000000;
-        }
+
+      .yes-btn {
+        --background: #25463d; // Green button color
+      }
+
+      .no-btn {
+        --background: #000000; // Black button color
       }
     }
   }
-  
-:host {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: white;
 }
-  

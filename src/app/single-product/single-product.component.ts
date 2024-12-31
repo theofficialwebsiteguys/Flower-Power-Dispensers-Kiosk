@@ -98,16 +98,17 @@ export class SingleProductComponent implements OnInit {
     };
   
     this.cartService.addToCart(cartItem); // Use the CartService
+    alert('Item added to cart!');
   
-    // Display a toast message with a clickable button
-    const toast = await this.toastController.create({
-      message: 'Item added to cart!',
-      duration: 3000,
-      position: 'bottom',
-      cssClass: 'custom-toast', // Apply custom styles
-    });
+    // // Display a toast message with a clickable button
+    // const toast = await this.toastController.create({
+    //   message: 'Item added to cart!',
+    //   duration: 10000,
+    //   position: 'bottom',
+    //   cssClass: 'custom-toast', // Apply custom styles
+    // });
   
-    toast.present();
+    // toast.present();
   }
   
   

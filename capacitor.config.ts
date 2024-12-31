@@ -2,7 +2,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.websiteguys.flowerpower',
-  appName: 'flower-power-dispensers',
+  appName: 'Flower Power Dispensers',
   webDir: 'www',
   plugins: {
     SplashScreen: {

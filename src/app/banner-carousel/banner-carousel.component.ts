@@ -12,7 +12,16 @@ export class BannerCarouselComponent implements OnInit, OnDestroy {
       title: 'Where Passion Meets Potency',
       description: 'Flower Power Dispensary',
     },
-    // Additional banners can be added here
+    {
+      image: 'assets/fp-2.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/fp-3.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
   ];
 
   currentIndex = 0;
@@ -25,7 +34,7 @@ export class BannerCarouselComponent implements OnInit, OnDestroy {
   startCarousel() {
     this.interval = setInterval(() => {
       this.currentIndex = (this.currentIndex + 1) % this.banners.length;
-    }, 3000);
+    }, 6000);
   }
 
   ngOnDestroy(): void {

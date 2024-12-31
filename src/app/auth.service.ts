@@ -190,6 +190,8 @@ export class AuthService {
     tap((response) => {
       if (response.valid) {
         this.authStatus.next(true);
+
+        this.updateUserData();
       } else {
         console.error('Authentication failed:', response.error || 'Unknown error');
         if (response.details) {
@@ -211,13 +213,38 @@ export class AuthService {
   
   }
 
-  toggleUserNotifications(userId: string): Observable<any> {
+  updateUserData(): void{
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
 
     if (!token) {
       this.logout();
-      return of();
+    }
+
+    const headers = new HttpHeaders({
+      Authorization: token,
+    });
+
+    console.log("here")
+    this.http
+      .get(`${this.apiUrl}/id/${this.getCurrentUser().id}`, { headers })
+      .pipe(
+        tap((response: any) => {
+          this.storeUserInfo(response);
+        }),
+        catchError((error) => {
+          console.error('Error toggling notifications:', error);
+          return throwError(() => error);
+        })
+      ).subscribe();
+  }
+
+  toggleUserNotifications(userId: string) {
+    const sessionData = localStorage.getItem('sessionData');
+    const token = sessionData ? JSON.parse(sessionData).token : null;
+
+    if (!token) {
+      this.logout();
     }
 
     const headers = new HttpHeaders({

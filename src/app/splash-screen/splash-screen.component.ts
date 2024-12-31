@@ -7,58 +7,55 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./splash-screen.component.scss'],
   animations: [
     trigger('logoAnimation', [
-      state('initial', style({ transform: 'translateY(-100%)' })),
-      state('final', style({ transform: 'translateY(-40%)' })),
-      transition('initial => final', [
-        animate('0.4s ease-out')
-      ])
+      state('initial', style({ transform: 'translateY(-100%)', opacity: 0 })),
+      state('final', style({ transform: 'translateY(0)', opacity: 1 })),
+      transition('initial => final', [animate('0.6s ease-out')]),
     ]),
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('0.5s ease-in', style({ opacity: 1 }))
-      ])
+        animate('0.5s ease-in', style({ opacity: 1 })),
+      ]),
     ]),
     trigger('fadeOut', [
-      state('visible', style({ opacity: 1 })),
-      state('hidden', style({ opacity: 0 })),
-      transition('visible => hidden', [
-        animate('0.5s ease-out')
-      ])
-    ])
-  ]
+      transition(':leave', [
+        style({ transform: 'scale(1)', opacity: 1 }),
+        animate('0.5s ease-in', style({ transform: 'scale(0.8)', opacity: 0 })),
+      ]),
+    ]),
+  ],
 })
 export class SplashScreenComponent implements OnInit {
   @Output() closeSplash = new EventEmitter<void>();
   logoState = 'initial';
   showAgeVerification = false;
   splashVisibility = 'visible';
-
+  logoSrc = 'assets/logo.png';
 
   ngOnInit() {
-    console.log("Initializing SplashScreenComponent");
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    this.logoSrc = isDarkMode ? 'assets/logo-dark-mode.png' : 'assets/logo.png';
 
-    // Trigger the logo animation
+    // Animate the logo first
     setTimeout(() => {
       this.logoState = 'final';
-      console.log("Logo animation complete, logoState:", this.logoState);
-    }, 100);
+    }, 200);
 
-    // Show the age verification text and buttons after the logo lands
+    // Delay age verification appearance until logo animation completes
     setTimeout(() => {
       this.showAgeVerification = true;
-      console.log("Age verification set to visible:", this.showAgeVerification);
-    }, 500);
+    }, 1000);
   }
 
   onYesClick() {
     this.splashVisibility = 'hidden';
+    this.showAgeVerification = false;
     setTimeout(() => {
       this.closeSplash.emit();
-    }, 500);
+    }, 100);
   }
 
   onNoClick() {
-    alert("Sorry, you must be over 21 to enter.");
+    alert('Sorry, you must be over 21 to enter.');
   }
 }

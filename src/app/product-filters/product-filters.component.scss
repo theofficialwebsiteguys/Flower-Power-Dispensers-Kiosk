@@ -88,7 +88,9 @@
   }
 
   ion-range {
+    width: 80%;
     padding: 0;
+    margin: auto;
 
     --bar-background: var(--ion-color-dark);
     --bar-background-active: var(--ion-color-dark);
