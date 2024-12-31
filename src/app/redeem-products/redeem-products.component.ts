@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Product } from '../product/product.model';
 import { ProductsService } from '../products.service';
 import { ProductCategory } from '../product-category/product-category.model';
+import { CartService } from '../cart.service';
 
 @Component({
   selector: 'app-redeem-products',
@@ -9,21 +10,60 @@ import { ProductCategory } from '../product-category/product-category.model';
   styleUrls: ['./redeem-products.component.scss'],
 })
 export class RedeemProductsComponent  implements OnInit {
-  products: any[] = [];
+  @Input() userPoints: number = 0;
+  
+  products: Array<Product & { points: number }> = []; // Include points with each product
+  redeemProductIds = ['cf4e02c37df4bd37', '770a696056c501ee', '1034f2b53cf785f9', 'e2d3549ca1fa0a54']; 
 
-  constructor() {}
+  constructor(private productsService: ProductsService, private cartService: CartService) {}
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
   loadProducts(): void {
-    this.products = [
-      { id: 1, name: 'Product 1', imageUrl: 'https://imgix.dispenseapp.com/df759ba5e7360809_1724612408903-245009616-orange_creamsicle.avif', points: 1000 },
-      { id: 2, name: 'Product 2', imageUrl: 'https://imgix.dispenseapp.com/df759ba5e7360809_1732922045183-645771785-HashGummies-SourApple.jpg', points: 2000 },
-      { id: 3, name: 'Product 3', imageUrl: 'https://imgix.dispenseapp.com/df759ba5e7360809_1725628464350-225001509-6821731c-d6da-453e-9b88-c3e0b6afc780.jpg', points: 1500 },
-      { id: 4, name: 'Product 4', imageUrl: 'https://imgix.dispenseapp.com/df759ba5e7360809_1726773591021-587295912-9fc21064f0864f18b179619e79f1e11f.png', points: 2500 },
-      { id: 5, name: 'Product 5', imageUrl: 'https://imgix.dispenseapp.com/df759ba5e7360809_1726705081935-530739911-pura.png', points: 3000 },
-    ];
+    this.productsService.getProductsByIds(this.redeemProductIds).subscribe(
+      (products) => {
+        // Sort products to match the order of redeemProductIds
+        const sortedProducts = products.sort(
+          (a, b) =>
+            this.redeemProductIds.indexOf(a.id) - this.redeemProductIds.indexOf(b.id)
+        );
+  
+        // Assign points after sorting
+        this.products = sortedProducts.map((product, index) => ({
+          ...product,
+          points: this.getPointsForProduct(index), // Assign points based on index or custom logic
+        }));
+      },
+      (error) => {
+        console.error('Error fetching redemption products:', error);
+      }
+    );
+  }
+
+  handleProductClick(product: Product & { points: number }): void {
+    if (this.userPoints < product.points) {
+      alert('You do not have enough points to redeem this product.');
+      return;
+    }
+
+    const confirmAdd = confirm(`Add ${product.title} to cart for ${product.points} points?`);
+    if (confirmAdd) {
+      this.addToCart(product);
+    }
+  }
+
+  addToCart(product: Product & { points: number }): void {
+    const { points, ...productWithoutPoints } = product; // Exclude 'points'
+    const productWithQuantity = { ...productWithoutPoints, quantity: 1 }; // Add 'quantity: 1'
+    this.cartService.addToCart(productWithQuantity);
+  }
+  
+
+  // Example function to define points for products
+  private getPointsForProduct(index: number): number {
+    const pointsArray = [10, 10, 50, 65]; // Example points values
+    return pointsArray[index] || 1000; // Default to 1000 if index exceeds array length
   }
 }

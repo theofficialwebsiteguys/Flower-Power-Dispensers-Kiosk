@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from './product/product.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, map, Observable, of, switchMap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { ProductCategory, CategoryWithImage } from './product-category/product-category.model';
@@ -80,6 +80,7 @@ export class ProductsService {
           sortMethod: { criterion, direction },
         } = this.currentProductFilters.getValue();
 
+  
         return productArray
           .filter(({ category, brand, strainType, weight, thc }) => {
             const {
@@ -88,16 +89,19 @@ export class ProductsService {
               weights,
               potency: { thc: thcRange },
             } = this.currentProductFilters.getValue();
-
+  
             const isEmpty = (arr: any) => {
               return arr.length < 1;
             };
-
+  
             const isInRange = (value: number, range: PotencyRange): boolean => {
               const { lower, upper } = range;
               return value >= lower && value <= upper;
             };
-
+  
+            // Default THC to 100 if null or undefined
+            const defaultThc = thc ?? '100% THC';
+  
             return (
               category === this.currentCategory.value &&
               (isEmpty(brands) || brands.includes(brand)) &&
@@ -107,7 +111,7 @@ export class ProductsService {
                   strainType.toUpperCase().split(' ').includes(s)
                 )) &&
               (!weight || isEmpty(weights) || weights.includes(weight)) &&
-              (!thc || isInRange(Number(thc.split('%')[0]), thcRange))
+              (!defaultThc || isInRange(Number(defaultThc.split('%')[0]), thcRange))
             );
           })
           .sort(
@@ -116,7 +120,11 @@ export class ProductsService {
               { price: priceB, thc: thcB, title: titleB }
             ) => {
               let result = 0;
-
+  
+              // Default THC to 100 if null or undefined for sorting
+              const defaultThcA = thcA ?? '100';
+              const defaultThcB = thcB ?? '100';
+  
               switch (criterion) {
                 case 'POPULAR': {
                   break;
@@ -129,9 +137,10 @@ export class ProductsService {
                   break;
                 }
                 case 'THC': {
-                  if (direction === 'ASC') result = Number(thcA) - Number(thcB);
+                  if (direction === 'ASC')
+                    result = Number(defaultThcA) - Number(defaultThcB);
                   else if (direction === 'DESC')
-                    result = Number(thcB) - Number(thcA);
+                    result = Number(defaultThcB) - Number(defaultThcA);
                   break;
                 }
                 case 'ALPHABETICAL': {
@@ -145,13 +154,14 @@ export class ProductsService {
                   break;
                 }
               }
-
+  
               return result;
             }
           );
       })
     );
   }
+  
 
   getProductFilterOptions(): Observable<ProductFilterOptions> {
     return this.products$.pipe(
@@ -165,11 +175,13 @@ export class ProductsService {
         }, options);
 
         productArray.forEach((product) => {
-          fields.forEach((field) => {
-            if (!!product[field]) {
-              options[`${field}s`].add(product[field]);
-            }
-          });
+          if (product.category === this.currentCategory.value) { // Filter by currentCategory
+            fields.forEach((field) => {
+              if (!!product[field]) {
+                options[`${field}s`].add(product[field]);
+              }
+            });
+          }
         });
 
         let result: ProductFilterOptions = { brands: [], weights: [] };
@@ -242,6 +254,15 @@ export class ProductsService {
 
 
   updateProductFilters(filters: ProductFilters) {
-    this.currentProductFilters.next(filters);
+    this.currentProductFilters.next({ ...filters }); // Ensure a new reference
   }
+
+  getProductsByIds(ids: string[]): Observable<Product[]> {
+    return this.products$.pipe(
+      map((productArray) =>
+        productArray.filter((product) => ids.includes(product.id))
+      )
+    );
+  }
+  
 }

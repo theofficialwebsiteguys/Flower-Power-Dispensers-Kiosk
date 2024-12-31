@@ -1,4 +1,11 @@
-import { trigger, transition, style, animate } from '@angular/animations';
+import {
+  trigger,
+  transition,
+  style,
+  animate,
+  group,
+  query,
+} from '@angular/animations';
 import { Component } from '@angular/core';
 import { App } from '@capacitor/app';
 
@@ -16,7 +23,13 @@ import { Router } from '@angular/router';
     trigger('fadeIn', [
       transition(':enter', [
         style({ opacity: 0 }),
-        animate('0.2s ease-in', style({ opacity: 1 })),
+        animate('0.5s ease-in', style({ opacity: 1 })),
+      ]),
+    ]),
+    trigger('fadeOut', [
+      transition(':leave', [
+        style({ opacity: 1 }),
+        animate('0.5s ease-out', style({ opacity: 0 })),
       ]),
     ]),
   ],
@@ -40,9 +53,7 @@ export class AppComponent {
       // Parse the path and query params
       const url = new URL(data.url);
       const mode = url.searchParams.get('mode');
-      console.log(mode)
       const token = url.searchParams.get('token');
-      console.log(token)
 
       // Navigate to the appropriate route in the app
       if (mode === 'reset-password' && token) {
@@ -51,7 +62,7 @@ export class AppComponent {
         });
       }
     });
-   }
+  }
 
   ngOnInit() {
     this.productService.fetchProducts();
@@ -59,15 +70,15 @@ export class AppComponent {
     this.settingsService.updateTheme();
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
-      if(this.isLoggedIn)
-        this.showSplashScreen = false;
+      if (this.isLoggedIn) this.onCloseSplash();
     });
-    //this.fcmService.initPushNotifications('test@gmail.com')
   }
 
   onCloseSplash() {
-    // Delay hiding the splash screen to allow the fade-out animation to complete
-    this.showSplashScreen = false;
+    // Set a slight delay to allow fade-out animation
+    setTimeout(() => {
+      this.showSplashScreen = false;
+    }, 100); // Matches the animation duration
     console.log(
       'Splash screen closed, showSplashScreen:',
       this.showSplashScreen

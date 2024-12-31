@@ -15,7 +15,7 @@
     <span *ngFor="let step of progressSteps">{{ step }}</span>
   </div>
 
-  <app-redeem-products></app-redeem-products>
+  <app-redeem-products [userPoints]="points"></app-redeem-products>
 
   <div class="rewards-details" *ngIf="!isExclusiveMember">
     <div class="reward-item">
@@ -23,10 +23,10 @@
       <div class="reward-header">Annual fee required (sign up in-store)</div>
       <h3>Exclusive Membership</h3>
       <ul class="reward-list">
-        <li>200 bonus points upon joining</li>
-        <li>10% off all in-store purchases of $125+ (pre-tax)</li>
+        <li>10% off all purchases of $100+ (pre-tax)</li>
         <li>Earn 2 points for every $1 spent (pre-tax)</li>
-        <li>Redeem points for select products</li>
+        <li>Access to exclusive Flower Power special promotions and events</li>
+        <li>Get alerts for product drops</li>
       </ul>
     </div>
   </div>

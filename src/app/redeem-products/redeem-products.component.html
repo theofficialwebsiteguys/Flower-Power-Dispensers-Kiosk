@@ -1,10 +1,19 @@
 <div class="slider-container">
   <div class="slider">
-    <div class="slide" *ngFor="let product of products">
+    <div class="slide" *ngFor="let product of products" [class.disabled]="userPoints < product.points" (click)="handleProductClick(product)">
       <div class="card">
+        <!-- Image and Points Badge -->
         <div class="image-container">
-          <img [src]="product.imageUrl" alt="Product Image" />
+          <img [src]="product.image" [alt]="product.title" />
           <div class="points-badge">{{ product.points }} Points</div>
+        </div>
+
+        <!-- Black Overlay -->
+        <div class="card-details category-section">
+          <p class="product-title">
+            {{ product.title | slice: 0:35 }}{{ product.title.length > 35 ? '...' : '' }}
+          </p>
+          <p class="product-price">{{ product.price | currency }}</p>
         </div>
       </div>
     </div>

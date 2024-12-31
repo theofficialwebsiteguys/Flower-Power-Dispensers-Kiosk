@@ -45,12 +45,6 @@ export class AccountComponent implements OnInit {
   private setupSettings() {
     this.settings = [
       {
-        id: 'notifications',
-        label: 'Notifications',
-        value: this.allowNotifications,
-        action: (value: boolean) => this.onToggleNotifications(value),
-      },
-      {
         id: 'darkMode',
         label: 'Dark Mode',
         value: this.darkModeEnabled,
@@ -65,7 +59,7 @@ export class AccountComponent implements OnInit {
         console.log('Notification setting updated successfully');
         this.allowNotifications = value;
       },
-      error: (err) => {
+      error: (err: any) => {
         console.error('Failed to update notification setting:', err);
       },
     });
