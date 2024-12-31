@@ -30,6 +30,7 @@
       </ion-label>
       <ion-button class="action-button" routerLink="/cart">
         <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
+        <ion-badge *ngIf="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</ion-badge>
       </ion-button>
     </ng-container>
   </ion-buttons>

@@ -2,8 +2,21 @@ img {
   height: 64px;
 }
 
+.cart-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  transform: translate(50%, -50%);
+  background: var(--ion-color-primary);
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+
 .action-button {
   text-transform: capitalize;
+  --border-radius: 0 !important;
 
   a {
     text-decoration: none;

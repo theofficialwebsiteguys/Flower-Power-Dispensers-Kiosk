@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
 import { Router } from '@angular/router';
+import { CartService } from '../cart.service';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +14,12 @@ export class HeaderComponent {
   isLoggedIn = false;
   darkModeEnabled = false;
   userPoints = 0;
+  cartItemCount = 0; // Initialize cart item count
 
   constructor(
     private authService: AuthService,
     private settingsService: SettingsService,
+    private cartService: CartService,
     private router: Router
   ) {}
 
@@ -33,6 +36,10 @@ export class HeaderComponent {
     });
     this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
       this.darkModeEnabled = isDarkModeEnabled;
+    });
+
+    this.cartService.cart$.subscribe((cartItems) => {
+      this.cartItemCount = cartItems.reduce((count, item) => count + item.quantity, 0);
     });
     // this.darkModeEnabled = this.settingsService.getDarkModeEnabled();
   }
