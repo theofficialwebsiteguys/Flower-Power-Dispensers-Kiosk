@@ -17,6 +17,7 @@ import { AuthService } from '../auth.service';
 export class SingleProductComponent implements OnInit {
   currentProduct: Product = {
     id: '',
+    posProductId: '',
     category: 'FLOWER',
     title: '',
     brand: '',

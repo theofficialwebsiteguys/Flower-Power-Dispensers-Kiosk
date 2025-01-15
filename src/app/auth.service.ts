@@ -12,6 +12,8 @@ import {
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FcmService } from './fcm.service';
+import { ProductsService } from './products.service';
+import { Product } from './product/product.model';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,9 @@ export class AuthService {
 
   private authStatus = new BehaviorSubject<boolean>(this.hasToken()); // Observable for auth status
 
-  constructor(private http: HttpClient, private router: Router, @Inject(FcmService) private fcmService: FcmService) {
+  private enrichedOrders = new BehaviorSubject<any[]>([]);
+
+  constructor(private http: HttpClient, private router: Router, @Inject(FcmService) private fcmService: FcmService, private productsService: ProductsService) {
     const user = localStorage.getItem('user_info');
     if (user) {
       this.userSubject.next(JSON.parse(user));
@@ -80,9 +84,11 @@ export class AuthService {
             this.storeSessionData(response.sessionId, response.expiresAt);
             this.authStatus.next(true); // Notify subscribers of auth status
             this.router.navigateByUrl('/rewards')
+            this.validateSession();
             this.fcmService.initPushNotifications(credentials.email);
           }
           if (response.user) {
+            console.log(response.user)
             this.storeUserInfo(response.user); // Save user information locally
           }
         })
@@ -125,6 +131,7 @@ export class AuthService {
   }
 
   private storeUserInfo(user: any) {
+    console.log(user)
     localStorage.setItem('user_info', JSON.stringify(user));
     this.userSubject.next(user);
   }
@@ -188,10 +195,12 @@ export class AuthService {
   .get<any>(`${this.apiUrl}/validate-session`, { headers })
   .pipe(
     tap((response) => {
-      if (response.valid) {
+      if (response) {
         this.authStatus.next(true);
-
         this.updateUserData();
+        this.handleRecentOrders(response.orders);
+        this.setAuthTokensAlleaves(response.authTokens?.alleaves);
+        this.fcmService.initPushNotifications(this.getUserInfo().email);
       } else {
         console.error('Authentication failed:', response.error || 'Unknown error');
         if (response.details) {
@@ -225,7 +234,6 @@ export class AuthService {
       Authorization: token,
     });
 
-    console.log("here")
     this.http
       .get(`${this.apiUrl}/id/${this.getCurrentUser().id}`, { headers })
       .pipe(
@@ -285,5 +293,45 @@ export class AuthService {
       );
   }
 
+   // Getter to access the current value of enriched orders
+   get orders() {
+    return this.enrichedOrders.asObservable();
+  }
+
+  // Method to process and set enriched orders
+  handleRecentOrders(orders: any[]) {
+    this.productsService.getProducts().subscribe((products: Product[]) => {
+      const enrichedOrders = orders.map((order) => {
+        const itemsWithDetails = Object.entries(order.items).map(([posProductId, quantity]) => {
+          const product = products.find((p) => p.posProductId == posProductId);
+          if (product) {
+            return {
+              ...product,
+              quantity,
+            };
+          } else {
+            console.warn(`No product found for posProductId: ${posProductId}`);
+            return null;
+          }
+        }).filter((item) => item !== null);
+
+        return {
+          ...order,
+          items: itemsWithDetails,
+        };
+      });
+
+      // Update the BehaviorSubject with enriched orders
+      this.enrichedOrders.next(enrichedOrders);
+    });
+  }
+    
+  // Store alleaves in sessionStorage
+  setAuthTokensAlleaves(alleaves: any): void {
+    sessionStorage.removeItem('authTokensAlleaves');
+    if (alleaves) {
+      sessionStorage.setItem('authTokensAlleaves', JSON.stringify(alleaves));
+    }
+  }
 
 }

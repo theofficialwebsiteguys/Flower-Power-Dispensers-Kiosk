@@ -1,0 +1,71 @@
+<div class="order-history">
+  <!-- Pending Orders Section -->
+  <h2>Pending Orders</h2>
+  <div class="order-list">
+    <div
+      class="order-card"
+      *ngFor="let order of pendingOrders; let i = index"
+      [class.expanded]="expandedOrderIndex.pending === i"
+    >
+      <div class="order-header" (click)="toggleExpand(i, 'pending')">
+        <div class="order-info">
+          <h3>Order #{{ order.id_order }}</h3>
+          <p>{{ order.items.length }} items</p>
+          <p>Pickup: {{ order.pickupDate }} at {{ order.pickupTime }}</p>
+        </div>
+        <div class="order-amount">
+          <p>${{ order.total | number: '1.2-2' }}</p>
+        </div>
+      </div>
+
+      <!-- Expandable section -->
+      <div class="order-items" *ngIf="expandedOrderIndex.pending === i">
+        <ul>
+          <li *ngFor="let item of order.items" class="order-item">
+            <img [src]="item.image" alt="{{ item.title }}" class="item-image" />
+            <span>{{ item.quantity }}x</span>
+            <span>{{ item.title }}</span>
+          </li>
+        </ul>
+        <button class="reorder-button" (click)="reorder(order)">
+          Reorder
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Past Orders Section -->
+  <h2>Past Orders</h2>
+  <div class="order-list">
+    <div
+      class="order-card"
+      *ngFor="let order of pastOrders; let i = index"
+      [class.expanded]="expandedOrderIndex.past === i"
+    >
+      <div class="order-header" (click)="toggleExpand(i, 'past')">
+        <div class="order-info">
+          <h3>Order #{{ order.id_order }}</h3>
+          <p>{{ order.items.length }} items</p>
+          <p>Pickup: {{ order.pickupDate }} at {{ order.pickupTime }}</p>
+        </div>
+        <div class="order-amount">
+          <p>${{ order.total | number: '1.2-2' }}</p>
+        </div>
+      </div>
+
+      <!-- Expandable section -->
+      <div class="order-items" *ngIf="expandedOrderIndex.past === i">
+        <ul>
+          <li *ngFor="let item of order.items" class="order-item">
+            <img [src]="item.image" alt="{{ item.title }}" class="item-image" />
+            <span>{{ item.quantity }}x</span>
+            <span>{{ item.title }}</span>
+          </li>
+        </ul>
+        <ion-button class="reorder-button" (click)="reorder(order)">
+          Reorder
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</div>

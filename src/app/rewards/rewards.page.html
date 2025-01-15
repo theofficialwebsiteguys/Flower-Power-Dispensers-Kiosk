@@ -5,6 +5,7 @@
   <div *ngIf="isLoggedIn; else guestContent">
     <app-points [points]="user.points" [isExclusiveMember]="user.premium"></app-points>
     <!-- Pass user to AccountComponent -->
+     <app-banner-carousel></app-banner-carousel>
     <app-account [user]="user"></app-account>
     <app-review></app-review>
   </div>

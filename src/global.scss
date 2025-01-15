@@ -27,6 +27,20 @@
 
 body{
   --ion-background-color: var(--ion-background-primary);
+
+  ion-tab-button {
+    i,
+    ion-label {
+      color: #b8b8b8;
+    }
+    
+    &.tab-selected {
+      i,
+      ion-label {
+        color: var(--ion-color-primary);
+      }
+    }
+  }
 }
 
 /* Dark Mode */

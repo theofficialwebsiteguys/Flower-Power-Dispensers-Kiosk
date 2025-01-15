@@ -8,7 +8,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 export class BannerCarouselComponent implements OnInit, OnDestroy {
   banners = [
     {
-      image: 'assets/flower-power-banner.webp',
+      image: 'assets/banner-cover.jpg',
       title: 'Where Passion Meets Potency',
       description: 'Flower Power Dispensary',
     },
@@ -18,7 +18,52 @@ export class BannerCarouselComponent implements OnInit, OnDestroy {
       description: 'Flower Power Dispensary',
     },
     {
-      image: 'assets/fp-3.jpg',
+      image: 'assets/carousel1.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel2.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel3.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel4.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel5.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel6.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel7.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel8.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel9.jpg',
+      title: 'Where Passion Meets Potency',
+      description: 'Flower Power Dispensary',
+    },
+    {
+      image: 'assets/carousel10.jpg',
       title: 'Where Passion Meets Potency',
       description: 'Flower Power Dispensary',
     },
