@@ -5,8 +5,9 @@
 >
   <div class="icon-wrapper">
     <img [src]='category.imageUrl' alt="icon" />
+    <p>
+      {{ category.category === "PRE_ROLLS" ? "Pre Rolls" : category.category.toLowerCase() }}
+    </p>
   </div>
-  <p>
-    {{ category.category === "PRE_ROLLS" ? "Pre Rolls" : category.category.toLowerCase() }}
-  </p>
+
 </button>

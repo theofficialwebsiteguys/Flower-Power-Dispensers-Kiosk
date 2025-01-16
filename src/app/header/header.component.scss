@@ -1,18 +1,21 @@
 img {
-  height: 64px;
+  height: 55px;
 }
 
 .cart-badge {
-  position: absolute;
-  top: 0;
-  right: 0;
-  transform: translate(50%, -50%);
   background: var(--ion-color-primary);
   color: #fff;
-  font-size: 12px;
+  font-size: 10px; /* Slightly smaller for better fit */
   font-weight: bold;
+  padding: 2px 6px; /* Balanced padding */
+  border-radius: 10px; /* Keeps it circular */
+  transform: none; /* Removed transform to prevent offset */
 }
 
+.action-button {
+  position: relative; /* Ensure the badge positions correctly */
+  padding: 10px; /* Extra space around the button */
+}
 
 .action-button {
   text-transform: capitalize;
@@ -36,7 +39,7 @@ img {
   top: 0;
   z-index: 1000;
   background: #fff;
-  padding: calc(10px + env(safe-area-inset-top)) 10px 10px 10px; /* Top padding accounts for notch */
+  padding: calc(5px + env(safe-area-inset-top)) 5px 5px 5px; /* Top padding accounts for notch */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
 

@@ -47,10 +47,10 @@
 .category-section {
   padding: 20px 24px 16px;
 
-  &:nth-child(odd) {
+  &:nth-child(even) {
     background-color: rgba(var(--ion-color-secondary-rgb), 0.7) !important;
   }
-  &:nth-child(4n-1) {
+  &:nth-child(4n-2) {
     background-color: rgba(var(--ion-color-primary-rgb), 0.6) !important;
   }
 }

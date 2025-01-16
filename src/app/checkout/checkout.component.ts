@@ -27,6 +27,10 @@ export class CheckoutComponent implements OnInit {
 
   isLoading: boolean = false; 
 
+  timeOptions: { value: string, display: string }[] = [];
+
+
+
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
 
@@ -34,6 +38,7 @@ export class CheckoutComponent implements OnInit {
 
   ngOnInit() {
     this.calculateDefaultTotals();
+    this.generateTimeOptions();
   
     window.AeroPay.init({
       env: 'staging'
@@ -63,6 +68,17 @@ export class CheckoutComponent implements OnInit {
     }
   }
   
+  generateTimeOptions() {
+    for (let hour = 8; hour <= 23; hour++) {
+      const displayHour = hour % 12 === 0 ? 12 : hour % 12;
+      const amPm = hour < 12 ? 'AM' : 'PM';
+      const formattedHour = hour < 10 ? `0${hour}` : `${hour}`;
+      this.timeOptions.push({
+        value: `${formattedHour}:00`,    // 24-hour format for value (e.g., 13:00)
+        display: `${displayHour}:00 ${amPm}`  // 12-hour format for display (e.g., 1:00 PM)
+      });
+    }
+  }
 
   calculateDefaultTotals() {
     this.finalSubtotal = this.checkoutInfo.cart.reduce((total: number, item: any) => total + item.price, 0);

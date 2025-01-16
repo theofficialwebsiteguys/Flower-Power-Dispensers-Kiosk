@@ -1,37 +1,65 @@
-.icon-wrapper {
-  width: 100px;
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #f0f0f0; /* Light gray background */
-  border-radius: 12px; /* Rounded corners for a smooth appearance */
-  border: 2px solid #e0e0e0; /* Light border for subtle definition */
-  box-shadow: 0 4px 8px rgba(var(--ion-color-primary-rgb), 0.2); /* Soft shadow for depth */
-}
-
-.icon-wrapper img {
-  max-width: 90%; /* Uniform scaling */
-  max-height: 90%;
-  object-fit: contain;
-}
-
-p {
-  font-size: 14px;
-  font-weight: bold; /* Make text stand out */
-  margin: 8px 0 0 0;
-  color: #444; /* Dark gray for better contrast */
-  text-transform: capitalize;
-}
-
+/* Button Container */
 .container {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  gap: 8px;
+  gap: 4px;
   background: none;
   border: none;
   cursor: pointer;
+  padding: 4px;
+  border-radius: 12px;
+  transition: background-color 0.2s ease;
+}
+
+/* Icon Wrapper with Glowing Circle */
+.icon-wrapper {
+  width: 120px;  /* Increased wrapper size */
+  height: 130px; /* Increased wrapper size */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+/* Softer, More Faded Glow Effect */
+.icon-wrapper::before {
+  content: "";
+  position: absolute;
+  width: 110px; /* Larger glow */
+  height: 110px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(var(--ion-color-primary-rgb), 0.4) 0%,  /* Softer start */
+    rgba(var(--ion-color-primary-rgb), 0) 75%    /* Fades out smoothly */
+  );
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Hover Effect for Slightly Stronger Glow */
+.container:hover .icon-wrapper::before {
+  transform: scale(1.1);
+  opacity: 0.6; /* Softer glow on hover */
+}
+
+/* Larger Icon Image */
+.icon-wrapper img {
+  width: 80px;  /* Increased size */
+  height: 80px;
+  object-fit: contain;
+  z-index: 1;
+}
+
+/* Category Label */
+.icon-wrapper p {
+  z-index: 1;
+  font-size: 18px; /* Slightly larger text */
+  font-weight: 600;
+  margin-top: 8px;
+  text-transform: capitalize;
+  letter-spacing: 0.3px;
 }

@@ -55,11 +55,9 @@
     <div class="time-picker-container enhanced-box">
       <ion-item lines="none" class="time-picker">
         <ion-select placeholder="Select Time" [(ngModel)]="selectedTime">
-          <ion-select-option value="09:00">09:00 AM</ion-select-option>
-          <ion-select-option value="10:00">10:00 AM</ion-select-option>
-          <ion-select-option value="11:00">11:00 AM</ion-select-option>
-          <ion-select-option value="12:00">12:00 PM</ion-select-option>
-          <ion-select-option value="13:00">01:00 PM</ion-select-option>
+          <ion-select-option *ngFor="let time of timeOptions" [value]="time.value">
+            {{ time.display }}
+          </ion-select-option>
         </ion-select>
       </ion-item>
     </div>
@@ -137,7 +135,5 @@
 </div>
 
 <ion-button expand="block" class="sticky-footer" (click)="placeOrder()">
-  <div class="footer-content">
-    <span>Place Order</span>
-  </div>
+  Place Order
 </ion-button>
