@@ -1,10 +1,10 @@
 <button
   type="button"
   class="container"
-  (click)="handleCategorySelect(category.category)"
+  (click)="handleCategorySelect(category.category)" [attr.aria-label]="'Select ' + (category.category === 'PRE_ROLLS' ? 'Pre Rolls' : category.category.toLowerCase()) + ' category'"
 >
   <div class="icon-wrapper">
-    <img [src]='category.imageUrl' alt="icon" />
+    <img [src]='category.imageUrl' [alt]="category.category + ' icon'" />
     <p>
       {{ category.category === "PRE_ROLLS" ? "Pre Rolls" : category.category.toLowerCase() }}
     </p>

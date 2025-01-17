@@ -1,18 +1,18 @@
 <div class="button-container">
-  <ion-button (click)="setOpen(true)">Sort + Filter</ion-button>
-  <ion-button (click)="clearFilters()" *ngIf="hasDirtyFilters" fill="clear">
+  <ion-button (click)="setOpen(true)" aria-label="Open sort and filter options">Sort + Filter</ion-button>
+  <ion-button (click)="clearFilters()" *ngIf="hasDirtyFilters" fill="clear" aria-label="Clear all applied filters">
     Clear Filters
   </ion-button>
 </div>
 
-<ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="setOpen(false)">
+<ion-modal [isOpen]="isModalOpen" (ionModalDidDismiss)="setOpen(false)" aria-labelledby="sort-filter-title">
   <ng-template>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Sort + Filter</ion-title>
+        <ion-title id="sort-filter-title">Sort + Filter Options</ion-title>
         <ion-buttons slot="end">
-          <ion-button (click)="setOpen(false)">
-            <ion-icon slot="icon-only" name="close"></ion-icon>
+          <ion-button (click)="setOpen(false)" aria-label="Close sort and filter options">
+            <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
           </ion-button>
         </ion-buttons>
       </ion-toolbar>
@@ -23,12 +23,13 @@
         <ion-label class="section-title">Sort</ion-label>
         <ion-row class="select-container">
           <ion-select
-            label="By"
+            label="Sort by"
             label-placement="floating"
             fill="outline"
             interface="popover"
             [(ngModel)]="filters.sortMethod.criterion"
             (ionChange)="handleFilterUpdate()"
+            aria-label="Sort products by criteria"
           >
             <ion-select-option
               *ngFor="let criterion of criteriaOptions"
@@ -37,12 +38,13 @@
             >
           </ion-select>
           <ion-select
-            label="From"
+            label="Sort direction"
             label-placement="floating"
             fill="outline"
             interface="popover"
             [(ngModel)]="filters.sortMethod.direction"
             (ionChange)="handleFilterUpdate()"
+            aria-label="Select sorting direction"
           >
             <ion-select-option
               *ngFor="let direction of directionOptions"
@@ -53,23 +55,19 @@
         </ion-row>
       </div>
 
-      <div
-        class="section"
-        *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions"
-      >
+      <div class="section" *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions">
         <ion-label class="section-title">Brands</ion-label>
         <ion-row class="checkbox-container">
           <label
             class="checkbox-wrapper"
             *ngFor="let brand of dynamicFilterOptions.brands"
+            [attr.aria-label]="'Filter by brand ' + brand.label"
           >
             <input
               #brandInput
               type="checkbox"
               [checked]="isChecked(filters.brands, brand.value)"
-              (change)="
-                handleCheckField(brandInput.checked, brand.value, 'brands')
-              "
+              (change)="handleCheckField(brandInput.checked, brand.value, 'brands')"
             />
             <ion-label>{{ brand.label }}</ion-label>
           </label>
@@ -79,37 +77,35 @@
       <div class="section">
         <ion-label class="section-title">Strains</ion-label>
         <ion-row class="checkbox-container">
-          <label class="checkbox-wrapper" *ngFor="let strain of strainOptions">
+          <label
+            class="checkbox-wrapper"
+            *ngFor="let strain of strainOptions"
+            [attr.aria-label]="'Filter by strain ' + strain.label"
+          >
             <input
               #strainInput
               type="checkbox"
               [checked]="isChecked(filters.strains, strain.value)"
-              (change)="
-                handleCheckField(strainInput.checked, strain.value, 'strains')
-              "
+              (change)="handleCheckField(strainInput.checked, strain.value, 'strains')"
             />
             <ion-label>{{ strain.label }}</ion-label>
           </label>
         </ion-row>
       </div>
 
-      <div
-        class="section"
-        *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions"
-      >
+      <div class="section" *ngIf="dynamicFilterOptions$ | async as dynamicFilterOptions">
         <ion-label class="section-title">Weights</ion-label>
         <ion-row class="checkbox-container">
           <label
             class="checkbox-wrapper"
             *ngFor="let weight of dynamicFilterOptions.weights"
+            [attr.aria-label]="'Filter by weight ' + weight.label"
           >
             <input
               #weightInput
               type="checkbox"
               [checked]="isChecked(filters.weights, weight.value)"
-              (change)="
-                handleCheckField(weightInput.checked, weight.value, 'weights')
-              "
+              (change)="handleCheckField(weightInput.checked, weight.value, 'weights')"
             />
             <ion-label>{{ weight.label }}</ion-label>
           </label>
@@ -127,6 +123,7 @@
             [value]="filters.potency.thc"
             [(ngModel)]="filters.potency.thc"
             (ionChange)="handleFilterUpdate()"
+            aria-label="Adjust THC potency range"
           ></ion-range>
         </ion-row>
       </div>

@@ -14,59 +14,59 @@ export class BannerCarouselComponent implements OnInit, OnDestroy {
     },
     {
       image: 'assets/fp-2.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Flower Power Counter Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel1.jpg',
-      title: 'Where Passion Meets Potency',
-      description: 'Flower Power Dispensary',
-    },
-    {
-      image: 'assets/carousel2.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Flower Power Sign',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel3.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Dank Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel4.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Bodega Boyz Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel5.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Toke Folks Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel6.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Bodega Boyz Display 2',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel7.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Hurley Grown Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel8.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'MFNY Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel9.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Flower Display',
       description: 'Flower Power Dispensary',
     },
     {
       image: 'assets/carousel10.jpg',
-      title: 'Where Passion Meets Potency',
+      title: 'Display Case',
       description: 'Flower Power Dispensary',
     },
+    {
+      image: 'assets/carousel2.jpg',
+      title: 'Flower Power Neon Sign',
+      description: 'Flower Power Dispensary',
+    }
   ];
 
   currentIndex = 0;

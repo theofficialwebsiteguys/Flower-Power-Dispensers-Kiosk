@@ -11,7 +11,6 @@ import { CartItemsComponent } from '../cart-items/cart-items.component';
 import { SharedModule } from '../shared/shared.module';
 import { CheckoutComponent } from '../checkout/checkout.component';
 import { RecentOrdersComponent } from '../recent-orders/recent-orders.component';
-import { ConfirmationComponent } from '../confirmation/confirmation.component';
 
 @NgModule({
   imports: [
@@ -21,6 +20,6 @@ import { ConfirmationComponent } from '../confirmation/confirmation.component';
     CartPageRoutingModule,
     SharedModule
   ],
-  declarations: [CartPage, CartItemsComponent, CheckoutComponent, RecentOrdersComponent, ConfirmationComponent]
+  declarations: [CartPage, CartItemsComponent, CheckoutComponent, RecentOrdersComponent]
 })
 export class CartPageModule {}

@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-register',
@@ -14,7 +15,7 @@ export class RegisterComponent {
   loading = false;
   submitted = false;
   error = '';
-  isFormTouched = false; // Tracks if any input has been entered
+  isFormTouched = false; 
 
   countries = [
     { name: 'United States', dialCode: '+1', code: 'US' },
@@ -37,11 +38,11 @@ export class RegisterComponent {
     { name: 'South Korea', dialCode: '+82', code: 'KR' },
   ];
 
-  selectedCountryCode = this.countries[0].dialCode; // Default country code
+  selectedCountryCode = this.countries[0].dialCode;
 
-  dobEmptyError = false; // Error when DOB is incomplete
-  dobInvalidError = false; // Error when DOB format is invalid
-  underageError = false; // Error when user is under 21
+  dobEmptyError = false; 
+  dobInvalidError = false; 
+  underageError = false; 
 
   currentYear = new Date().getFullYear();
   darkModeEnabled: boolean = false;
@@ -51,25 +52,26 @@ export class RegisterComponent {
     private router: Router,
     private authService: AuthService,
     private settingsService: SettingsService,
+    private accessibilityService: AccessibilityService
   ) {
     this.registerForm = this.fb.group(
       {
         firstName: ['', [Validators.required, Validators.minLength(2)]],
         lastName: ['', [Validators.required, Validators.minLength(2)]],
         email: ['', [Validators.required, Validators.email]],
-        countryCode: [this.countries[0].code, Validators.required], // Default to the first country
-        phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]], // 7-15 digits
+        countryCode: [this.countries[0].code, Validators.required], 
+        phone: ['', [Validators.required, Validators.pattern(/^\d{7,15}$/)]], 
         month: [
           '',
           [Validators.required, Validators.pattern(/^(0[1-9]|1[0-2])$/)],
-        ], // MM
+        ], 
         day: [
           '',
           [
             Validators.required,
             Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])$/),
           ],
-        ], // DD
+        ],
         year: [
           '',
           [
@@ -81,19 +83,19 @@ export class RegisterComponent {
             )
             
           ],
-        ], // YYYY
+        ],
         password: ['', [Validators.required, Validators.minLength(6)]],
         confirmPassword: ['', [Validators.required]],
       },
       {
-        validator: this.passwordMatchValidator, // Custom validator
+        validator: this.passwordMatchValidator, 
       }
     );
   }
 
   ngOnInit() {
     window.addEventListener('resize', this.handleKeyboard.bind(this));
-    // Track changes in the form to determine if any input is entered
+  
     this.registerForm.valueChanges.subscribe(() => {
       this.isFormTouched = true;
     });
@@ -118,10 +120,9 @@ export class RegisterComponent {
   onSubmit() {
     this.submitted = true;
 
-    console.log('here');
     if (this.registerForm.invalid) {
-      console.log(this.registerForm);
       this.dobInvalidError = true;
+      this.accessibilityService.announce('Please correct the errors in the form.', 'assertive');
       this.loading = false;
       return;
     }
@@ -152,6 +153,7 @@ export class RegisterComponent {
 
     if (isNaN(dob.getTime())) {
       this.dobInvalidError = true;
+      this.accessibilityService.announce('Invalid date of birth.', 'assertive');
       this.loading = false;
       return;
     } else {
@@ -162,6 +164,7 @@ export class RegisterComponent {
     console.log(age)
     if (age < 21) {
       this.underageError = true;
+      this.accessibilityService.announce('You must be at least 21 years old to register.', 'assertive');
       this.loading = false;
       return;
     } else {

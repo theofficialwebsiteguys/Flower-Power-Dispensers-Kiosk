@@ -1,15 +1,27 @@
-<div class="splash-container" [@fadeOut] *ngIf="splashVisibility === 'visible'">
-  <!-- Logo Animation -->
+<div class="splash-container" [@fadeOut] *ngIf="splashVisibility === 'visible'" role="dialog" aria-labelledby="splash-logo" aria-modal="true">
   <div class="logo-container">
-    <img [src]="logoSrc" [@logoAnimation]="logoState" class="logo" alt="App Logo" />
+    <img [src]="logoSrc" [@logoAnimation]="logoState" class="logo" alt="App Logo" id="splash-logo" />
   </div>
 
-  <!-- Age Verification Section -->
-  <div *ngIf="showAgeVerification" @fadeIn class="age-verification">
-    <p class="verification-text">Are you 21+ Years Old?</p>
+  <div *ngIf="showAgeVerification" @fadeIn class="age-verification" role="alertdialog" aria-labelledby="age-verification-heading" aria-describedby="age-verification-description">
+    <p class="verification-text">Are you 21 years old or older?</p>
     <div class="button-group">
-      <ion-button (click)="onYesClick()" class="yes-btn" shape="round">Yes</ion-button>
-      <ion-button (click)="onNoClick()" class="no-btn" shape="round">No</ion-button>
+      <ion-button
+        (click)="onYesClick()"
+        class="yes-btn"
+        shape="round"
+        aria-label="Yes, I am 21 years or older"
+      >
+        Yes
+      </ion-button>
+      <ion-button
+        (click)="onNoClick()"
+        class="no-btn"
+        shape="round"
+        aria-label="No, I am not 21 years or older"
+      >
+        No
+      </ion-button>
     </div>
   </div>
 </div>

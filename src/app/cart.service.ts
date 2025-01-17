@@ -18,29 +18,25 @@ export interface CartItem {
   weight: string;
 }
 
-
 @Injectable({
   providedIn: 'root',
 })
 export class CartService {
-  private cartKey = 'cart'; // Key for storing the cart in sessionStorage
+  private cartKey = 'cart'; 
   private cartSubject = new BehaviorSubject<CartItem[]>(this.getCart());
-  cart$ = this.cartSubject.asObservable(); // Observable for the cart
+  cart$ = this.cartSubject.asObservable(); 
 
   constructor(private http: HttpClient, private authService: AuthService) {
-    // Initialize cart in sessionStorage if it doesn't exist
     if (!sessionStorage.getItem(this.cartKey)) {
       sessionStorage.setItem(this.cartKey, JSON.stringify([]));
     }
   }
 
-  // Get the cart items from sessionStorage
   getCart(): CartItem[] {
     const cart = sessionStorage.getItem(this.cartKey);
     return cart ? JSON.parse(cart) : [];
   }
 
-  // Add an item to the cart
   addToCart(item: CartItem) {
     const cart = this.getCart();
     const existingItemIndex = cart.findIndex(
@@ -56,7 +52,6 @@ export class CartService {
     this.saveCart(cart);
   }
 
-  // Update the quantity of a specific item in the cart
   updateQuantity(itemId: string, quantity: number) {
     const cart = this.getCart();
     const itemIndex = cart.findIndex((cartItem: CartItem) => cartItem.id === itemId);
@@ -70,22 +65,19 @@ export class CartService {
     }
   }
 
-  // Remove an item from the cart
   removeFromCart(itemId: string) {
     const cart = this.getCart();
     const updatedCart = cart.filter((cartItem: CartItem) => cartItem.id !== itemId);
     this.saveCart(updatedCart);
   }
 
-  // Clear the entire cart
   clearCart() {
     this.saveCart([]);
   }
 
-
   checkout(points_redeem: number): Observable<any> {
     const cartItems = this.getCart();
-    const unmatchedItems = [...cartItems]; // Clone the cart items array
+    const unmatchedItems = [...cartItems]; 
     const matchedCart: any[] = [];
     let skip = 0;
     const take = 100;
@@ -97,7 +89,6 @@ export class CartService {
     let id_customer: any;
     let checkoutItems: any[] = [];
   
-     // Step 1: Fetch and Match Inventory
   const fetchAndMatch = (): Observable<any[]> => {
     return this.fetchInventory(skip, take).pipe(
       switchMap((inventoryResponse) => {
@@ -112,7 +103,7 @@ export class CartService {
               ...unmatchedItems[matchIndex],
               id_batch: inventoryItem.id_batch,
             });
-            unmatchedItems.splice(matchIndex, 1); // Remove matched items
+            unmatchedItems.splice(matchIndex, 1);
           }
         });
 
@@ -176,7 +167,7 @@ export class CartService {
     return this.createOrder(orderDetails).pipe(
       tap((response) => {
         id_order = response.id_order;
-        console.log('Order Created:', response);
+        // console.log('Order Created:', response);
       }),
       catchError((error) => {
         console.error('Error creating order:', error);
@@ -189,7 +180,7 @@ export class CartService {
   const addItemsToOrder = (orderId: number): Observable<any[]> => {
     return this.addCheckoutItemsToOrder(orderId, checkoutItems).pipe(
       tap((responses) => {
-        console.log("Add Items to order responses", responses)
+        // console.log("Add Items to order responses", responses)
         // Calculate the total subtotal
         const totalSubtotal = responses.reduce(
           (acc: number, item: any) => {
@@ -237,7 +228,7 @@ export class CartService {
       });
 
       return this.http.put(url, body, { headers }).pipe(
-        tap(() => console.log(`Updated item ${item.id_item} price to ${priceOverride}`)),
+        // tap(() => console.log(`Updated item ${item.id_item} price to ${priceOverride}`)),
         catchError((error) => {
           console.error(`Error updating item ${item.id_item} price:`, error);
           return throwError(() => error);
@@ -296,7 +287,7 @@ export class CartService {
       const body = { skip, take };
   
       return this.http.post<any>('https://app.alleaves.com/api/inventory/search', body, { headers }).pipe(
-        tap((response) => console.log('Inventory Batch:', response)),
+        // tap((response) => console.log('Inventory Batch:', response)),
         catchError((error) => {
           console.error('Error fetching inventory:', error);
           return throwError(() => error);
@@ -315,7 +306,7 @@ export class CartService {
     const apiUrl = 'https://app.alleaves.com/api/customer';
 
     return this.http.post<any>(apiUrl, userDetails, { headers }).pipe(
-      tap((response) => console.log('User Created Successfully:', response)),
+      // tap((response) => console.log('User Created Successfully:', response)),
       catchError((error) => {
         console.error('Error creating User:', error);
         return throwError(() => error);
@@ -335,7 +326,7 @@ export class CartService {
     const apiUrl = 'https://app.alleaves.com/api/order';
 
     return this.http.post<any>(apiUrl, orderDetails, { headers }).pipe(
-      tap((response) => console.log('Order Created Successfully:', response)),
+      // tap((response) => console.log('Order Created Successfully:', response)),
       catchError((error) => {
         console.error('Error creating order:', error);
         return throwError(() => error);
@@ -367,7 +358,7 @@ export class CartService {
             id_item: resItem.id_item,  // Captured id_item
           }));
   
-          console.log(`Captured id_items for item ${item.id_batch}:`, generatedItems);
+          // console.log(`Captured id_items for item ${item.id_batch}:`, generatedItems);
           return generatedItems;
         }),
         catchError((error) => {
@@ -381,7 +372,7 @@ export class CartService {
       map((responses) => {
         // Flatten the nested arrays into a single array of items with id_item
         const flattenedItems = responses.reduce((acc: any[], val: any[]) => acc.concat(val), []);
-        console.log('All items with id_items:', flattenedItems);
+        // console.log('All items with id_items:', flattenedItems);
         return flattenedItems;
       }),
       catchError((error) => {
@@ -409,9 +400,9 @@ export class CartService {
     });
 
     return this.http.post(`${environment.apiUrl}/orders/create`, payload, { headers }).pipe(
-      tap((response) => {
-        console.log('Order Response:', response);
-      }),
+      // tap((response) => {
+      //   console.log('Order Response:', response);
+      // }),
       catchError((error) => {
         console.error('Error in placeOrder:', error);
         return throwError(() => error);
@@ -430,9 +421,9 @@ export class CartService {
     });
 
     return this.http.put(`https://app.alleaves.com/api/order/${id_order}`, payload, { headers }).pipe(
-      tap((response) => { 
-        console.log('Order Response:', response);
-      }),
+      // tap((response) => { 
+      //   console.log('Order Response:', response);
+      // }),
       catchError((error) => {
         console.error('Error in placeOrder:', error);
         return throwError(() => error);

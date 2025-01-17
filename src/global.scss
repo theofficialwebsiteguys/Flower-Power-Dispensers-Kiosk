@@ -25,6 +25,20 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+/* Hides content visually but keeps it accessible for screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+
 body{
   --ion-background-color: var(--ion-background-primary);
 
@@ -35,9 +49,11 @@ body{
     font-style: normal;
     font-variation-settings:
       "wdth" 100;
-    color: var(--ion-color-primary);
   }
 
+  .icon-wrapper{
+    color: var(--ion-color-dark);
+  }
 
   ion-tab-button {
     i,
@@ -60,6 +76,8 @@ body {
     color: var(--ion-color-dark-contrast);
     background-color: var(--ion-color-dark);
     --ion-background-color: var(--ion-color-dark);
+
+
 
     *:not(img),
     .product-detail {

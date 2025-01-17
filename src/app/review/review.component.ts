@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-review',
@@ -10,7 +11,14 @@ export class ReviewComponent {
   reviewComment: string = '';
   googleReviewUrl: string = 'https://search.google.com/local/writereview?placeid=ChIJaewyJiZZwokRRTvQ3pXjVZk'; // Replace with your actual Google Review link
 
+  constructor(private accessibilityService: AccessibilityService) {}
+
   leaveReview() {
-    window.open(this.googleReviewUrl, '_blank');
+    const newWindow = window.open(this.googleReviewUrl, '_blank');
+    if (newWindow) {
+      this.accessibilityService.announce('Google Reviews opened in a new tab.', 'polite');
+    } else {
+      this.accessibilityService.announce('Failed to open Google Reviews. Please check your browser settings.', 'assertive');
+    }
   }
 }

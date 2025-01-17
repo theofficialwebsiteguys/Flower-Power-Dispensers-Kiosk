@@ -47,6 +47,10 @@
 .category-section {
   padding: 20px 24px 16px;
 
+  &:first-child {
+    padding-top: 0; /* Removes top padding only for the first section */
+  }
+
   &:nth-child(even) {
     background-color: rgba(var(--ion-color-secondary-rgb), 0.7) !important;
   }

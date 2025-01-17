@@ -1,18 +1,25 @@
 <app-header></app-header>
 
 <ion-content [fullscreen]="true">
-  <!-- Show rewards content if user is logged in -->
-  <div *ngIf="isLoggedIn; else guestContent">
-    <app-points [points]="user.points" [isExclusiveMember]="user.premium"></app-points>
-    <!-- Pass user to AccountComponent -->
-     <app-banner-carousel></app-banner-carousel>
-    <app-account [user]="user"></app-account>
-    <app-review></app-review>
+  <div *ngIf="isLoggedIn; else guestContent" aria-labelledby="user-dashboard-heading">
+    <h1 id="user-dashboard-heading" class="sr-only">User Dashboard</h1>
+    <app-points
+      [points]="user.points"
+      [isExclusiveMember]="user.premium"
+      [attr.aria-label]="'You have ' + user.points + ' points. ' + user.premium ? 'You are an exclusive member.' : 'You are not an exclusive member.'"
+    ></app-points>
+    
+    <app-banner-carousel aria-label="Promotional banners carousel"></app-banner-carousel>
+
+    <app-account
+      [user]="user"
+      [attr.aria-label]="'Account settings for ' + user.name"
+    ></app-account>
+
+    <app-review aria-label="Leave a review"></app-review>
   </div>
 
-  <!-- Guest content -->
   <ng-template #guestContent>
-    <app-guest></app-guest>
-    <!-- Replace with your guest component -->
+    <app-guest aria-label="Guest content. Please log in to access your dashboard."></app-guest>
   </ng-template>
 </ion-content>

@@ -1,9 +1,9 @@
-<ion-item (click)="updateProductDisplay()">
+<ion-item (click)="updateProductDisplay()" role="button" [attr.aria-label]="'View details for ' + product.title">
   <ion-row class="container">
-    <img [src]="product.image" alt="Product" />
+    <img [src]="product.image" [alt]="product.title + ' image'" />
     <ion-label class="info">
       <p>{{ product.brand }}</p>
-      <h1>{{ product.title }}</h1>
+      <h1 class="product-title">{{ product.title }}</h1>
       <p class="capitalize">{{ product.strainType | lowercase }}</p>
       <p>{{ product.thc }}</p>
       <ion-row class="weightAndPrice">
@@ -13,12 +13,15 @@
 
       <ng-container *ngIf="isLoggedIn">
         <ion-row class="quantity-controls">
-          <button (click)="adjustQuantity(-1, $event)">-</button>
-          <span>{{ quantity }}</span>
-          <button (click)="adjustQuantity(1, $event)">+</button>
+          <button (click)="adjustQuantity(-1, $event)" [attr.aria-label]="'Decrease quantity of ' + product.title">-</button>
+          <span aria-live="polite">{{ quantity }}</span>
+          <button (click)="adjustQuantity(1, $event)" [attr.aria-label]="'Increase quantity of ' + product.title">+</button>
         </ion-row>
-        <ion-button class="add-to-cart-btn" expand="block" color="primary" (click)="addToCart($event)">Add to Cart</ion-button>
+        <ion-button class="add-to-cart-btn" expand="block" color="primary" (click)="addToCart($event)" [attr.aria-label]="'Add ' + product.title + ' to cart'">
+          Add to Cart
+        </ion-button>
       </ng-container>
     </ion-label>
   </ion-row>
 </ion-item>
+

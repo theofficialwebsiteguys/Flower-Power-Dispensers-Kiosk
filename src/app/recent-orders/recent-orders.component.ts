@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { CartItem, CartService } from '../cart.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-recent-orders',
@@ -14,12 +15,11 @@ export class RecentOrdersComponent  implements OnInit {
   expandedOrderIndex: { pending: number | null; past: number | null } = {
     pending: null,
     past: null,
-  }; // Tracks which order is expanded
+  }; 
 
-  constructor(private authService: AuthService, private cartService: CartService) {}
+  constructor(private authService: AuthService, private cartService: CartService, private accessibilityService: AccessibilityService) {}
 
   ngOnInit() {
-    // Subscribe to the orders observable to get updates
     this.authService.orders.subscribe((orders) => {
       this.pendingOrders = orders.filter((order) => !order.complete);
       this.pastOrders = orders.filter((order) => order.complete);
@@ -29,9 +29,13 @@ export class RecentOrdersComponent  implements OnInit {
   }
 
   toggleExpand(index: number, section: 'pending' | 'past'): void {
-    // Toggle expansion for the specific section
-    this.expandedOrderIndex[section] =
-      this.expandedOrderIndex[section] === index ? null : index;
+    const isExpanded = this.expandedOrderIndex[section] === index;
+    this.expandedOrderIndex[section] = isExpanded ? null : index;
+
+    const message = isExpanded
+      ? `Order ${section} #${index + 1} collapsed.`
+      : `Order ${section} #${index + 1} expanded.`;
+    this.accessibilityService.announce(message, 'polite');
   }
 
   reorder(order: any): void {
@@ -51,6 +55,8 @@ export class RecentOrdersComponent  implements OnInit {
       };
       this.cartService.addToCart(cartItem);
     });
+    const message = `Order #${order.id_order} items have been added to your cart.`;
+    this.accessibilityService.announce(message, 'assertive');
     console.log('Order added to cart:', order);
   }
 }

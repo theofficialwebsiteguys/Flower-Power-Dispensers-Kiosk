@@ -2,14 +2,37 @@ img {
   height: 55px;
 }
 
+/* Cart Button */
+.cart-button {
+  position: relative;
+  --background: transparent;
+  --box-shadow: none;
+  padding: 0;
+}
+
+/* Font Awesome Cart Icon */
+.cart-button i {
+  font-size: 22px; /* Adjust the size of the icon */
+  color: var(--ion-color-primary); /* Match your app's primary color */
+}
+
+/* Cart Badge */
 .cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -6px;
   background: var(--ion-color-primary);
   color: #fff;
-  font-size: 10px; /* Slightly smaller for better fit */
+  font-size: 10px;
   font-weight: bold;
-  padding: 2px 6px; /* Balanced padding */
-  border-radius: 10px; /* Keeps it circular */
-  transform: none; /* Removed transform to prevent offset */
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 
 .action-button {
@@ -41,5 +64,12 @@ img {
   background: #fff;
   padding: calc(5px + env(safe-area-inset-top)) 5px 5px 5px; /* Top padding accounts for notch */
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Cart Icon */
+ion-icon[name="cart-outline"] {
+  font-size: 24px; /* Size of the cart icon */
+  color: var(--ion-color-primary);
 }
 

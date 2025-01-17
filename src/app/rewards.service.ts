@@ -8,7 +8,6 @@ export class RewardsService {
 
   constructor(private http: HttpClient) {}
 
-  // API URLs (replace with your API endpoints)
   private apiUrl = 'https://your-api.com/rewards'; 
 
   sendReferral(email: string){

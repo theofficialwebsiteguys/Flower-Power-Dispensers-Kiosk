@@ -1,4 +1,4 @@
-<div class="log-in-page">
+<div class="log-in-page" role="main" aria-labelledby="login-heading">
   <div class="login-container">
     <div class="login-header">
       <div class="login-header-logo">
@@ -12,13 +12,13 @@
       </div>
     </div>
 
-    <!-- Error Message -->
-    <div *ngIf="error" class="error-message">
-      {{ error }}
-    </div>
+    <h1 id="login-heading" class="sr-only">Register for Flower Power</h1>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-      <!-- Name Row -->
+    <div *ngIf="error" class="error-message" aria-live="assertive">{{ error }}</div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" aria-describedby="form-instructions">
+      <p id="form-instructions" class="sr-only">Fill out all required fields marked with an asterisk (*).</p>
+
       <div class="name-row">
         <div class="form-group">
           <label for="firstName" class="required">First Name</label>
@@ -31,10 +31,11 @@
             "
             placeholder="Enter your first name"
             required
+            [attr.ria-invalid]="submitted && registerForm.get('firstName')?.invalid"
           />
           <div
             *ngIf="submitted && registerForm.get('firstName')?.invalid"
-            class="form-error"
+            class="form-error" aria-live="assertive"
           >
             First name is required and must be at least 2 characters.
           </div>
@@ -49,17 +50,17 @@
             [class.invalid]="submitted && registerForm.get('lastName')?.invalid"
             placeholder="Enter your last name"
             required
+            [attr.aria-invalid]="submitted && registerForm.get('lastName')?.invalid"
           />
           <div
             *ngIf="submitted && registerForm.get('lastName')?.invalid"
-            class="form-error"
+            class="form-error" aria-live="assertive"
           >
             Last name is required and must be at least 2 characters.
           </div>
         </div>
       </div>
 
-      <!-- Email -->
       <div class="form-group">
         <label for="email" class="required">Email</label>
         <input
@@ -69,10 +70,11 @@
           [class.invalid]="submitted && registerForm.get('email')?.invalid"
           placeholder="Enter your email"
           required
+          [attr.aria-invalid]="submitted && registerForm.get('email')?.invalid"
         />
         <div
           *ngIf="submitted && registerForm.get('email')?.invalid"
-          class="form-error"
+          class="form-error" aria-live="assertive"
         >
           Valid email is required.
         </div>
@@ -86,6 +88,7 @@
             id="countryCode"
             placeholder="Select Country Code"
             interface="popover"
+            aria-required="true"
           >
             <ion-select-option
               *ngFor="let country of countries"
@@ -104,20 +107,18 @@
             [class.invalid]="submitted && registerForm.get('phone')?.invalid"
             placeholder="Enter your phone number"
             required
+            [attr.aria-invalid]="submitted && registerForm.get('phone')?.invalid"
           />
         </div>
       
-        <!-- Error message for the entire section -->
         <div
           *ngIf="submitted && registerForm.get('phone')?.invalid"
-          class="form-error"
+          class="form-error" aria-live="assertive"
         >
           Phone number is required and must be valid.
         </div>
       </div>
       
-
-      <!-- DOB -->
       <div class="form-group">
         <label for="dob" class="required">Date of Birth</label>
         <div class="dob-container">
@@ -129,6 +130,9 @@
             placeholder="MM"
             class="dob-input"
             maxlength="2"
+            required
+            aria-required="true"
+            [attr.aria-invalid]="submitted && registerForm.get('month')?.invalid"
           />
           <input
             type="tel"
@@ -138,6 +142,9 @@
             placeholder="DD"
             class="dob-input"
             maxlength="2"
+            required
+            aria-required="true"
+            [attr.aria-invalid]="submitted && registerForm.get('day')?.invalid"
           />
           <input
             type="tel"
@@ -147,17 +154,19 @@
             placeholder="YYYY"
             class="dob-input"
             maxlength="4"
+            required
+            aria-required="true"
+            [attr.aria-invalid]="submitted && registerForm.get('year')?.invalid"
           />
         </div>
         <div
           *ngIf="(submitted && dobEmptyError) || dobInvalidError || underageError"
-          class="form-error"
+          class="form-error" aria-live="assertive"
         >
           A valid Date of Birth of 21+ is Required.
         </div>
       </div>
 
-      <!-- Password -->
       <div class="form-group">
         <label for="password" class="required">Password</label>
         <input
@@ -167,16 +176,17 @@
           [class.invalid]="submitted && registerForm.get('password')?.invalid"
           placeholder="Enter your password"
           required
+          aria-required="true"
+          [attr.aria-invalid]="submitted && registerForm.get('password')?.invalid"
         />
         <div
           *ngIf="submitted && registerForm.get('password')?.invalid"
-          class="form-error"
+          class="form-error" aria-live="assertive"
         >
           Password is required and must be at least 6 characters.
         </div>
       </div>
 
-      <!-- Confirm Password -->
       <div class="form-group">
         <label for="confirmPassword" class="required">Confirm Password</label>
         <input
@@ -188,29 +198,31 @@
           "
           placeholder="Confirm your password"
           required
+          aria-required="true"
+          [attr.aria-invalid]="submitted && registerForm.get('notMatching')?.invalid"
         />
         <div
           *ngIf="submitted && registerForm.hasError('notMatching')"
-          class="form-error"
+          class="form-error" aria-live="assertive"
         >
           Passwords do not match.
         </div>
       </div>
 
-      <!-- Submit Button -->
       <ion-button
         expand="block"
         type="submit"
         [disabled]="!isFormTouched || loading"
+        aria-label="Submit Registration Form"
       >
-        <ion-spinner *ngIf="loading" slot="start"></ion-spinner>
+        <ion-spinner *ngIf="loading" slot="start" aria-hidden="true"></ion-spinner>
         Register
       </ion-button>
     </form>
 
     <p class="login-link">
       Already have an account?
-      <a routerLink="/auth" [queryParams]="{ mode: 'login' }">Login</a>
+      <a routerLink="/auth" [queryParams]="{ mode: 'login' }" aria-label="Log in to your account">Login</a>
     </p>
   </div>
 </div>

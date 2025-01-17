@@ -4,6 +4,7 @@ import { ProductsService } from '../products.service';
 
 import { CategoryWithImage, ProductCategory } from '../product-category/product-category.model';
 import { Product } from '../product/product.model';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-card-slider',
@@ -14,7 +15,7 @@ export class CardSliderComponent implements OnInit {
   products: Product[] = [];
   categories: CategoryWithImage[] = [];
 
-  constructor(private readonly productService: ProductsService) {}
+  constructor(private readonly productService: ProductsService, private accessibilityService: AccessibilityService) {}
 
   ngOnInit() {
     this.categories = this.productService.getCategories();
@@ -25,13 +26,14 @@ export class CardSliderComponent implements OnInit {
   }
 
   updateCategory(category?: ProductCategory) {
-    if (!category) {
-      return;
+    if (category) {
+      this.productService.updateCategory(category);
+      this.accessibilityService.announce(`Category changed to ${category}`, 'polite');
     }
-    this.productService.updateCategory(category);
   }
 
   updateProductDisplay(product: Product) {
     this.productService.updateCurrentProduct(product);
+    this.accessibilityService.announce(`Viewing product ${product.title}`, 'polite');
   }
 }

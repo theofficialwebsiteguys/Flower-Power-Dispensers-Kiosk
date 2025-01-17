@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { CartItem, CartService } from '../cart.service';
 import { IonContent, LoadingController, ToastController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-cart',
@@ -19,9 +20,15 @@ export class CartPage {
 
   checkoutInfo: any;
 
-  isLoading: boolean = false; 
+  isLoading: boolean = false;
 
-  constructor(private readonly cartService: CartService,  private toastController: ToastController, private loadingController: LoadingController, private authService: AuthService){}
+  constructor(
+    private readonly cartService: CartService,
+    private toastController: ToastController,
+    private loadingController: LoadingController,
+    private authService: AuthService,
+    private accessibilityService: AccessibilityService
+  ) {}
 
   ngOnInit(): void {
     this.cartService.cart$.subscribe((cart) => {
@@ -37,57 +44,49 @@ export class CartPage {
     });
     await loading.present();
 
-    this.checkoutInfo = { cart: this.cartItems, user_info: this.authService.getCurrentUser() }
-    this.showCheckout = true; 
+    this.checkoutInfo = {
+      cart: this.cartItems,
+      user_info: this.authService.getCurrentUser(),
+    };
+    this.showCheckout = true;
     loading.dismiss();
-
-    // this.cartService.checkout().subscribe(
-    //   (response) => {
-    //     loading.dismiss();
-    //     this.isLoading = false;  
-    //     this.checkoutInfo = response;
-    //     this.showCheckout = true; 
-    //   },
-    //   (error) => {
-    //     loading.dismiss();
-    //     this.isLoading = false; 
-    //     console.error('Error during checkout:', error);
-    //     this.showCheckout = false; 
-    //   }
-    // );
+    this.accessibilityService.announce('Checkout process started.', 'polite');
   }
 
-  removeCheckout(){
+  removeCheckout() {
     this.showCheckout = false;
+    this.accessibilityService.announce('Returned to cart.', 'polite');
   }
 
   async onOrderPlaced() {
     this.showCheckout = false;
     await this.presentToast('Your order has been placed successfully!');
     this.resetCart();
-    this.scrollToTop();  // Scroll to the top of the page
+    this.scrollToTop();
+    this.accessibilityService.announce(
+      'Your order was placed successfully.',
+      'polite'
+    );
   }
-  
+
   scrollToTop() {
-    this.content.scrollToTop(500);  // Smooth scroll over 500ms
+    this.content.scrollToTop(500);
   }
-  
 
   async presentToast(message: string, color: string = 'success') {
     const toast = await this.toastController.create({
       message: message,
       duration: 3000,
       color: color,
-      position: 'bottom'
+      position: 'bottom',
     });
     await toast.present();
   }
 
-  // Reset cart and checkout after confirmation
   resetCart() {
-    this.cartService.clearCart(); // Assuming a clearCart method exists
+    this.cartService.clearCart();
     this.cartItems = [];
     this.checkoutInfo = null;
+    this.accessibilityService.announce('Your cart has been cleared.', 'polite');
   }
-
 }

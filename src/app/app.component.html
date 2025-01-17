@@ -1,6 +1,22 @@
 <ion-app>
-  <div *ngIf="showSplashScreen" @fadeOut class="splash-container">
+  <!-- Splash Screen -->
+  <div
+    *ngIf="showSplashScreen"
+    @fadeOut
+    class="splash-container"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="splash-heading"
+    aria-describedby="splash-description"
+  >
     <app-splash-screen (closeSplash)="onCloseSplash()"></app-splash-screen>
   </div>
-  <ion-router-outlet *ngIf="!showSplashScreen" @fadeIn></ion-router-outlet>
+
+  <!-- Main Content -->
+  <ion-router-outlet
+    *ngIf="!showSplashScreen"
+    @fadeIn
+    aria-live="polite"
+    aria-label="Main content area"
+  ></ion-router-outlet>
 </ion-app>
