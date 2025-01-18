@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CartItem, CartService } from '../cart.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-cart-items',
@@ -11,7 +12,7 @@ export class CartItemsComponent implements OnInit {
   @Input() items: CartItem[] = []
 
 
-  constructor(private readonly cartService: CartService){}
+  constructor(private readonly cartService: CartService, private readonly accessibilityService: AccessibilityService){}
 
   ngOnInit(): void {
     this.cartService.cart$.subscribe((cart) => {
@@ -20,14 +21,24 @@ export class CartItemsComponent implements OnInit {
   }
 
   updateQuantity(item: CartItem, delta: number): void {
-    this.cartService.updateQuantity(item.id, item.quantity + delta);
+    const newQuantity = item.quantity + delta;
+
+    if (newQuantity < 1) {
+      this.accessibilityService.announce(`Removed ${item.title} from your cart.`, 'polite');
+    } else {
+      this.accessibilityService.announce(`Updated ${item.title} quantity to ${newQuantity}.`, 'polite');
+    }
+
+    this.cartService.updateQuantity(item.id, newQuantity);
   }
 
   calculateSubtotal(): number {
-    return this.items.reduce(
+    const subtotal = this.items.reduce(
       (total, item) => total + Number(item.price) * item.quantity,
       0
     );
+    this.accessibilityService.announce(`Subtotal updated to ${subtotal.toFixed(2)} dollars.`, 'polite');
+    return subtotal;
   }
 
 }

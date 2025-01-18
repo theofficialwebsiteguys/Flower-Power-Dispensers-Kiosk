@@ -1,25 +1,25 @@
-<div class="points-container">
-
+<div class="points-container" aria-labelledby="points-heading">
   <div class="points-header">
-    <span class="points-value">{{ points }} pts</span>
-    <p class="membership-status">
+    <h2 id="points-heading" class="sr-only">Your Points and Membership Status</h2>
+    <span class="points-value" aria-live="polite">{{ points }} pts</span>
+    <p class="membership-status" aria-live="polite">
       {{ isExclusiveMember ? "Exclusive Member: $1 = 2 Point" : "Free Member: $1 = 1 Points" }}
     </p>
   </div>
 
-  <div class="progress-bar-container">
-    <div class="progress-bar" [style.width.%]="progressPercentage"></div>
+  <div class="progress-bar-container" aria-label="Progress towards next reward">
+    <div class="progress-bar" [style.width.%]="progressPercentage" role="progressbar" 
+      [attr.aria-valuenow]="progressPercentage" aria-valuemin="0" aria-valuemax="100">
+    </div>
   </div>
 
-  <div class="progress-steps">
+  <div class="progress-steps" aria-label="Reward milestones">
     <span *ngFor="let step of progressSteps">{{ step }}</span>
   </div>
 
-  <app-redeem-products [userPoints]="points"></app-redeem-products>
-
-  <div class="rewards-details" *ngIf="!isExclusiveMember">
+  <!-- <div class="rewards-details" *ngIf="!isExclusiveMember">
     <div class="reward-item">
-      <ion-icon name="medal-outline"></ion-icon>
+      <ion-icon name="medal-outline" aria-hidden="true"></ion-icon>
       <div class="reward-header">Annual fee required (sign up in-store)</div>
       <h3>Exclusive Membership</h3>
       <ul class="reward-list">
@@ -29,5 +29,5 @@
         <li>Get alerts for product drops</li>
       </ul>
     </div>
-  </div>
+  </div> -->
 </div>

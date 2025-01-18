@@ -1,20 +1,10 @@
 <ion-content>
-  <div class="auth-container">
-    <ng-container *ngIf="showMode === 'login'; else modeTemplate">
-      <app-login></app-login>
+  <div class="auth-container" role="main">
+    <ng-container [ngSwitch]="showMode">
+      <app-login *ngSwitchCase="'login'" aria-label="Login Form"></app-login>
+      <app-register *ngSwitchCase="'register'" aria-label="Registration Form"></app-register>
+      <app-forgot-password *ngSwitchCase="'forgot-password'" aria-label="Forgot Password Form"></app-forgot-password>
+      <app-reset-password *ngSwitchCase="'reset-password'" [token]="resetToken" aria-label="Reset Password Form"></app-reset-password>
     </ng-container>
-    <ng-template #modeTemplate>
-      <ng-container *ngIf="showMode === 'register'; else forgotPasswordTemplate">
-        <app-register></app-register>
-      </ng-container>
-    </ng-template>
-    <ng-template #forgotPasswordTemplate>
-      <ng-container *ngIf="showMode === 'forgot-password'; else resetPasswordTemplate">
-        <app-forgot-password></app-forgot-password>
-      </ng-container>
-    </ng-template>
-    <ng-template #resetPasswordTemplate>
-      <app-reset-password [token]="resetToken"></app-reset-password>
-    </ng-template>
   </div>
 </ion-content>

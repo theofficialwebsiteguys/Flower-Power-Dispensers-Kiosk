@@ -1,5 +1,6 @@
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-splash-screen',
@@ -32,30 +33,34 @@ export class SplashScreenComponent implements OnInit {
   splashVisibility = 'visible';
   logoSrc = 'assets/logo.png';
 
+  constructor(private accessibilityService: AccessibilityService) {}
+  
   ngOnInit() {
     const isDarkMode = document.body.classList.contains('dark-mode');
     this.logoSrc = isDarkMode ? 'assets/logo-dark-mode.png' : 'assets/logo.png';
 
-    // Animate the logo first
     setTimeout(() => {
       this.logoState = 'final';
+      this.accessibilityService.announce('Welcome to the app. Logo displayed.', 'polite');
     }, 200);
 
-    // Delay age verification appearance until logo animation completes
     setTimeout(() => {
       this.showAgeVerification = true;
+      this.accessibilityService.announce('Please confirm if you are 21 years old or older.', 'assertive');
     }, 1000);
   }
 
   onYesClick() {
     this.splashVisibility = 'hidden';
     this.showAgeVerification = false;
+    this.accessibilityService.announce('Thank you for confirming your age. Entering the app.', 'polite');
     setTimeout(() => {
       this.closeSplash.emit();
     }, 100);
   }
 
   onNoClick() {
+    this.accessibilityService.announce('Access denied. You must be over 21 to enter.', 'assertive');
     alert('Sorry, you must be over 21 to enter.');
   }
 }

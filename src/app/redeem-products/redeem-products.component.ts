@@ -3,6 +3,7 @@ import { Product } from '../product/product.model';
 import { ProductsService } from '../products.service';
 import { ProductCategory } from '../product-category/product-category.model';
 import { CartService } from '../cart.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-redeem-products',
@@ -12,10 +13,10 @@ import { CartService } from '../cart.service';
 export class RedeemProductsComponent  implements OnInit {
   @Input() userPoints: number = 0;
   
-  products: Array<Product & { points: number }> = []; // Include points with each product
-  redeemProductIds = ['cf4e02c37df4bd37', '770a696056c501ee', '1034f2b53cf785f9', 'e2d3549ca1fa0a54']; 
+  products: Array<Product & { points: number }> = [];
+  redeemProductIds = ['', '', '', '']; 
 
-  constructor(private productsService: ProductsService, private cartService: CartService) {}
+  constructor(private productsService: ProductsService, private cartService: CartService, private accessibilityService: AccessibilityService) {}
 
   ngOnInit(): void {
     this.loadProducts();
@@ -24,26 +25,28 @@ export class RedeemProductsComponent  implements OnInit {
   loadProducts(): void {
     this.productsService.getProductsByIds(this.redeemProductIds).subscribe(
       (products) => {
-        // Sort products to match the order of redeemProductIds
         const sortedProducts = products.sort(
           (a, b) =>
             this.redeemProductIds.indexOf(a.id) - this.redeemProductIds.indexOf(b.id)
         );
   
-        // Assign points after sorting
         this.products = sortedProducts.map((product, index) => ({
           ...product,
-          points: this.getPointsForProduct(index), // Assign points based on index or custom logic
+          points: this.getPointsForProduct(index),
         }));
+
+        this.accessibilityService.announce('Redemption products loaded.', 'polite');
       },
       (error) => {
         console.error('Error fetching redemption products:', error);
+        this.accessibilityService.announce('Error loading redemption products.', 'assertive');
       }
     );
   }
 
   handleProductClick(product: Product & { points: number }): void {
     if (this.userPoints < product.points) {
+      this.accessibilityService.announce('Not enough points to redeem this product.', 'assertive');
       alert('You do not have enough points to redeem this product.');
       return;
     }
@@ -55,15 +58,15 @@ export class RedeemProductsComponent  implements OnInit {
   }
 
   addToCart(product: Product & { points: number }): void {
-    const { points, ...productWithoutPoints } = product; // Exclude 'points'
-    const productWithQuantity = { ...productWithoutPoints, quantity: 1 }; // Add 'quantity: 1'
+    const { points, ...productWithoutPoints } = product;
+    const productWithQuantity = { ...productWithoutPoints, quantity: 1 };
     this.cartService.addToCart(productWithQuantity);
+    this.accessibilityService.announce(`${product.title} has been added to your cart.`, 'assertive');
   }
   
 
-  // Example function to define points for products
   private getPointsForProduct(index: number): number {
-    const pointsArray = [10, 10, 50, 65]; // Example points values
-    return pointsArray[index] || 1000; // Default to 1000 if index exceeds array length
+    const pointsArray = [10, 10, 50, 65]; 
+    return pointsArray[index] || 1000;
   }
 }

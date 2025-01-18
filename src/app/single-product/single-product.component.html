@@ -1,49 +1,70 @@
 <div class="product-detail">
-  <div class="back-button" (click)="goBack()">
-    <ion-icon name="arrow-back-outline"></ion-icon>
+  <div
+    class="back-button"
+    (click)="goBack()"
+    role="button"
+    tabindex="0"
+    aria-label="Go back to the previous page"
+    (keydown.enter)="goBack()"
+    (keydown.space)="goBack()"
+  >
+    <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
   </div>
+
   <div class="image-container">
     <img
       [src]="currentProduct.image || 'assets/default.jpg'"
-      alt="Product Image"
+      [alt]="currentProduct.title ? currentProduct.title + ' image' : 'Product Image'"
     />
   </div>
-  <div class="product-info">
+
+  <div class="product-info" aria-labelledby="product-title" aria-describedby="product-description product-price product-strain product-weight">
     <p class="brand">{{ currentProduct.brand }}</p>
-    <h2 class="title">{{ currentProduct.title }}</h2>
-    <span class="price">{{ currentProduct.price | currency }}</span>
-    <p class="strain">
+    <h2 id="product-title" class="title">{{ currentProduct.title }}</h2>
+    <span id="product-price" class="price">{{ currentProduct.price | currency }}</span>
+    <p id="product-strain" class="strain">
       {{ currentProduct.strainType }}
       {{ currentProduct.strainType && currentProduct.thc ? "-" : "" }}
       {{ currentProduct.thc }}
     </p>
-    <p class="description">
+    <p id="product-description" class="description">
       {{ getDescription() }}
       <span
         class="see-more"
         (click)="toggleDescription()"
+        (keydown.enter)="toggleDescription()"
+        (keydown.space)="toggleDescription()"
+        role="button"
+        tabindex="0"
+        [attr.aria-expanded]="showFullDescription"
+        [attr.aria-label]="showFullDescription ? 'See less of the product description' : 'See more of the product description'"
         *ngIf="currentProduct.desc"
       >
         {{ showFullDescription ? "See Less" : "See More" }}
       </span>
     </p>
-    <span class="weight">{{ currentProduct.weight }}</span>
+    <span id="product-weight" class="weight">{{ currentProduct.weight }}</span>
   </div>
 
   <ng-container *ngIf="isLoggedIn">
-    <div class="quantity-counter">
-      <button (click)="decrementQuantity()">-</button>
-      <span>{{ quantity }}</span>
-      <button (click)="incrementQuantity()">+</button>
-     </div>
-  
-  
-    <ion-button expand="block" (click)="addToCart()">
+    <div class="quantity-counter" aria-label="Select product quantity">
+      <button (click)="decrementQuantity()" aria-label="Decrease quantity">-</button>
+      <span aria-live="polite">{{ quantity }}</span>
+      <button (click)="incrementQuantity()" aria-label="Increase quantity">+</button>
+    </div>
+
+    <ion-button expand="block" (click)="addToCart()" [attr.aria-label]="'Add ' + currentProduct.title + ' to cart'">
       Add to Cart
     </ion-button>
   </ng-container>
-  
-  <ion-button expand="block" routerLink="/auth" [queryParams]="{ mode: 'register' }" *ngIf="!isLoggedIn">
+
+  <ion-button
+    expand="block"
+    routerLink="/auth"
+    [queryParams]="{ mode: 'register' }"
+    *ngIf="!isLoggedIn"
+    [attr.aria-label]="'Register to add ' + currentProduct.title + ' to your cart'"
+  >
     Register to Add to Cart
   </ion-button>
 </div>

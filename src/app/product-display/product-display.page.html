@@ -1,8 +1,13 @@
 <ion-content [fullscreen]="true">
   <app-header></app-header>
 
-  <app-single-product></app-single-product>
+  <app-single-product aria-label="Product details"></app-single-product>
 
-  <h2 class="similar-title">Similar Items</h2>
-  <app-product-list [showSimilarItems]="true"></app-product-list>
+  <h2 class="similar-title" id="similar-items-heading">Similar Items</h2>
+  <app-product-list 
+    [showSimilarItems]="true" 
+    role="region" 
+    aria-labelledby="similar-items-heading"
+    aria-label="List of similar items"
+  ></app-product-list>
 </ion-content>

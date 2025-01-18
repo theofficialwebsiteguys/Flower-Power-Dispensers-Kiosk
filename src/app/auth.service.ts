@@ -4,24 +4,26 @@ import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
-  map,
   Observable,
-  of,
   tap,
   throwError,
 } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { FcmService } from './fcm.service';
+import { ProductsService } from './products.service';
+import { Product } from './product/product.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private userSubject = new BehaviorSubject<any>(null); // Store user info
+  private userSubject = new BehaviorSubject<any>(null); 
 
-  private authStatus = new BehaviorSubject<boolean>(this.hasToken()); // Observable for auth status
+  private authStatus = new BehaviorSubject<boolean>(this.hasToken());
 
-  constructor(private http: HttpClient, private router: Router, @Inject(FcmService) private fcmService: FcmService) {
+  private enrichedOrders = new BehaviorSubject<any[]>([]);
+
+  constructor(private http: HttpClient, private router: Router, @Inject(FcmService) private fcmService: FcmService, private productsService: ProductsService) {
     const user = localStorage.getItem('user_info');
     if (user) {
       this.userSubject.next(JSON.parse(user));
@@ -30,27 +32,23 @@ export class AuthService {
 
   private apiUrl = `${environment.apiUrl}/users`;
 
-  // Observable for user info
   getUserInfo(): any {
     return this.userSubject.asObservable();
   }
 
-  // Get the currently stored user info
   getCurrentUser() {
     return this.userSubject.value;
   }
 
-  // Check if user is logged in
   isLoggedIn(): Observable<boolean> {
     return this.authStatus.asObservable();
   }
 
   register(userData: any): Observable<any> {
-    const defaultValues = { points: 0, business_id: 1 }; // Add default values if needed
+    const defaultValues = { points: 0, business_id: 1 }; 
     const payload = { ...userData, ...defaultValues };
     return this.http.post(`${this.apiUrl}/register`, payload).pipe(
       tap(() => {
-        // Automatically login the user after registration
         this.login({
           email: userData.email,
           password: userData.password,
@@ -59,13 +57,11 @@ export class AuthService {
     );
   }
 
-  // Log in a user
   login(credentials: { email: string; password: string }): Observable<any> {
-    // Add business info to the payload
     const payload = {
       ...credentials,
-      businessId: '1', // Replace with your business ID logic
-      businessName: 'Flower Power Dispensers', // Replace with your business name logic
+      businessId: '1', 
+      businessName: 'Flower Power Dispensers', 
     };
 
     return this.http
@@ -76,14 +72,15 @@ export class AuthService {
       .pipe(
         tap((response: { sessionId: string; user: any; expiresAt: Date }) => {
           if (response) {
-            // Save the session details or token
             this.storeSessionData(response.sessionId, response.expiresAt);
-            this.authStatus.next(true); // Notify subscribers of auth status
+            this.authStatus.next(true); 
             this.router.navigateByUrl('/rewards')
+            this.validateSession();
             this.fcmService.initPushNotifications(credentials.email);
           }
           if (response.user) {
-            this.storeUserInfo(response.user); // Save user information locally
+            console.log(response.user)
+            this.storeUserInfo(response.user); 
           }
         })
       );
@@ -92,28 +89,27 @@ export class AuthService {
   logout(): void {
     const sessionData = localStorage.getItem('sessionData');
     const headers = new HttpHeaders({
-      Authorization: sessionData ? JSON.parse(sessionData).token : null, // Set Authorization header
+      Authorization: sessionData ? JSON.parse(sessionData).token : null, 
     });
 
     this.http
       .post<{ sessionId: string; user: any; expiresAt: Date }>(
         `${this.apiUrl}/logout`,
-        {}, // No body required
-        { headers } // Pass headers in options
+        {},
+        { headers } 
       )
       .pipe(
         tap((response: { sessionId: string; user: any; expiresAt: Date }) => {
           if (response) {
-            // Handle logout logic
             this.removeToken();
             this.authStatus.next(false);
-            this.router.navigate(['/rewards']); // Redirect to rewards page
+            this.router.navigate(['/rewards']);
             this.userSubject.next(null);
             this.removeUser();
           }
         })
       )
-      .subscribe(); // Ensure the request is sent
+      .subscribe();
   }
 
   private storeSessionData(sessionId: string, expiresAt: Date): void {
@@ -125,6 +121,7 @@ export class AuthService {
   }
 
   private storeUserInfo(user: any) {
+    console.log(user)
     localStorage.setItem('user_info', JSON.stringify(user));
     this.userSubject.next(user);
   }
@@ -134,26 +131,21 @@ export class AuthService {
     return sessionData ? JSON.parse(sessionData) : null;
   }
 
-  // Remove the token
   private removeToken(): void {
     localStorage.removeItem('sessionData');
   }
 
-  // Remove the token
   private removeUser(): void {
     localStorage.removeItem('user_info');
   }
 
-  // Check if token exists
   private hasToken(): boolean {
     return !!this.getSessionData();
   }
 
   isTokenExpired(expiry: Date): boolean {
-    const currentTime = new Date().getTime(); // Get the current time in milliseconds
-    const expiryTime = new Date(expiry).getTime(); // Convert the expiry date to milliseconds
-
-    // Return true if the current time is greater than or equal to the expiry time
+    const currentTime = new Date().getTime(); 
+    const expiryTime = new Date(expiry).getTime(); 
     return currentTime >= expiryTime;
   }
 
@@ -188,10 +180,12 @@ export class AuthService {
   .get<any>(`${this.apiUrl}/validate-session`, { headers })
   .pipe(
     tap((response) => {
-      if (response.valid) {
+      if (response) {
         this.authStatus.next(true);
-
         this.updateUserData();
+        this.handleRecentOrders(response.orders);
+        this.setAuthTokensAlleaves(response.authTokens?.alleaves);
+        this.fcmService.initPushNotifications(this.getUserInfo().email);
       } else {
         console.error('Authentication failed:', response.error || 'Unknown error');
         if (response.details) {
@@ -208,9 +202,7 @@ export class AuthService {
       return throwError(error);
     })
   )
-  .subscribe();
-
-  
+  .subscribe();  
   }
 
   updateUserData(): void{
@@ -225,7 +217,6 @@ export class AuthService {
       Authorization: token,
     });
 
-    console.log("here")
     this.http
       .get(`${this.apiUrl}/id/${this.getCurrentUser().id}`, { headers })
       .pipe(
@@ -285,5 +276,42 @@ export class AuthService {
       );
   }
 
+   get orders() {
+   return this.enrichedOrders.asObservable();
+  }
+
+
+  handleRecentOrders(orders: any[]) {
+    this.productsService.getProducts().subscribe((products: Product[]) => {
+      const enrichedOrders = orders.map((order) => {
+        const itemsWithDetails = Object.entries(order.items).map(([posProductId, quantity]) => {
+          const product = products.find((p) => p.posProductId == posProductId);
+          if (product) {
+            return {
+              ...product,
+              quantity,
+            };
+          } else {
+            console.warn(`No product found for posProductId: ${posProductId}`);
+            return null;
+          }
+        }).filter((item) => item !== null);
+
+        return {
+          ...order,
+          items: itemsWithDetails,
+        };
+      });
+
+      this.enrichedOrders.next(enrichedOrders);
+    });
+  }
+    
+  setAuthTokensAlleaves(alleaves: any): void {
+    sessionStorage.removeItem('authTokensAlleaves');
+    if (alleaves) {
+      sessionStorage.setItem('authTokensAlleaves', JSON.stringify(alleaves));
+    }
+  }
 
 }

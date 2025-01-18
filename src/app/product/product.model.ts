@@ -5,6 +5,7 @@ export type Strain = 'HYBRID' | 'INDICA' | 'SATIVA';
 export type Product = {
   [key: string]: any;
   id: string;
+  posProductId: string;
   category: ProductCategory; // .cannabisComplianceType OR .cannabisType
   title: string; // .name
   desc: string; // .description

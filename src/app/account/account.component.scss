@@ -4,7 +4,7 @@
   align-items: center;
   justify-content: flex-start;
   height: 100%;
-  padding: 20px 20px 0;
+  padding: 0 20px 0;
 
   .header {
     margin-bottom: 20px;
@@ -91,4 +91,17 @@
     text-transform: capitalize;
     width: 100%;
   }
+}
+
+
+/* Visually hides content but keeps it accessible to screen readers */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
 }

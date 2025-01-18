@@ -4,19 +4,24 @@ ion-item {
   --border-color: rgba(var(--ion-color-dark-rgb), 0.15);
 }
 
+.product-title {
+  font-size: 1.1rem; /* Adjust this value to make it larger or smaller */
+  margin: 5px 0; /* Optional: adds spacing around the title */
+}
+
 .container {
   width: 100%;
   height: 100%;
 
   align-items: center;
   flex-wrap: nowrap;
-  gap: 40px;
+  gap: 20px;
 
   padding: 16px 0;
 }
 
 img {
-  width: 100px;
+  width: 125px;
 }
 
 .info {
@@ -36,7 +41,6 @@ img {
   display: flex;
   align-items: center;
   margin: 10px 0;
-  justify-content: flex-end;
 
   button,
   span {
@@ -68,4 +72,6 @@ img {
 
 ion-button {
   margin-top: 10px;
+  width: 200px;
+  margin-left: auto;
 }

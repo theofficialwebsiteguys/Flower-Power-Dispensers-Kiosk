@@ -8,6 +8,7 @@ import { ProductsService } from '../products.service';
 import { Product } from '../product/product.model';
 import { CartService } from '../cart.service';
 import { AuthService } from '../auth.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-single-product',
@@ -17,6 +18,7 @@ import { AuthService } from '../auth.service';
 export class SingleProductComponent implements OnInit {
   currentProduct: Product = {
     id: '',
+    posProductId: '',
     category: 'FLOWER',
     title: '',
     brand: '',
@@ -30,7 +32,7 @@ export class SingleProductComponent implements OnInit {
   };
 
   showFullDescription = false;
-  quantity = 1; // Initialize quantity
+  quantity = 1; 
 
   isLoggedIn: boolean = false;
 
@@ -40,14 +42,16 @@ export class SingleProductComponent implements OnInit {
     private authService: AuthService,
     private location: Location,
     private router: Router,
-    private toastController: ToastController // Inject ToastController
+    private toastController: ToastController,
+    private accessibilityService: AccessibilityService
   ) {}
 
   ngOnInit() {
     this.productService.currentProduct$.subscribe((product) => {
       if (product) {
         this.currentProduct = product;
-        this.quantity = 1; // Reset quantity when the product changes
+        this.quantity = 1; 
+        this.accessibilityService.announce(`Now viewing ${product.title} by ${product.brand}.`, 'polite');
       } else {
         this.router.navigateByUrl('/home');
       }
@@ -64,6 +68,8 @@ export class SingleProductComponent implements OnInit {
 
   toggleDescription() {
     this.showFullDescription = !this.showFullDescription;
+    const message = this.showFullDescription ? 'Full description shown.' : 'Description collapsed.';
+    this.accessibilityService.announce(message, 'polite');
   }
 
   getDescription(): string {
@@ -77,17 +83,20 @@ export class SingleProductComponent implements OnInit {
 
   goBack() {
     this.location.back();
+    this.accessibilityService.announce('Returned to the previous page.', 'polite');
   }
 
   incrementQuantity() {
     if (this.quantity < this.currentProduct['quantity'] ) {
       this.quantity++;
+      this.accessibilityService.announce(`Quantity increased to ${this.quantity}.`, 'polite');
     }
   }
 
   decrementQuantity() {
     if (this.quantity > 1) {
       this.quantity--;
+      this.accessibilityService.announce(`Quantity decreased to ${this.quantity}.`, 'polite');
     }
   }
 
@@ -97,18 +106,9 @@ export class SingleProductComponent implements OnInit {
       quantity: this.quantity,
     };
   
-    this.cartService.addToCart(cartItem); // Use the CartService
+    this.cartService.addToCart(cartItem); 
+    this.accessibilityService.announce(`${this.currentProduct.title} added to cart. Quantity: ${this.quantity}.`, 'assertive');
     alert('Item added to cart!');
-  
-    // // Display a toast message with a clickable button
-    // const toast = await this.toastController.create({
-    //   message: 'Item added to cart!',
-    //   duration: 10000,
-    //   position: 'bottom',
-    //   cssClass: 'custom-toast', // Apply custom styles
-    // });
-  
-    // toast.present();
   }
   
   

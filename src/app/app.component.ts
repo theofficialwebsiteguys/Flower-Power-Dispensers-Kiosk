@@ -72,6 +72,9 @@ export class AppComponent {
       this.isLoggedIn = status;
       if (this.isLoggedIn) this.onCloseSplash();
     });
+
+
+
   }
 
   onCloseSplash() {

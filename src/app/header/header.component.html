@@ -1,38 +1,33 @@
 <ion-toolbar class="heading-container">
-  <!-- Left Button -->
   <ion-buttons slot="start">
-    <ion-button class="action-button" routerLink="/home"
-      ><img
-        [src]="
-          darkModeEnabled ? 'assets/logo-dark-mode.png' : 'assets/logo.png'
-        "
+    <ion-button class="action-button" routerLink="/home" aria-label="Go to home page">
+      <img
+        [src]="darkModeEnabled ? 'assets/logo-dark-mode.png' : 'assets/logo.png'"
         class="logo"
-        alt="logo"
-    /></ion-button>
+        alt="Company logo"
+      />
+    </ion-button>
   </ion-buttons>
 
-  <!-- Right Button -->
   <ion-buttons slot="end">
-    <!-- Log In Button (Visible when not logged in) -->
     <ion-button
       class="action-button"
       *ngIf="!isLoggedIn"
       routerLink="/auth"
       [queryParams]="{ mode: 'login' }"
+      aria-label="Log in to your account"
     >
       Log In
     </ion-button>
-  
-    <!-- Cart and Points Display (Visible when logged in) -->
+
     <ng-container *ngIf="isLoggedIn">
-      <ion-label class="points-display">
-        {{ userPoints }} Points
-      </ion-label>
-      <ion-button class="action-button" routerLink="/cart">
-        <ion-icon slot="icon-only" name="cart-outline"></ion-icon>
-        <ion-badge *ngIf="cartItemCount > 0" class="cart-badge">{{ cartItemCount }}</ion-badge>
+      <ion-label class="points-display" aria-live="polite">{{ userPoints }} Points</ion-label>
+      <ion-button class="action-button cart-button" routerLink="/cart" aria-label="View your shopping cart">
+        <i class="fas fa-cart-shopping" aria-hidden="true"></i>
+        <ion-badge *ngIf="cartItemCount > 0" class="cart-badge" [attr.aria-label]="cartItemCount + ' items in cart'">
+          {{ cartItemCount }}
+        </ion-badge>
       </ion-button>
     </ng-container>
   </ion-buttons>
-  
 </ion-toolbar>

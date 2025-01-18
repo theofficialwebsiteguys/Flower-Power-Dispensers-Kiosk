@@ -11,7 +11,7 @@ export class PointsComponent {
   maxPoints: number = 1000;
   @Input() isExclusiveMember: boolean = false;
 
-  constructor(private authService: AuthService){}
+  constructor(){}
 
   get progressPercentage(): number {
     return (this.points / this.maxPoints) * 100;

@@ -1,8 +1,10 @@
-<ion-col>
+<ion-col role="list" aria-label="Filtered product list">
   <ng-container *ngFor="let product of products$ | async">
     <app-product
       *ngIf="product.category === currentCategory"
       [product]="product"
+      role="listitem"
+      [attr.aria-label]="'View details for ' + product.title"
     ></app-product>
   </ng-container>
 </ion-col>

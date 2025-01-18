@@ -1,17 +1,17 @@
 <div class="review-container">
-  <!-- Header -->
   <div class="header">
-    <h1>Leave a Review</h1>
-    <p>Your feedback helps us grow! Share your experience on Google.</p>
+    <h1 id="leave-review-heading">Leave a Review</h1>
+    <p id="leave-review-description">Your feedback helps us grow! Share your experience on Google.</p>
   </div>
 
-  <!-- Button -->
   <div class="input-container">
     <ion-button
       expand="block"
       (click)="leaveReview()"
       color="primary"
       class="submit-btn"
+      aria-labelledby="leave-review-heading leave-review-description"
+      aria-label="Go to Google Reviews to leave feedback"
     >
       Go to Google Reviews
     </ion-button>

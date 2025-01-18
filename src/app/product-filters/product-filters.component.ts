@@ -18,6 +18,7 @@ import {
   ProductFilterOptions,
 } from './product-filters.model';
 import { Strain } from '../product/product.model';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-product-filters',
@@ -25,7 +26,7 @@ import { Strain } from '../product/product.model';
   styleUrls: ['./product-filters.component.scss'],
 })
 export class ProductFiltersComponent implements OnInit {
-  constructor(private productService: ProductsService) {
+  constructor(private productService: ProductsService, private accessibilityService: AccessibilityService) {
     addIcons({ close });
   }
 
@@ -52,17 +53,20 @@ export class ProductFiltersComponent implements OnInit {
 
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
+    const action = isOpen ? 'opened' : 'closed';
+    this.accessibilityService.announce(`Sort and filter options ${action}.`, 'polite');
   }
 
   handleFilterUpdate() {
-    this.hasDirtyFilters =
-      JSON.stringify(this.filters) !== JSON.stringify(DEFAULT_PRODUCT_FILTERS);
+    this.hasDirtyFilters = JSON.stringify(this.filters) !== JSON.stringify(DEFAULT_PRODUCT_FILTERS);
     this.productService.updateProductFilters(this.filters);
+    this.accessibilityService.announce('Filters have been updated.', 'polite');
   }
 
   clearFilters(): void {
     this.filters = JSON.parse(JSON.stringify(DEFAULT_PRODUCT_FILTERS));
     this.handleFilterUpdate();
+    this.accessibilityService.announce('All filters have been cleared.', 'polite');
   }
 
   isChecked(array: any, value: string): boolean {
@@ -87,7 +91,7 @@ export class ProductFiltersComponent implements OnInit {
         this.filters[field] = this.filters[field].filter(
           (v: string) => v !== value
         );
-
+      this.accessibilityService.announce(`${value} filter removed.`, 'polite');
       this.handleFilterUpdate();
       return;
     }
@@ -96,6 +100,7 @@ export class ProductFiltersComponent implements OnInit {
       if (field === 'strains') {
         if (this.isStrain(value)) this.filters[field].push(value);
       } else this.filters[field].push(value);
+      this.accessibilityService.announce(`${value} filter applied.`, 'polite');
     }
 
     this.handleFilterUpdate();

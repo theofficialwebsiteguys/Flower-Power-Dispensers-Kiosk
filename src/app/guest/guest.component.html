@@ -7,13 +7,13 @@
     </p>
   </div>
 
-  <ion-button expand="block" routerLink="/auth" [queryParams]="{ mode: 'register' }"
+  <ion-button expand="block" routerLink="/auth" [queryParams]="{ mode: 'register' }" aria-label="Sign up for our free rewards program"
     >Sign Up for Free</ion-button
   >
 
-  <div class="rewards-details">
+  <div class="rewards-details" aria-live="polite">
     <div class="reward-item">
-      <ion-icon name="card-outline"></ion-icon>
+      <ion-icon name="card-outline" aria-hidden="true"></ion-icon>
       <div class="reward-header">Free to join</div>
       <h3>Free Rewards Program</h3>
       <ul class="reward-list">
@@ -25,7 +25,7 @@
         </li>
       </ul>
     </div>
-    <div class="reward-item">
+    <!-- <div class="reward-item">
       <ion-icon name="medal-outline"></ion-icon>
       <div class="reward-header">Annual fee required (sign up in-store)</div>
       <h3>Exclusive Membership</h3>
@@ -35,6 +35,6 @@
         <li>Earn 2 points for every $1 spent (pre-tax)</li>
         <li>Redeem points for select products</li>
       </ul>
-    </div>
+    </div> -->
   </div>
 </div>

@@ -39,7 +39,7 @@ export class ProductsService {
     const storedProducts = sessionStorage.getItem('products');
     if (storedProducts) {
       const parsedProducts: Product[] = JSON.parse(storedProducts);
-      this.products.next(parsedProducts); // Load products into BehaviorSubject
+      this.products.next(parsedProducts); 
     }
   }
 
@@ -59,9 +59,9 @@ export class ProductsService {
       })
       .subscribe(
         (products) => {
-          this.products.next(products); // Update BehaviorSubject
-          this.saveProductsToSessionStorage(products); // Save to session storage
-          console.log(products); // Verify all products are fetched
+          this.products.next(products);
+          this.saveProductsToSessionStorage(products);
+          console.log(products); 
         },
         (error) => {
           console.error('Error fetching products from backend:', error);
@@ -199,7 +199,7 @@ export class ProductsService {
   }
 
   updateCategory(category: ProductCategory) {
-    this.currentCategory.next(category); // Updates the value in the BehaviorSubject
+    this.currentCategory.next(category); 
     this.route.navigateByUrl('/products');
   }
 
@@ -220,7 +220,6 @@ export class ProductsService {
     ];
   }
 
-  //combineLatest combines use of 2 observables
   getSimilarItems(): Observable<Product[]> {
     return combineLatest([this.currentProduct$, this.products$]).pipe(
       map(([currentProduct, productArray]) => {
@@ -254,7 +253,7 @@ export class ProductsService {
 
 
   updateProductFilters(filters: ProductFilters) {
-    this.currentProductFilters.next({ ...filters }); // Ensure a new reference
+    this.currentProductFilters.next({ ...filters }); 
   }
 
   getProductsByIds(ids: string[]): Observable<Product[]> {

@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -17,7 +18,8 @@ export class ResetPasswordComponent  implements OnInit {
   constructor(
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
-    private readonly router: Router
+    private readonly router: Router,
+    private readonly accessibilityService: AccessibilityService
   ) {
     this.resetPasswordForm = this.fb.group({
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
@@ -31,6 +33,7 @@ export class ResetPasswordComponent  implements OnInit {
         next: (response) => {
           if (response.success) {
             console.log(response.message);
+            this.accessibilityService.announce('Reset token validated successfully.', 'polite');
           } else {
             this.handleError('Invalid or expired reset token.');
           }
@@ -46,12 +49,14 @@ export class ResetPasswordComponent  implements OnInit {
 
   private handleError(message: string): void {
     this.errorMessage = message;
+    this.accessibilityService.announce(message, 'assertive');
     this.router.navigateByUrl('/rewards'); // Redirecting to another page if error occurs
   }
 
   onSubmit() {
     if (this.resetPasswordForm.invalid) {
       this.errorMessage = 'Please fill in all required fields correctly.';
+      this.accessibilityService.announce(this.errorMessage, 'assertive');
       return;
     }
 
@@ -59,17 +64,20 @@ export class ResetPasswordComponent  implements OnInit {
 
     if (newPassword !== confirmPassword) {
       this.errorMessage = 'Passwords do not match. Please try again.';
+      this.accessibilityService.announce(this.errorMessage, 'assertive');
       return;
     }
 
     this.errorMessage = null; 
     this.authService.resetPassword(newPassword, this.token).subscribe({
       next: () => {
+        this.accessibilityService.announce('Password reset successful!', 'polite');
         alert('Password reset successful!');
         this.router.navigate(['/auth'], { queryParams: { mode: 'login' } });
       },
       error: (err) => {
         this.errorMessage = this.getErrorMessage(err);
+        this.accessibilityService.announce(this.errorMessage, 'assertive');
       },
     });
   }

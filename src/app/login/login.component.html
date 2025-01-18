@@ -12,14 +12,16 @@
       </div>
     </div>
 
-    <!-- Error Message -->
-    <div *ngIf="error" class="error-message">
+    <div *ngIf="error" class="error-message" aria-live="assertive">
       {{ error }}
     </div>
 
-    <!-- Login Form -->
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      <!-- Email -->
+    <form
+      [formGroup]="loginForm"
+      (ngSubmit)="onSubmit()"
+      aria-labelledby="login-heading"
+    >
+      <h1 id="login-heading" class="sr-only">Login to Your Account</h1>
       <div class="form-group">
         <label for="email" class="required">Email</label>
         <input
@@ -28,16 +30,18 @@
           formControlName="email"
           placeholder="Enter your email"
           required
+          aria-required="true"
+          aria-label="Enter your email address"
         />
         <div
           *ngIf="submitted && loginForm.get('email')?.invalid"
           class="form-error"
+          aria-live="assertive"
         >
           Valid email is required.
         </div>
       </div>
 
-      <!-- Password -->
       <div class="form-group">
         <label for="password" class="required">Password</label>
         <input
@@ -46,34 +50,50 @@
           formControlName="password"
           placeholder="Enter your password"
           required
+          aria-required="true"
+          aria-label="Enter your password"
         />
         <div
           *ngIf="submitted && loginForm.get('password')?.invalid"
           class="form-error"
+          aria-live="assertive"
         >
           Password is required.
         </div>
       </div>
 
-      <!-- Forgot Password -->
       <div class="forgot-password">
-        <a routerLink="/auth" [queryParams]="{ mode: 'forgot-password' }">Forgot your password?</a>
+        <a
+          routerLink="/auth"
+          [queryParams]="{ mode: 'forgot-password' }"
+          aria-label="Forgot your password? Navigate to reset page"
+          >Forgot your password?</a
+        >
       </div>
 
-      <!-- Submit Button -->
       <ion-button
         expand="block"
         type="submit"
         [disabled]="loginForm.invalid || loading"
+        aria-label="Log in to your account"
       >
-        <ion-spinner *ngIf="loading" slot="start"></ion-spinner>
+        <ion-spinner
+          *ngIf="loading"
+          slot="start"
+          aria-hidden="true"
+        ></ion-spinner>
         Login
       </ion-button>
     </form>
 
     <p class="login-link">
       Don’t have an account?
-      <a routerLink="/auth" [queryParams]="{ mode: 'register' }">Sign Up</a>
+      <a
+        routerLink="/auth"
+        [queryParams]="{ mode: 'register' }"
+        aria-label="Sign up for a new account"
+        >Sign Up</a
+      >
     </p>
   </div>
 </div>

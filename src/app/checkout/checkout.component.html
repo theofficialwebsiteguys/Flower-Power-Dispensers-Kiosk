@@ -1,12 +1,195 @@
-<div class="back-button" (click)="goBack()">
-  <ion-icon name="arrow-back-outline"></ion-icon>
+<div class="checkout-container">
+  <div class="header">
+    <div
+      class="back-button"
+      (click)="goBack()"
+      role="button"
+      aria-label="Go back to the previous page"
+    >
+      <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
+    </div>
+    <h1>Checkout</h1>
+  </div>
+
+  <div class="section contact-info">
+    <h2>Contact Information</h2>
+    <form>
+      <div class="input-row">
+        <ion-item class="rounded-input half-width">
+          <ion-input
+            [(ngModel)]="checkoutInfo.user_info.fname"
+            name="first"
+            placeholder="First Name"
+            aria-label="First Name"
+          ></ion-input>
+        </ion-item>
+        <ion-item class="rounded-input half-width">
+          <ion-input
+            [(ngModel)]="checkoutInfo.user_info.lname"
+            name="last"
+            placeholder="Last Name"
+            aria-label="Last Name"
+          ></ion-input>
+        </ion-item>
+      </div>
+      <ion-item class="rounded-input">
+        <ion-input
+          [(ngModel)]="checkoutInfo.user_info.email"
+          name="email"
+          type="email"
+          placeholder="Email"
+          aria-label="Email Address"
+        ></ion-input>
+      </ion-item>
+      <ion-item class="rounded-input">
+        <ion-input
+          [(ngModel)]="checkoutInfo.user_info.phone"
+          name="phone"
+          type="tel"
+          placeholder="Phone"
+          aria-label="Phone Number"
+        ></ion-input>
+      </ion-item>
+    </form>
+  </div>
+
+  <div class="section order-type">
+    <h2>Order Type</h2>
+    <ion-radio-group aria-label="Select Order Type">
+      <ion-item lines="none" class="radio-item">
+        <ion-radio slot="start" value="pickup" checked></ion-radio>
+        <ion-label>Pickup</ion-label>
+      </ion-item>
+      <ion-item lines="none" class="radio-item">
+        <ion-radio slot="start" value="delivery" disabled></ion-radio>
+        <ion-label>Delivery (Currently Unavailable)</ion-label>
+      </ion-item>
+    </ion-radio-group>
+
+    <div class="date-time-container">
+      <div class="date-picker-container enhanced-box">
+        <ion-item
+          lines="none"
+          class="date-picker"
+          (click)="toggleTooltip()"
+          role="button"
+          aria-label="Select delivery or pickup date"
+        >
+          <ion-label>{{ selectedDate || "Select Date" }}</ion-label>
+        </ion-item>
+        <div class="tooltip-calendar" *ngIf="showTooltip">
+          <ion-datetime
+            (ionChange)="onDateSelected($event)"
+            presentation="date"
+            aria-label="Calendar date selector"
+          ></ion-datetime>
+        </div>
+      </div>
+      <div class="time-picker-container enhanced-box">
+        <ion-item lines="none" class="time-picker">
+          <ion-select
+            placeholder="Select Time"
+            [(ngModel)]="selectedTime"
+            aria-label="Select time for order"
+          >
+            <ion-select-option
+              *ngFor="let time of timeOptions"
+              [value]="time.value"
+            >
+              {{ time.display }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+  </div>
+
+  <div class="section payment-method">
+    <h2>Payment Method</h2>
+    <ion-radio-group aria-label="Select Payment Method">
+      <ion-item lines="none" class="radio-item">
+        <ion-radio slot="start" value="cash"></ion-radio>
+        <ion-label>Cash</ion-label>
+      </ion-item>
+      <ion-item lines="none" class="radio-item">
+        <ion-radio slot="start" value="card"></ion-radio>
+        <ion-label>Debit/Credit Card</ion-label>
+      </ion-item>
+    </ion-radio-group>
+    <div class="aeropay-container enhanced-box">
+      <p>Or use:</p>
+      <div
+        id="aeropay-button-container"
+        aria-label="Aeropay payment option"
+      ></div>
+    </div>
+  </div>
+
+  <div class="section order-summary">
+    <h2>Order Summary</h2>
+    <div class="summary" aria-live="polite">
+      <p>
+        Subtotal: <span>{{ finalSubtotal | currency }}</span>
+      </p>
+      <p>
+        Available Points: <span>{{ checkoutInfo.user_info.points }}</span>
+      </p>
+      <p>
+        Potential Savings:
+        <span>{{ checkoutInfo.user_info.points * pointValue | currency }}</span>
+      </p>
+      <p>
+        Points to Redeem: <span>{{ pointsToRedeem }}</span>
+      </p>
+      <ion-item lines="none" class="points-slider">
+        <ion-range
+          [(ngModel)]="pointsToRedeem"
+          [min]="0"
+          [max]="checkoutInfo.user_info.points"
+          [step]="1"
+          (ionChange)="updateTotals()"
+          aria-label="Adjust points to redeem for discount"
+        >
+          <ion-label slot="start">0</ion-label>
+          <ion-label slot="end">{{ checkoutInfo.user_info.points }}</ion-label>
+        </ion-range>
+      </ion-item>
+      <p>
+        Discount Applied:
+        <span>{{ pointsToRedeem * pointValue | currency }}</span>
+      </p>
+      <p>
+        Tax: <span>{{ finalTax | currency }}</span>
+      </p>
+      <p>
+        Total: <span>{{ finalTotal | currency }}</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="section cart-items">
+    <h2>Your Items</h2>
+    <ul>
+      <li *ngFor="let item of checkoutInfo.cart" class="order-item">
+        <img
+          [src]="item.image"
+          [alt]="'Image of ' + item.title"
+          class="item-image"
+        />
+        <div class="item-details">
+          <span class="item-quantity">{{ item.quantity }}x</span>
+          <span class="item-title">{{ item.title }}</span>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 
-<div class="iframe-container">
-  <iframe
-  *ngIf="sanitizedUrl" [src]="sanitizedUrl"
-    frameborder="0"
-    allowfullscreen
-    allow="payment"
-  ></iframe>
-</div>
+<ion-button
+  expand="block"
+  class="sticky-footer"
+  (click)="placeOrder()"
+  aria-label="Place your order"
+>
+  Place Order
+</ion-button>

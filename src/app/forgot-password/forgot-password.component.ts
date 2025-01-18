@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
 import { Location } from '@angular/common';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-forgot-password',
@@ -21,7 +22,8 @@ export class ForgotPasswordComponent {
     private readonly fb: FormBuilder,
     private readonly authService: AuthService,
     private readonly settingsService: SettingsService,
-    private location: Location
+    private location: Location,
+    private readonly accessibilityService: AccessibilityService
   ) {
     this.forgotPasswordForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -37,6 +39,7 @@ export class ForgotPasswordComponent {
   onSubmit() {
     if (this.forgotPasswordForm.invalid) {
       this.errorMessage = 'Please enter a valid email address.';
+      this.accessibilityService.announce(this.errorMessage, 'assertive');
       return;
     }
 
@@ -47,15 +50,18 @@ export class ForgotPasswordComponent {
       next: () => {
         this.emailSent = true;
         this.errorMessage = '';
+        this.accessibilityService.announce('Password reset email sent. Please check your inbox.', 'polite');
       },
       error: (err) => {
         this.errorMessage = this.getErrorMessage(err);
+        this.accessibilityService.announce(this.errorMessage, 'assertive');
       },
     });
   }
 
   goBack() {
     this.location.back();
+    this.accessibilityService.announce('Returned to the previous page.', 'polite');
   }
 
   private getErrorMessage(err: any): string {

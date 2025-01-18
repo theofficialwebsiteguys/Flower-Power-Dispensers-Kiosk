@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,8 @@ export class LoginComponent {
     private readonly fb: FormBuilder,
     private readonly router: Router,
     private readonly authService: AuthService,
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
+    private accessibilityService: AccessibilityService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -38,9 +40,9 @@ export class LoginComponent {
   }
 
   resetForm() {
-    this.loginForm.reset(); // Reset the form fields
-    this.submitted = false; // Reset submission state
-    this.error = ''; // Clear any errors
+    this.loginForm.reset();
+    this.submitted = false; 
+    this.error = ''; 
     this.loading = false;
   }
 
@@ -49,20 +51,24 @@ export class LoginComponent {
 
     if (this.loginForm.invalid) {
       this.error = 'Please fill in all required fields correctly.';
+      this.accessibilityService.announce(this.error, 'assertive');
       return;
     }
 
     this.loading = true;
     this.error = ''; 
+    this.accessibilityService.announce('Attempting to log in...', 'polite');
 
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
         this.resetForm();
+        this.accessibilityService.announce('Login successful. Redirecting to rewards page.', 'polite');
         this.router.navigate(['/rewards'])
       },
       error: (err) => {
         this.loading = false;
         this.error = this.getErrorMessage(err);
+        this.accessibilityService.announce(this.error, 'assertive');
       },
     });
   }

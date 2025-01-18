@@ -4,6 +4,9 @@
   align-items: center;
   flex-direction: column;
   height: 80vh;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
   position: relative;
 
   .logo-container {
@@ -15,41 +18,93 @@
 
   .logo {
     width: 60%;
+    max-width: 400px; // Prevent logo from being too large on desktops
+    height: auto;
   }
 
   .age-verification {
-    position: absolute; // Make it independent of the main layout
-    top: calc(50% + 80px); // Place it below the logo
+    position: absolute;
+    top: calc(60%); // Adjusted for better alignment
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
+    padding: 10px;
 
     .verification-text {
-      font-size: 1.2rem; // Adjust font size to fit
+      font-size: 1.2rem;
       color: black;
       margin-bottom: 20px;
-      white-space: nowrap; // Force the text to stay on one line
+      text-align: center;
+      white-space: normal; // Allow text wrapping
     }
 
     .button-group {
       display: flex;
-      gap: 20px;
+      flex-direction: row;
+      gap: 15px;
 
       ion-button {
-        width: 120px;
-        height: 50px;
-        font-size: 1.2rem;
+        width: 100px;
+        height: 45px;
+        font-size: 1rem;
         font-weight: bold;
         text-transform: uppercase;
       }
 
       .yes-btn {
-        --background: #25463d; // Green button color
+        --background: #25463d;
       }
 
       .no-btn {
-        --background: #000000; // Black button color
+        --background: #000000;
+      }
+    }
+  }
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .logo {
+    width: 70%;
+  }
+
+  .age-verification {
+    top: 65%;
+    .verification-text {
+      font-size: 1rem;
+    }
+
+    .button-group {
+      ion-button {
+        width: 90px;
+        height: 40px;
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .logo {
+    width: 80%;
+  }
+
+  .age-verification {
+    top: 70%;
+    .verification-text {
+      font-size: 0.9rem;
+    }
+
+    .button-group {
+      flex-direction: column;
+      gap: 10px;
+
+      ion-button {
+        width: 100px;
+        height: 40px;
+        font-size: 0.9rem;
       }
     }
   }

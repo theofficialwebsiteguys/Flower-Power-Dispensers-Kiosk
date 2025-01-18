@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
+import { AccessibilityService } from '../accessibility.service';
 
 @Component({
   selector: 'app-account',
@@ -10,67 +11,37 @@ import { SettingsService } from '../settings.service';
 })
 export class AccountComponent implements OnInit {
   @Input() user: any;
-  allowNotifications: boolean = false;
-  darkModeEnabled: boolean = false;
+  allowNotifications = false;
+  darkModeEnabled = false;
+  userInfo: any = [];
+  settings: any = [];
 
-  userInfo: any[] = [];
-  settings: any[] = [];
-  isLoggedIn: boolean = false;
-
-  constructor(
-    private readonly authService: AuthService,
-    private readonly settingsService: SettingsService
-  ) {}
+  @ViewChild('liveRegion') liveRegion!: ElementRef;
+  
+  constructor(private authService: AuthService, private settingsService: SettingsService, private accessibilityService: AccessibilityService) {}
 
   ngOnInit(): void {
     if (this.user) {
-      this.populateUserInfo(this.user);
+      this.userInfo = [
+        { icon: 'person-outline', label: 'Name', value: `${this.user.fname} ${this.user.lname}` },
+        { icon: 'mail-outline', label: 'Email', value: this.user.email },
+        { icon: 'call-outline', label: 'Phone', value: this.user.phone }
+      ];
       this.darkModeEnabled = this.settingsService.getDarkModeEnabled();
-      this.setupSettings();
+      this.settings = [
+        { id: 'darkMode', label: 'Dark Mode', value: this.darkModeEnabled, action: (val: boolean) => this.toggleDarkMode(val) }
+      ];
     }
   }
 
-  private populateUserInfo(user: any) {
-    this.userInfo = [
-      {
-        icon: 'person-outline',
-        label: 'Name',
-        value: `${user.fname} ${user.lname}`,
-      },
-      { icon: 'mail-outline', label: 'Email', value: user.email },
-      { icon: 'call-outline', label: 'Phone', value: user.phone },
-    ];
-  }
-
-  private setupSettings() {
-    this.settings = [
-      {
-        id: 'darkMode',
-        label: 'Dark Mode',
-        value: this.darkModeEnabled,
-        action: (value: boolean) => this.onToggleDarkMode(value),
-      },
-    ];
-  }
-
-  onToggleNotifications(value: boolean): void {
-    this.authService.toggleUserNotifications(this.user.id).subscribe({
-      next: () => {
-        console.log('Notification setting updated successfully');
-        this.allowNotifications = value;
-      },
-      error: (err: any) => {
-        console.error('Failed to update notification setting:', err);
-      },
-    });
-  }
-
-  onToggleDarkMode(value: boolean): void {
+  toggleDarkMode(value: boolean): void {
     this.darkModeEnabled = value;
-    this.settingsService.setDarkModeEnabled(this.darkModeEnabled);
+    this.settingsService.setDarkModeEnabled(value);
+    this.accessibilityService.announce(`Dark mode has been ${value ? 'enabled' : 'disabled'}`);
   }
 
-  logout() {
+  logout(): void {
     this.authService.logout();
+    this.accessibilityService.announce('You have been logged out');
   }
 }
