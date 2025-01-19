@@ -212,7 +212,6 @@ export class ProductsService {
       { category: 'FLOWER', imageUrl: 'assets/icons/flower.png' },
       { category: 'PRE_ROLLS', imageUrl: 'assets/icons/prerolls.png' },
       { category: 'CONCENTRATES', imageUrl: 'assets/icons/concentrates.png' },
-      { category: 'VAPORIZERS', imageUrl: 'assets/icons/vaporizers.png' },
       { category: 'BEVERAGES', imageUrl: 'assets/icons/beverages.png' },
       { category: 'TINCTURES', imageUrl: 'assets/icons/tinctures.png' },
       { category: 'EDIBLES', imageUrl: 'assets/icons/edibles.png' },

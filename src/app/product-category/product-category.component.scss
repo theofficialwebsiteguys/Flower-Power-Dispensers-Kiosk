@@ -14,6 +14,18 @@
   transition: background-color 0.2s ease;
 }
 
+/* Selected State */
+.container.selected {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.2); /* Subtle highlight on hover */
+  border-radius: 12px; /* Match button's rounded corners */
+}
+
+/* Hover Effect */
+.container:hover {
+  background-color: rgba(var(--ion-color-primary-rgb), 0.2); /* Subtle highlight on hover */
+}
+
+
 /* Icon Wrapper with Glowing Circle */
 .icon-wrapper {
   width: 120px;  /* Increased wrapper size */

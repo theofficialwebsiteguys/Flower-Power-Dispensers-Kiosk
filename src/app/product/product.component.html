@@ -1,6 +1,6 @@
 <ion-item (click)="updateProductDisplay()" role="button" [attr.aria-label]="'View details for ' + product.title">
   <ion-row class="container">
-    <img [src]="product.image" [alt]="product.title + ' image'" />
+    <img [src]="getProductImage(product)" [alt]="product.title + ' image'" />
     <ion-label class="info">
       <p>{{ product.brand }}</p>
       <h1 class="product-title">{{ product.title }}</h1>

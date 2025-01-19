@@ -36,4 +36,14 @@ export class CardSliderComponent implements OnInit {
     this.productService.updateCurrentProduct(product);
     this.accessibilityService.announce(`Viewing product ${product.title}`, 'polite');
   }
+
+  getProductImage(product: any): string {
+    if (product.image) {
+      return product.image;
+    }
+    if (product.brand) {
+      return `assets/brand_images/${product.brand.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    }
+    return 'assets/default.jpg';
+  }
 }

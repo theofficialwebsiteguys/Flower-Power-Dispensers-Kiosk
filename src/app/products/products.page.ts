@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-products',
@@ -6,7 +7,21 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./products.page.scss'],
 })
 export class ProductsPage implements OnInit {
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
+
   constructor() {}
 
   ngOnInit() {}
+
+  ionViewDidEnter(): void {
+    this.scrollToTop(); // Scroll to top when the page is fully loaded
+  }
+
+  scrollToTop() {
+    if (this.content) {
+      this.content.scrollToTop(300); // Smooth scrolling with animation
+    } else {
+      console.warn('IonContent is not available.');
+    }
+  }
 }

@@ -64,4 +64,14 @@ export class ProductComponent implements OnInit {
     alert('Item added to cart!');
     this.accessibilityService.announce(`${this.product.title} added to your cart.`, 'polite');
   }
+
+  getProductImage(product: any): string {
+    if (product.image) {
+      return product.image;
+    }
+    if (product.brand) {
+      return `assets/brand_images/${product.brand.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    }
+    return 'assets/default.jpg';
+  }
 }

@@ -69,8 +69,16 @@ export class CartPage {
     );
   }
 
+  ionViewDidEnter(): void {
+    this.scrollToTop(); // Scroll to top when the page is fully loaded
+  }
+
   scrollToTop() {
-    this.content.scrollToTop(500);
+    if (this.content) {
+      this.content.scrollToTop(300); // Smooth scrolling with animation
+    } else {
+      console.warn('IonContent is not available.');
+    }
   }
 
   async presentToast(message: string, color: string = 'success') {

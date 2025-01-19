@@ -3,6 +3,7 @@ import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { SettingsService } from '../settings.service';
 import { AccessibilityService } from '../accessibility.service';
+import { AlertController } from '@ionic/angular';
 
 @Component({
   selector: 'app-account',
@@ -18,7 +19,7 @@ export class AccountComponent implements OnInit {
 
   @ViewChild('liveRegion') liveRegion!: ElementRef;
   
-  constructor(private authService: AuthService, private settingsService: SettingsService, private accessibilityService: AccessibilityService) {}
+  constructor(private authService: AuthService, private settingsService: SettingsService, private accessibilityService: AccessibilityService, private alertController: AlertController) {}
 
   ngOnInit(): void {
     if (this.user) {
@@ -40,8 +41,29 @@ export class AccountComponent implements OnInit {
     this.accessibilityService.announce(`Dark mode has been ${value ? 'enabled' : 'disabled'}`);
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.accessibilityService.announce('You have been logged out');
+  async logout(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Confirm Logout',
+      message: 'Are you sure you want to log out?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+            this.accessibilityService.announce('Log out canceled');
+          },
+        },
+        {
+          text: 'Log Out',
+          role: 'destructive',
+          handler: () => {
+            this.authService.logout();
+            this.accessibilityService.announce('You have been logged out');
+          },
+        },
+      ],
+    });
+
+    await alert.present();
   }
 }

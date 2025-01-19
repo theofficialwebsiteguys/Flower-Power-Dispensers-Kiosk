@@ -4,6 +4,7 @@ import { ProductsService } from '../products.service';
 
 import { CategoryWithImage, ProductCategory } from './product-category.model';
 import { AccessibilityService } from '../accessibility.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-category',
@@ -11,14 +12,30 @@ import { AccessibilityService } from '../accessibility.service';
   styleUrls: ['./product-category.component.scss'],
 })
 export class ProductCategoryComponent implements OnInit {
-  constructor(private productService: ProductsService, private accessibilityService: AccessibilityService) {}
+  constructor(
+    private productService: ProductsService,
+    private accessibilityService: AccessibilityService,
+    private router: Router
+  ) {}
 
-  @Input() category: CategoryWithImage = {category: 'FLOWER', imageUrl: ''};
+  @Input() category: CategoryWithImage = { category: 'FLOWER', imageUrl: '' };
 
   ngOnInit() {}
 
   handleCategorySelect(category: ProductCategory) {
-    this.productService.updateCategory(category);
-    this.accessibilityService.announce(`${category} category selected.`, 'polite');
+    this.productService.updateCategory(category); // Update the selected category in the service
+    this.accessibilityService.announce(
+      `${category} category selected.`,
+      'polite'
+    ); // Accessibility announcement
+  }
+
+  isSelectedCategory(category: ProductCategory): boolean {
+    // Do not highlight any category if the current route is `/`
+    if (this.router.url === '/home') {
+      return false;
+    }
+    // Otherwise, check the selected category
+    return this.productService.getCurrentCategory() === category;
   }
 }

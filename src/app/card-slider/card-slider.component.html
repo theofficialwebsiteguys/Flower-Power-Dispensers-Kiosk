@@ -11,7 +11,7 @@
         <div class="slide" *ngIf="product.category === category.category">
           <div class="card" (click)="updateProductDisplay(product)" role="button" [attr.aria-label]="'View details for ' + product.title">
             <div class="image-container">
-              <img [src]="product.image" alt="Product" />
+              <img [src]="getProductImage(product)" [alt]="product.title + ' image'" />
               <div class="card-details">
                 <p class="product-title">
                   {{ product.title | slice:0:35 }}{{ product.title.length > 35 ? '...' : '' }}

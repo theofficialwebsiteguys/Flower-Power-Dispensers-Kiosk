@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from '../auth.service';
+import { IonContent } from '@ionic/angular';
 
 @Component({
   selector: 'app-rewards',
@@ -7,6 +8,7 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./rewards.page.scss'],
 })
 export class RewardsPage implements OnInit {
+  @ViewChild(IonContent, { static: false }) content!: IonContent;
 
   user: any;
 
@@ -21,6 +23,18 @@ export class RewardsPage implements OnInit {
         this.user = userInfo;
       });
     });
+  }
+
+  ionViewDidEnter(): void {
+    this.scrollToTop(); // Scroll to top when the page is fully loaded
+  }
+
+  scrollToTop() {
+    if (this.content) {
+      this.content.scrollToTop(300); // Smooth scrolling with animation
+    } else {
+      console.warn('IonContent is not available.');
+    }
   }
 
 }
