@@ -9,9 +9,10 @@ import { AppComponent } from './app.component';
 import { SplashScreenComponent } from './splash-screen/splash-screen.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideHttpClient } from '@angular/common/http';
+import { RestrictedComponent } from './restricted/restricted.component';
 
 @NgModule({
-  declarations: [AppComponent, SplashScreenComponent],
+  declarations: [AppComponent, SplashScreenComponent, RestrictedComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, provideHttpClient()],
   bootstrap: [AppComponent],

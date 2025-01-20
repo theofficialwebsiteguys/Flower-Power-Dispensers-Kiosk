@@ -14,6 +14,9 @@ import { AuthService } from './auth.service';
 import { SettingsService } from './settings.service';
 import { FcmService } from './fcm.service';
 import { Router } from '@angular/router';
+import { GeolocationService } from './geolocation.service';
+import { ModalController } from '@ionic/angular';
+import { RestrictedComponent } from './restricted/restricted.component';
 
 @Component({
   selector: 'app-root',
@@ -44,7 +47,9 @@ export class AppComponent {
     private authService: AuthService,
     private settingsService: SettingsService,
     private fcmService: FcmService,
-    private router: Router
+    private router: Router,
+    private geoLocationService: GeolocationService,
+    private modalController: ModalController
   ) {
     // Listen for app URL open events
     App.addListener('appUrlOpen', (data: any) => {
@@ -65,6 +70,10 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.checkGeoLocation();
+  }
+
+  initializeApp() {
     this.productService.fetchProducts();
     this.authService.validateSession();
     this.settingsService.updateTheme();
@@ -72,9 +81,6 @@ export class AppComponent {
       this.isLoggedIn = status;
       if (this.isLoggedIn) this.onCloseSplash();
     });
-
-
-
   }
 
   onCloseSplash() {
@@ -86,5 +92,30 @@ export class AppComponent {
       'Splash screen closed, showSplashScreen:',
       this.showSplashScreen
     );
+  }
+
+  async checkGeoLocation() {
+    try {
+      const isInNY = await this.geoLocationService.isUserInNewYork();
+  
+      if (!isInNY) {
+        this.showRestrictedAccessModal(); // Show the modal if the user is outside NY
+      } else {
+        this.initializeApp(); // Proceed with app initialization if in NY
+      }
+    } catch (error) {
+      console.error('Error during geo-check:', error);
+      this.showRestrictedAccessModal(); // Show modal in case of errors
+    }
+  }
+  
+  async showRestrictedAccessModal() {
+    const modal = await this.modalController.create({
+      component: RestrictedComponent,
+      backdropDismiss: false, // Prevent the modal from being dismissed
+      cssClass: 'restricted-modal',
+    });
+
+    await modal.present();
   }
 }
