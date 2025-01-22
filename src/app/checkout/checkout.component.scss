@@ -59,6 +59,7 @@
 
     .radio-item {
       margin: 12px 0;
+      align-items: flex-start;
 
       ion-radio {
         --size: 20px;
@@ -70,6 +71,16 @@
     }
   }
 
+  .aeropay-label {
+    display: flex;
+    flex-direction: column; /* Stack the image and button vertically */
+    align-items: flex-start; /* Align items to the start of the label */
+  }
+  
+  #aeropay-button-container {
+    margin-top: 10px; /* Add some spacing between the image and the button */
+  }
+  
   .summary {
     p {
       display: flex;
@@ -184,6 +195,11 @@
   align-items: center;
   justify-content: center;
   margin-top: 16px;
+}
+
+.aeropay-image{
+  max-width: 60%;
+  margin-top: 5px;
 }
 
 ion-radio::part(container) {

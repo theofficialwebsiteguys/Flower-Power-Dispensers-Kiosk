@@ -1,5 +1,5 @@
 /* Button Container */
-.container {
+.container-category {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -15,13 +15,13 @@
 }
 
 /* Selected State */
-.container.selected {
+.container-category.selected {
   background-color: rgba(var(--ion-color-primary-rgb), 0.2); /* Subtle highlight on hover */
   border-radius: 12px; /* Match button's rounded corners */
 }
 
 /* Hover Effect */
-.container:hover {
+.container-category:hover {
   background-color: rgba(var(--ion-color-primary-rgb), 0.2); /* Subtle highlight on hover */
 }
 
@@ -35,6 +35,11 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  background-color: transparent;
+
+  p{
+    background-color: transparent;
+  }
 }
 
 /* Softer, More Faded Glow Effect */

@@ -30,6 +30,8 @@ export class CheckoutComponent implements OnInit {
 
   timeOptions: { value: string; display: string }[] = [];
 
+  selectedPaymentMethod: string = '';
+
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
 
