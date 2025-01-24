@@ -5,7 +5,7 @@
     <ng-container *ngIf="cartItems.length > 0; else emptyCart">
       <app-cart-items [items]="cartItems"></app-cart-items>
       <div class="checkout-container">
-        <ion-button class="checkout-button" (click)="checkout()" aria-label="Proceed to checkout">Checkout</ion-button>
+        <ion-button class="checkout-button" (click)="checkout()" aria-label="Proceed to checkout">Continue</ion-button>
       </div>
     </ng-container>
 

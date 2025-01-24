@@ -8,7 +8,7 @@
     >
       <ion-icon name="arrow-back-outline" aria-hidden="true"></ion-icon>
     </div>
-    <h1>Checkout</h1>
+    <h1>Cart</h1>
   </div>
 
   <div class="section contact-info">
@@ -60,10 +60,10 @@
         <ion-radio slot="start" value="pickup" checked></ion-radio>
         <ion-label>Pickup</ion-label>
       </ion-item>
-      <ion-item lines="none" class="radio-item">
+      <!-- <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="delivery" disabled></ion-radio>
         <ion-label>Delivery (Currently Unavailable)</ion-label>
-      </ion-item>
+      </ion-item> -->
     </ion-radio-group>
 
     <div class="date-time-container">
@@ -109,15 +109,15 @@
     <ion-radio-group [(ngModel)]="selectedPaymentMethod" aria-label="Select Payment Method">
       <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="cash"></ion-radio>
-        <ion-label>Cash</ion-label>
+        <ion-label>In Store - Cash</ion-label>
       </ion-item>
       <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="card"></ion-radio>
-        <ion-label>Debit/Credit Card</ion-label>
+        <ion-label>In Store - Debit/Credit</ion-label>
       </ion-item>
       <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="aeropay"></ion-radio>
-        <ion-label class="aeropay-label">Pay By Bank
+        <ion-label class="aeropay-label">
           <img class="aeropay-image" src="assets/aeropay.png" alt="Powered by Aeropay">
           <div
             id="aeropay-button-container"
@@ -195,5 +195,5 @@
   [disabled]="selectedPaymentMethod === 'aeropay'"
   aria-label="Place your order"
 >
-  Place Order
+  Submit Order
 </ion-button>

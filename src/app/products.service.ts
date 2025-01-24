@@ -39,7 +39,8 @@ export class ProductsService {
     const storedProducts = sessionStorage.getItem('products');
     if (storedProducts) {
       const parsedProducts: Product[] = JSON.parse(storedProducts);
-      this.products.next(parsedProducts); 
+      const sortedProducts = this.sortProducts(parsedProducts);
+      this.products.next(sortedProducts);
     }
   }
 
@@ -59,9 +60,9 @@ export class ProductsService {
       })
       .subscribe(
         (products) => {
-          this.products.next(products);
-          this.saveProductsToSessionStorage(products);
-          console.log(products); 
+          const sortedProducts = this.sortProducts(products);
+          this.products.next(sortedProducts);
+          this.saveProductsToSessionStorage(sortedProducts);
         },
         (error) => {
           console.error('Error fetching products from backend:', error);
@@ -72,6 +73,10 @@ export class ProductsService {
   getProducts(): Observable<Product[]> {
     return this.products$;
   }
+
+  private sortProducts(products: Product[]): Product[] {
+    return products.sort((a, b) => a.title.localeCompare(b.title));
+  }  
 
   getFilteredProducts(): Observable<Product[]> {
     return this.products$.pipe(
@@ -215,7 +220,7 @@ export class ProductsService {
       { category: 'BEVERAGES', imageUrl: 'assets/icons/beverages.png' },
       { category: 'TINCTURES', imageUrl: 'assets/icons/tinctures.png' },
       { category: 'EDIBLES', imageUrl: 'assets/icons/edibles.png' },
-      { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
+      // { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
     ];
   }
 
