@@ -111,5 +111,14 @@ export class SingleProductComponent implements OnInit {
     alert('Item added to cart!');
   }
   
+  getProductImage(product: any): string {
+    if (product.image) {
+      return product.image;
+    }
+    if (product.brand) {
+      return `assets/brand_images/${product.brand.toLowerCase().replace(/\s+/g, '-')}.jpg`;
+    }
+    return 'assets/default.jpg';
+  }
   
 }

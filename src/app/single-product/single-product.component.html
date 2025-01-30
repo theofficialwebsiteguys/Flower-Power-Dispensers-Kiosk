@@ -13,7 +13,7 @@
 
   <div class="image-container">
     <img
-      [src]="currentProduct.image || 'assets/default.jpg'"
+      [src]="getProductImage(currentProduct)"
       [alt]="currentProduct.title ? currentProduct.title + ' image' : 'Product Image'"
     />
   </div>

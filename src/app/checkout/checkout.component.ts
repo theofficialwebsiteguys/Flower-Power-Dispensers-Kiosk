@@ -22,7 +22,7 @@ export class CheckoutComponent implements OnInit {
   finalTotal: number = 0;
   finalTax: number = 0;
 
-  pointValue: number = 0.2;
+  pointValue: number = 0.05;
 
   selectedTime: string = '';
 

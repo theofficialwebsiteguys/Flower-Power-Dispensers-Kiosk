@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Product } from './product/product.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, map, Observable, of, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, catchError, combineLatest, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 import { ProductCategory, CategoryWithImage } from './product-category/product-category.model';
@@ -48,27 +48,29 @@ export class ProductsService {
     sessionStorage.setItem('products', JSON.stringify(products));
   }
 
-  fetchProducts(): void {
+  fetchProducts(): Observable<Product[]> {
     if (this.products.value.length > 0) {
       console.log('Products already loaded from session storage.');
-      return;
+      return of(this.products.value); // Return existing products as an Observable
     }
-
-    this.http
+  
+    return this.http
       .get<Product[]>(`${environment.apiUrl}/products/all-products`, {
-        params: { venueId: environment.venueId } 
+        params: { venueId: environment.venueId },
       })
-      .subscribe(
-        (products) => {
+      .pipe(
+        tap((products) => {
           const sortedProducts = this.sortProducts(products);
           this.products.next(sortedProducts);
           this.saveProductsToSessionStorage(sortedProducts);
-        },
-        (error) => {
+        }),
+        catchError((error) => {
           console.error('Error fetching products from backend:', error);
-        }
+          return throwError(() => error);
+        })
       );
   }
+  
 
   getProducts(): Observable<Product[]> {
     return this.products$;
@@ -220,7 +222,7 @@ export class ProductsService {
       { category: 'BEVERAGES', imageUrl: 'assets/icons/beverages.png' },
       { category: 'TINCTURES', imageUrl: 'assets/icons/tinctures.png' },
       { category: 'EDIBLES', imageUrl: 'assets/icons/edibles.png' },
-      // { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
+      { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
     ];
   }
 
