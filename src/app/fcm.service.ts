@@ -85,11 +85,11 @@ export class FcmService {
         Authorization: sessionData ? JSON.parse(sessionData).token : null,
       });
       const response = await lastValueFrom(
-        this.http.post(`${environment.apiUrl}/notifications/push-token`, { email }, { headers })
+        this.http.post(`${environment.apiUrl}/users/push-token`, { email }, { headers })
       );
       return response || null;
     } catch (error: any) {
-      console.error('Error retrieving token from backend:', error);
+      console.error('Error retrieving token from backend:', JSON.stringify(error));
       return null;
     }
   }
@@ -102,12 +102,12 @@ export class FcmService {
       });
   
       const response = await lastValueFrom(
-        this.http.post(`${environment.apiUrl}/notifications/update-push-token`, { email, token }, { headers })
+        this.http.post(`${environment.apiUrl}/users/update-push-token`, { email, token }, { headers })
       );
   
       console.log('Token updated in backend:', response);
     } catch (error: any) {
-      console.error('Error updating token in backend:', error);
+      console.error('Error updating token in backend:', JSON.stringify(error));
       
     }
   }
