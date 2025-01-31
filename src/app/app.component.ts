@@ -77,15 +77,17 @@ export class AppComponent {
     this.authService.validateSession();
     this.settingsService.updateTheme();
   
+    // Only check login after products are fetched
+    this.authService.isLoggedIn().subscribe((status) => {
+      this.isLoggedIn = status;
+      if (this.isLoggedIn) this.onCloseSplash();
+    });
+            
     this.productService.fetchProducts().subscribe({
       next: () => {
         console.log("Products fetched successfully.");
   
-        // Only check login after products are fetched
-        this.authService.isLoggedIn().subscribe((status) => {
-          this.isLoggedIn = status;
-          if (this.isLoggedIn) this.onCloseSplash();
-        });
+
       },
       error: (error) => {
         console.error("Error fetching products:", error);
