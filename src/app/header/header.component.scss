@@ -60,11 +60,12 @@ img {
 .heading-container {
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 10000; /* Increase above carousel */
   background: #fff;
-  padding: calc(5px + env(safe-area-inset-top)) 5px 5px 5px; /* Top padding accounts for notch */
+  padding: calc(5px + env(safe-area-inset-top)) 5px 5px 5px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
 }
+
 
 
 /* Cart Icon */
@@ -73,3 +74,104 @@ ion-icon[name="cart-outline"] {
   color: var(--ion-color-primary);
 }
 
+/* Notification Button */
+.notification-button {
+  position: relative;
+  --background: transparent;
+  --box-shadow: none;
+  padding: 0;
+}
+
+/* Font Awesome Bell Icon */
+.notification-button i {
+  font-size: 22px; /* Same size as the cart icon */
+  color: var(--ion-color-primary); /* Match your app's primary color */
+}
+
+/* Notification Badge */
+.notification-badge {
+  position: absolute;
+  top: -4px; /* Align with the cart badge */
+  right: -6px;
+  background: var(--ion-color-secondary);
+  color: #fff;
+  font-size: 10px;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 50%;
+  min-width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
+}
+
+.modal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: #f7f7f7;
+  border-radius: 10px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.notification-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+}
+/* Styling for the Clear All Button */
+.clear-all-button {
+  margin: 0;
+  margin-top: 10px;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Style for the individual notification "Clear" button */
+.notification-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: #f9f9f9;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.3s ease;
+}
+
+.notification-item.unread {
+  background-color: #e1f5fe;
+  font-weight: bold;
+}
+
+.notification-item:hover {
+  background-color: #e0e0e0;
+}
+
+.notification-icon {
+  font-size: 18px;
+  margin-right: 12px;
+  color: var(--ion-color-primary);
+}
+
+ion-button.clear {
+  font-size: 12px;
+  color: var(--ion-color-danger);
+  padding: 0;
+  margin-left: 12px;
+}
+
+
+.empty-notifications {
+  text-align: center;
+  color: #aaa;
+  font-size: 16px;
+}

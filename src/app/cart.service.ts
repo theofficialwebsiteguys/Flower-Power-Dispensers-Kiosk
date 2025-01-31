@@ -25,11 +25,79 @@ export class CartService {
   private cartKey = 'cart'; 
   private cartSubject = new BehaviorSubject<CartItem[]>(this.getCart());
   cart$ = this.cartSubject.asObservable(); 
+  private inactivityTime = 0;
+  private inactivityLimit = 20 * 60; // 20 minutes
+  private userId: number | null = null; // Store user ID
+  private lastNotificationKey = 'lastCartAbandonmentNotification';
 
   constructor(private http: HttpClient, private authService: AuthService) {
     if (!sessionStorage.getItem(this.cartKey)) {
       sessionStorage.setItem(this.cartKey, JSON.stringify([]));
     }
+
+    this.authService.isLoggedIn().subscribe((status) => {
+      if (status) {
+        this.authService.getUserInfo().subscribe((user: any) => {
+          if (user) {
+            this.userId = user.id;
+            sessionStorage.removeItem(this.lastNotificationKey);
+            this.setupTracking();
+          }
+        });
+      }
+    });
+    
+
+
+  }
+
+  private setupTracking() {
+    document.addEventListener('mousemove', () => this.resetInactivity());
+    document.addEventListener('keypress', () => this.resetInactivity());
+    window.addEventListener('beforeunload', () => this.handleAbandonedCart());
+
+    setInterval(() => {
+      this.inactivityTime += 1;
+      if (this.inactivityTime > this.inactivityLimit && this.getCart().length > 0) {
+        this.handleAbandonedCart();
+      }
+    }, 1000);
+  }
+
+  private resetInactivity() {
+    this.inactivityTime = 0;
+    if (this.getCart().length === 0) {
+      sessionStorage.removeItem(this.lastNotificationKey);
+    }
+    
+  }  
+
+  private handleAbandonedCart() {
+    const cartItems = this.getCart();
+    const lastNotification = sessionStorage.getItem(this.lastNotificationKey);
+
+    if (cartItems.length > 0 && this.userId && !lastNotification) {
+      this.sendCartAbandonmentNotification(this.userId);
+      sessionStorage.setItem(this.lastNotificationKey, 'sent'); // Mark as sent
+    }
+  }
+  
+
+  private sendCartAbandonmentNotification(userId: number) {
+    const payload = { userId, title: 'Forget To Checkout?', body: 'Come back to checkout and feel the power of the flower!' };
+
+    const sessionData = localStorage.getItem('sessionData');
+    const token = sessionData ? JSON.parse(sessionData).token : null;
+
+    const headers = new HttpHeaders({
+      Authorization: token,
+    });
+
+    
+    this.http.post(`${environment.apiUrl}/notifications/send-push`, payload, { headers }).subscribe({
+      next: response => console.log('Cart abandonment notification sent', response),
+      error: error => console.error('Error sending notification', error),
+    });
   }
 
   getCart(): CartItem[] {

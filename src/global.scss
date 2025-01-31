@@ -38,6 +38,38 @@
   border: 0;
 }
 
+.custom-loading .loading-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding-top: 120px; /* Adds space for the image */
+  background-color: white !important;  /* Force white background */
+  color: black !important;  /* Force black text */
+  border-radius: 12px;  /* Optional: Add rounded corners */
+}
+
+.custom-loading .loading-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: black !important;
+  background-color: white;
+}
+
+/* Add the image inside the loading wrapper */
+.custom-loading .loading-wrapper::before {
+  content: "";
+  background: url("assets/logo.png") no-repeat center center;
+  background-size: contain;
+  width: 100px;  /* Adjust size as needed */
+  height: 100px;
+  position: absolute;
+  top: 20px; /* Position it above the loading spinner */
+}
+
 
 body{
   --ion-background-color: var(--ion-background-primary);

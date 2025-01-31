@@ -22,12 +22,56 @@
 
     <ng-container *ngIf="isLoggedIn">
       <ion-label class="points-display" aria-live="polite">{{ userPoints }} Points</ion-label>
+
+      <!-- Cart Button -->
       <ion-button class="action-button cart-button" routerLink="/cart" aria-label="View your shopping cart">
         <i class="fas fa-cart-shopping" aria-hidden="true"></i>
         <ion-badge *ngIf="cartItemCount > 0" class="cart-badge" [attr.aria-label]="cartItemCount + ' items in cart'">
           {{ cartItemCount }}
         </ion-badge>
       </ion-button>
+
+      <!-- Notification Button -->
+      <ion-button class="action-button notification-button" (click)="toggleNotifications()" aria-label="View notifications">
+        <i class="fas fa-bell" aria-hidden="true"></i>
+        <ion-badge *ngIf="unreadCount > 0" class="notification-badge" [attr.aria-label]="unreadCount + ' unread notifications'">
+        </ion-badge>
+      </ion-button>
+
     </ng-container>
   </ion-buttons>
 </ion-toolbar>
+
+<ion-modal [isOpen]="showNotifications" (ionModalDidDismiss)="closeNotifications()" aria-labelledby="sort-filter-title">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title id="sort-filter-title">Notifications</ion-title>
+        <ion-buttons slot="end">
+          <ion-button aria-label="Close notifications" (click)="closeNotifications()">
+            <ion-icon slot="icon-only" name="close" aria-hidden="true"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="filters-container">
+      <div *ngIf="notifications.length === 0" class="empty-notifications">
+        No new notifications.
+      </div>
+
+      <div *ngFor="let notification of notifications" 
+           class="notification-item" 
+           [class.unread]="!notification.read"
+           (click)="markAsRead(notification)">
+        <ion-icon name="alert-circle" class="notification-icon" aria-hidden="true"></ion-icon>
+        <span>{{ notification.message }}</span>
+        <ion-button fill="clear" slot="end" (click)="clearNotification(notification)">Clear</ion-button>
+      </div>
+
+      <ion-button fill="solid" expand="full" class="clear-all-button" (click)="clearAllNotifications()">
+        Clear All
+      </ion-button>
+    </div>
+  </ng-template>
+</ion-modal>

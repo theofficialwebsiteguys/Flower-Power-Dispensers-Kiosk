@@ -76,10 +76,9 @@ export class AuthService {
             this.authStatus.next(true); 
             this.router.navigateByUrl('/rewards')
             this.validateSession();
-            this.fcmService.initPushNotifications(credentials.email);
+            this.fcmService.initPushNotifications(response.user.email);
           }
           if (response.user) {
-            console.log(response.user)
             this.storeUserInfo(response.user); 
           }
         })
@@ -121,7 +120,6 @@ export class AuthService {
   }
 
   private storeUserInfo(user: any) {
-    console.log(user)
     localStorage.setItem('user_info', JSON.stringify(user));
     this.userSubject.next(user);
   }
@@ -175,7 +173,6 @@ export class AuthService {
       Authorization: sessionData?.token,
     });
 
-    console.log(sessionData);
     this.http
   .get<any>(`${this.apiUrl}/validate-session`, { headers })
   .pipe(
@@ -185,7 +182,7 @@ export class AuthService {
         this.updateUserData();
         this.handleRecentOrders(response.orders);
         this.setAuthTokensAlleaves(response.authTokens?.alleaves);
-        this.fcmService.initPushNotifications(this.getUserInfo().email);
+        this.fcmService.initPushNotifications(this.getCurrentUser().email);
       } else {
         console.error('Authentication failed:', response.error || 'Unknown error');
         if (response.details) {

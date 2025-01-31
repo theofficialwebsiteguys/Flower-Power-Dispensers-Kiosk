@@ -19,28 +19,27 @@ export class FcmService {
       console.warn('Push notifications are not supported on the web platform.');
       return;
     }
-
+  
     try {
-      // Register and get the FCM token
+      // Ensure listeners are set before registration
+      this.addNotificationListeners(email);
+  
       let permStatus = await PushNotifications.checkPermissions();
-
+  
       if (permStatus.receive === 'prompt') {
         permStatus = await PushNotifications.requestPermissions();
       }
-
+  
       if (permStatus.receive !== 'granted') {
         throw new Error('User denied permissions!');
       }
-
+  
       await PushNotifications.register();
-
-      // Set up listeners for push notifications
-      this.addNotificationListeners(email);
-
     } catch (error) {
       console.error('Error initializing FCM:', error);
     }
   }
+  
 
   addNotificationListeners(email: string) {
     // Listener for registration (token generation)
@@ -83,14 +82,13 @@ export class FcmService {
     try {
       const sessionData = localStorage.getItem('sessionData');
       const headers = new HttpHeaders({
-        Authorization: sessionData ? JSON.parse(sessionData).token : null, // Set Authorization header
+        Authorization: sessionData ? JSON.parse(sessionData).token : null,
       });
       const response = await lastValueFrom(
-        this.http.post(`${environment.apiUrl}/users/push-token`, { email }, { headers })
+        this.http.post(`${environment.apiUrl}/notifications/push-token`, { email }, { headers })
       );
-      console.log('Token from backend:', response);
-      return response || null; // Assuming the response contains { pushToken }
-    } catch (error) {
+      return response || null;
+    } catch (error: any) {
       console.error('Error retrieving token from backend:', error);
       return null;
     }
@@ -102,12 +100,15 @@ export class FcmService {
       const headers = new HttpHeaders({
         Authorization: sessionData ? JSON.parse(sessionData).token : null, // Set Authorization header
       });
+  
       const response = await lastValueFrom(
-        this.http.post(`${environment.apiUrl}/users/update-push-token`, { email, token }, { headers })
+        this.http.post(`${environment.apiUrl}/notifications/update-push-token`, { email, token }, { headers })
       );
+  
       console.log('Token updated in backend:', response);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error updating token in backend:', error);
+      
     }
   }
 

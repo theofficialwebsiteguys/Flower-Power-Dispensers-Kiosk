@@ -52,7 +52,7 @@ export class CheckoutComponent implements OnInit {
 
     const ap = window.AeroPay.button({
       forceIframe: false,
-      location: 'c7a33e4712',
+      location: 'ff46fe702a',
       type: 'checkout',
       onSuccess: (uuid: string) => {
         console.log('Transaction successful:', uuid);
@@ -148,62 +148,64 @@ export class CheckoutComponent implements OnInit {
   async placeOrder() {
     this.isLoading = true;
     const loading = await this.loadingController.create({
-      message: 'Placing Order...',
       spinner: 'crescent',
+      message: 'Please wait while we process your order...',
+      cssClass: 'custom-loading', // Apply the custom CSS
     });
     await loading.present();
+    
 
     const user_id = this.checkoutInfo.user_info.id;
     let pos_order_id = 0;
     let points_add = 0;
     const points_redeem = this.pointsToRedeem;
 
-    this.cartService.checkout(points_redeem).subscribe(
-      (response) => {
-        console.log('Final Response: ' + response);
-        pos_order_id = response.id_order;
-        points_add = response.subtotal;
+    // this.cartService.checkout(points_redeem).subscribe(
+    //   (response) => {
+    //     console.log('Final Response: ' + response);
+    //     pos_order_id = response.id_order;
+    //     points_add = response.subtotal;
 
-        console.log('Order Placed Successfully', response);
+    //     console.log('Order Placed Successfully', response);
 
-        this.cartService
-          .placeOrder(
-            user_id,
-            pos_order_id,
-            points_redeem ? 0 : points_add,
-            points_redeem
-          )
-          .subscribe({
-            next: () => {
-              console.log('Order placed successfully!');
-              loading.dismiss();
-              this.isLoading = false;
-              this.orderPlaced.emit();
-              this.accessibilityService.announce(
-                'Your order has been placed successfully.',
-                'polite'
-              );
-            },
-            error: (error) => {
-              loading.dismiss();
-              this.isLoading = false;
-              console.error('Error placing order:', error);
-              this.accessibilityService.announce(
-                'There was an error placing your order. Please try again.',
-                'polite'
-              );
-            },
-          });
-      },
-      (error) => {
-        loading.dismiss();
-        this.isLoading = false;
-        console.error('Error during checkout:', error);
-        this.accessibilityService.announce(
-          'Checkout failed. Please try again.',
-          'polite'
-        );
-      }
-    );
+    //     this.cartService
+    //       .placeOrder(
+    //         user_id,
+    //         pos_order_id,
+    //         points_redeem ? 0 : points_add,
+    //         points_redeem
+    //       )
+    //       .subscribe({
+    //         next: () => {
+    //           console.log('Order placed successfully!');
+    //           loading.dismiss();
+    //           this.isLoading = false;
+    //           this.orderPlaced.emit();
+    //           this.accessibilityService.announce(
+    //             'Your order has been placed successfully.',
+    //             'polite'
+    //           );
+    //         },
+    //         error: (error) => {
+    //           loading.dismiss();
+    //           this.isLoading = false;
+    //           console.error('Error placing order:', error);
+    //           this.accessibilityService.announce(
+    //             'There was an error placing your order. Please try again.',
+    //             'polite'
+    //           );
+    //         },
+    //       });
+    //   },
+    //   (error) => {
+    //     loading.dismiss();
+    //     this.isLoading = false;
+    //     console.error('Error during checkout:', error);
+    //     this.accessibilityService.announce(
+    //       'Checkout failed. Please try again.',
+    //       'polite'
+    //     );
+    //   }
+    // );
   }
 }

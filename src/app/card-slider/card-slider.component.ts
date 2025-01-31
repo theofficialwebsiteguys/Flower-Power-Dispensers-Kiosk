@@ -21,7 +21,6 @@ export class CardSliderComponent implements OnInit {
     this.categories = this.productService.getCategories();
     this.productService.getProducts().subscribe((products) => {
       this.products = products;
-      console.log(this.products);
     });
   }
 
