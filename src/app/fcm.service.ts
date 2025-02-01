@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { HttpHeaders, HttpResponse } from '@angular/common/http';
+import { FirebaseMessaging } from '@capacitor-firebase/messaging';
 
 export const FCM_TOKEN = 'push_notification_token';
 
@@ -21,7 +22,6 @@ export class FcmService {
     }
   
     try {
-      // Ensure listeners are set before registration
       this.addNotificationListeners(email);
   
       let permStatus = await PushNotifications.checkPermissions();
@@ -35,6 +35,18 @@ export class FcmService {
       }
   
       await PushNotifications.register();
+  
+      // ✅ Use FirebaseMessaging to get the FCM token
+      const tokenResult = await FirebaseMessaging.getToken();
+      const fcmToken = tokenResult.token;
+      
+      console.log('Retrieved FCM Token:', fcmToken);
+      
+      if (fcmToken) {
+        await this.updateTokenInBackend(email, fcmToken);
+      } else {
+        console.error('Failed to retrieve FCM token.');
+      }
     } catch (error) {
       console.error('Error initializing FCM:', error);
     }
