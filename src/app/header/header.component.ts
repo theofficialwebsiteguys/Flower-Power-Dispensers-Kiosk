@@ -5,7 +5,6 @@ import { SettingsService } from '../settings.service';
 import { Router } from '@angular/router';
 import { CartService } from '../cart.service';
 import { AccessibilityService } from '../accessibility.service';
-import { filter, of, switchMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -31,41 +30,41 @@ export class HeaderComponent {
   ) {}
 
   ngOnInit() {
-    this.authService.isLoggedIn().pipe(
-      tap(status => {
-        this.isLoggedIn = status;
-        if (!this.isLoggedIn) {
-          this.accessibilityService.announce('You are logged out.', 'polite');
-        }
-      }),
-      filter(status => status), // Only proceed if the user is logged in
-      switchMap(() => this.authService.getUserInfo()),
-      tap((userInfo: any) => {
+    this.authService.isLoggedIn().subscribe(status => {
+      this.isLoggedIn = status;
+      if (!status) {
+        this.accessibilityService.announce('You are logged out.', 'polite');
+        return;
+      }
+  
+      this.authService.getUserInfo().subscribe((userInfo: any) => {
         if (userInfo) {
           this.userPoints = userInfo.points;
           this.accessibilityService.announce(`You have ${this.userPoints} reward points.`, 'polite');
         }
-      }),
-      switchMap(() => this.settingsService.getUserNotifications())
-    ).subscribe(notifications => {
-      this.notifications = notifications;
-      this.unreadCount = notifications.filter((n: any) => n.status === 'unread').length;
+      });
+  
+      this.settingsService.getUserNotifications().subscribe(notifications => {
+        this.notifications = notifications;
+        this.unreadCount = notifications.filter((n: any) => n.status === 'unread').length;
+      });
     });
   
-    this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
+    this.settingsService.isDarkModeEnabled$.subscribe(isDarkModeEnabled => {
       this.darkModeEnabled = isDarkModeEnabled;
-      const mode = this.darkModeEnabled ? 'Dark mode' : 'Light mode';
-      this.accessibilityService.announce(`${mode} is enabled.`, 'polite');
+      this.accessibilityService.announce(`${isDarkModeEnabled ? 'Dark mode' : 'Light mode'} is enabled.`, 'polite');
     });
   
-    this.cartService.cart$.subscribe((cartItems) => {
-      const previousCount = this.cartItemCount;
-      this.cartItemCount = cartItems.reduce((count, item) => count + item.quantity, 0);
-      if (this.cartItemCount !== previousCount) {
+    this.cartService.cart$.subscribe(cartItems => {
+      const newCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+      if (this.cartItemCount !== newCount) {
+        this.cartItemCount = newCount;
         this.accessibilityService.announce(`You have ${this.cartItemCount} items in your cart.`, 'polite');
       }
     });
   }
+  
+  
   
 
 // Mark all notifications as read

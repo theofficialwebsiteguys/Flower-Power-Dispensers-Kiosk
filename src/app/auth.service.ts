@@ -74,6 +74,8 @@ export class AuthService {
           if (response) {
             this.storeSessionData(response.sessionId, response.expiresAt);
             this.authStatus.next(true); 
+            this.userSubject.next(response.user); // Update userSubject with user info
+            this.storeUserInfo(response.user);
             this.router.navigateByUrl('/rewards')
             this.validateSession();
             this.fcmService.initPushNotifications(response.user.email);
@@ -102,8 +104,8 @@ export class AuthService {
           if (response) {
             this.removeToken();
             this.authStatus.next(false);
-            this.router.navigate(['/rewards']);
             this.userSubject.next(null);
+            this.router.navigate(['/rewards']);
             this.removeUser();
           }
         })
