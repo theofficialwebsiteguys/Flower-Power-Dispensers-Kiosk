@@ -269,3 +269,28 @@ ion-radio::part(container) {
     }
   }
 }
+
+.delivery-address {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+
+  h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+
+  .input-row {
+    display: flex;
+    gap: 12px;
+  }
+
+  .rounded-input {
+    border-radius: 8px;
+    --padding-start: 12px;
+    margin-bottom: 12px;
+  }
+}

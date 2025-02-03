@@ -12,6 +12,15 @@ import { Router } from '@angular/router';
 })
 export class CheckoutComponent implements OnInit {
   @Input() checkoutInfo: any;
+
+  deliveryAddress = {
+    street: '',
+    apt: '',
+    city: '',
+    zip: '',
+    state: 'NY' // Default to New York and cannot be changed
+  };
+  
   isDatePickerOpen = false;
   selectedDate: string | null = null;
   pointsToRedeem: number = 0;
@@ -31,7 +40,12 @@ export class CheckoutComponent implements OnInit {
 
   timeOptions: { value: string; display: string }[] = [];
 
-  selectedPaymentMethod: string = '';
+  selectedPaymentMethod: string = 'cash';
+
+  selectedOrderType: string = 'pickup';
+
+  
+  
 
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
@@ -232,4 +246,9 @@ export class CheckoutComponent implements OnInit {
     });
     await toast.present();
   }
+
+  onOrderTypeChange(event: any) {
+    this.selectedOrderType = event.detail.value;
+  }
+
 }

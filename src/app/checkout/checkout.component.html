@@ -55,54 +55,65 @@
 
   <div class="section order-type">
     <h2>Order Type</h2>
-    <ion-radio-group aria-label="Select Order Type">
+    <ion-radio-group [(ngModel)]="selectedOrderType" (ionChange)="onOrderTypeChange($event)" aria-label="Select Order Type">
       <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="pickup" checked></ion-radio>
         <ion-label>Pickup</ion-label>
       </ion-item>
       <ion-item lines="none" class="radio-item">
-        <ion-radio slot="start" value="delivery" disabled></ion-radio>
-        <ion-label>Delivery (Currently Unavailable)</ion-label>
+        <ion-radio slot="start" value="delivery"></ion-radio>
+        <ion-label>Delivery</ion-label>
       </ion-item>
     </ion-radio-group>
-
-    <div class="date-time-container">
-      <div class="date-picker-container enhanced-box">
-        <ion-item
-          lines="none"
-          class="date-picker"
-          (click)="toggleTooltip()"
-          role="button"
-          aria-label="Select delivery or pickup date"
-        >
-          <ion-label>{{ selectedDate || "Select Date" }}</ion-label>
+  
+    <div *ngIf="selectedOrderType === 'delivery'" class="delivery-address">
+      <h3>Delivery Address</h3>
+      <ion-item class="rounded-input">
+        <ion-input
+          [(ngModel)]="deliveryAddress.street"
+          name="street"
+          placeholder="Street Address"
+          aria-label="Street Address"
+        ></ion-input>
+      </ion-item>
+    
+      <ion-item class="rounded-input">
+        <ion-input
+          [(ngModel)]="deliveryAddress.apt"
+          name="apt"
+          placeholder="Apartment / Suite (Optional)"
+          aria-label="Apartment or Suite"
+        ></ion-input>
+      </ion-item>
+    
+      <div class="input-row">
+        <ion-item class="rounded-input half-width">
+          <ion-input
+            [(ngModel)]="deliveryAddress.city"
+            name="city"
+            placeholder="City"
+            aria-label="City"
+          ></ion-input>
         </ion-item>
-        <div class="tooltip-calendar" *ngIf="showTooltip">
-          <ion-datetime
-            (ionChange)="onDateSelected($event)"
-            presentation="date"
-            aria-label="Calendar date selector"
-          ></ion-datetime>
-        </div>
-      </div>
-      <div class="time-picker-container enhanced-box">
-        <ion-item lines="none" class="time-picker">
-          <ion-select
-            placeholder="Select Time"
-            [(ngModel)]="selectedTime"
-            aria-label="Select time for order"
-          >
-            <ion-select-option
-              *ngFor="let time of timeOptions"
-              [value]="time.value"
-            >
-              {{ time.display }}
-            </ion-select-option>
-          </ion-select>
+        <ion-item class="rounded-input half-width">
+          <ion-input
+            [(ngModel)]="deliveryAddress.zip"
+            name="zip"
+            placeholder="ZIP Code"
+            aria-label="ZIP Code"
+          ></ion-input>
         </ion-item>
       </div>
+    
+      <ion-item class="rounded-input readonly-input">
+        <ion-label>State</ion-label>
+        <ion-text>{{ deliveryAddress.state }}</ion-text>
+      </ion-item>
     </div>
+    
+    
   </div>
+  
 
   <div class="section payment-method">
     <h2>Payment Method</h2>

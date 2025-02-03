@@ -126,12 +126,23 @@ ion-icon[name="cart-outline"] {
 /* Styling for the Clear All Button */
 .clear-all-button {
   margin: 0;
-  margin-top: 10px;
   color: #fff;
   font-weight: bold;
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
+
+.sticky-footer {
+  position: sticky;
+  margin-top: 10px;
+  bottom: 0;
+  background: white; /* Ensure it doesn't overlap with background */
+  padding: 10px;
+  border-top: 1px solid #ddd; /* Slight border for separation */
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for better visibility */
+  z-index: 10;
+}
+
 
 /* Optional: Style for the individual notification "Clear" button */
 .notification-item {

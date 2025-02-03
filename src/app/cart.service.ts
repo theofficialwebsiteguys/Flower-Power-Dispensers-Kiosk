@@ -26,9 +26,11 @@ export class CartService {
   private cartSubject = new BehaviorSubject<CartItem[]>(this.getCart());
   cart$ = this.cartSubject.asObservable(); 
   private inactivityTime = 0;
-  private inactivityLimit = 20 * 60; // 20 minutes
+  private inactivityLimit = 10 * 60; // 20 minutes
   private userId: number | null = null; // Store user ID
   private lastNotificationKey = 'lastCartAbandonmentNotification';
+
+  private inactivityTimer: any;
 
   constructor(private http: HttpClient, private authService: AuthService) {
     if (!sessionStorage.getItem(this.cartKey)) {
@@ -47,30 +49,40 @@ export class CartService {
       }
     });
     
-
-
   }
 
   private setupTracking() {
     document.addEventListener('mousemove', () => this.resetInactivity());
     document.addEventListener('keypress', () => this.resetInactivity());
-    window.addEventListener('beforeunload', () => this.handleAbandonedCart());
-
-    setInterval(() => {
-      this.inactivityTime += 1;
+  
+    const trackInactivity = () => {
+      this.inactivityTime += 1; // Increase by half-second steps
+  
       if (this.inactivityTime > this.inactivityLimit && this.getCart().length > 0) {
         this.handleAbandonedCart();
       }
-    }, 1000);
+  
+      this.inactivityTimer = setTimeout(trackInactivity, 1000); // Schedule next check
+    };
+  
+    trackInactivity();
   }
+  
+  ngOnDestroy() {
+    if (this.inactivityTimer) {
+      clearTimeout(this.inactivityTimer);
+    }
+  }
+  
 
   private resetInactivity() {
-    this.inactivityTime = 0;
     if (this.getCart().length === 0) {
       sessionStorage.removeItem(this.lastNotificationKey);
     }
-    
-  }  
+    if (this.inactivityTime > 0) {
+      this.inactivityTime = 0; // Reset inactivity timer
+    }
+  }
 
   private handleAbandonedCart() {
     const cartItems = this.getCart();
