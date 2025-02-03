@@ -20,7 +20,7 @@
         <div class="order-info">
           <h3>Order #{{ order.id_order }}</h3>
           <p>{{ order.items.length }} items</p>
-          <p>Pickup: {{ order.pickupDate }} at {{ order.pickupTime }}</p>
+          <!-- <p>Pickup: {{ order.pickupDate }} at {{ order.pickupTime }}</p> -->
         </div>
         <div class="order-amount">
           <p>${{ order.total | number : "1.2-2" }}</p>

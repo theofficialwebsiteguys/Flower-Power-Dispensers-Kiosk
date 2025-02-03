@@ -271,7 +271,7 @@ export class CartService {
   };
 
   const updateOrderItemPrices = (orderId: number, items: any[]): Observable<any> => {
-    let remainingDiscount = points_redeem / 10;
+    let remainingDiscount = points_redeem / 20;
     const sortedItems = [...items].sort((a, b) => b.price - a.price);
 
     const updateRequests = sortedItems.map((item) => {

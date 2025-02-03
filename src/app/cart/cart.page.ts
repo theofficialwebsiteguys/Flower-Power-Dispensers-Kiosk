@@ -84,7 +84,7 @@ export class CartPage {
   async presentToast(message: string, color: string = 'success') {
     const toast = await this.toastController.create({
       message: message,
-      duration: 3000,
+      duration: 5000,
       color: color,
       position: 'bottom',
     });

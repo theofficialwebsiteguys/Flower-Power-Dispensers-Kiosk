@@ -1,8 +1,9 @@
 import { Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CartService } from '../cart.service';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, ToastController } from '@ionic/angular';
 import { AccessibilityService } from '../accessibility.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -39,7 +40,9 @@ export class CheckoutComponent implements OnInit {
     private readonly location: Location,
     private cartService: CartService,
     private loadingController: LoadingController,
-    private accessibilityService: AccessibilityService
+    private accessibilityService: AccessibilityService,
+    private toastController: ToastController,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -162,7 +165,7 @@ export class CheckoutComponent implements OnInit {
 
     this.cartService.checkout(points_redeem).subscribe(
       (response) => {
-        console.log('Final Response: ' + response);
+        console.log('Final Response: ', response);
         pos_order_id = response.id_order;
         points_add = response.subtotal;
 
@@ -185,27 +188,48 @@ export class CheckoutComponent implements OnInit {
                 'Your order has been placed successfully.',
                 'polite'
               );
+              this.redirectToCart();
             },
-            error: (error) => {
+            error: async (error) => {
               loading.dismiss();
               this.isLoading = false;
               console.error('Error placing order:', error);
+              await this.presentToast('Error placing order: ' + JSON.stringify(error.error.message));
               this.accessibilityService.announce(
                 'There was an error placing your order. Please try again.',
                 'polite'
               );
+              this.redirectToCart();
             },
           });
       },
-      (error) => {
+      async (error) => {
         loading.dismiss();
         this.isLoading = false;
         console.error('Error during checkout:', error);
+        await this.presentToast('Error placing order: ' + JSON.stringify(error.error.message));
         this.accessibilityService.announce(
           'Checkout failed. Please try again.',
           'polite'
         );
+        this.redirectToCart();
       }
     );
+  }
+
+  private redirectToCart() {
+    this.router.navigateByUrl('/cart').then(() => {
+      location.reload(); // Ensures a full reload of the cart page
+    });
+  }
+
+  async presentToast(message: string, color: string = 'danger') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 5000,
+      color: color,
+      position: 'bottom',
+    });
+    await toast.present();
   }
 }
