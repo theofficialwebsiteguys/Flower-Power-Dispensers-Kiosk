@@ -12,6 +12,7 @@ import {
   ProductFilterOptions,
   ProductFilters,
 } from './product-filters/product-filters.model';
+import { CapacitorHttp } from '@capacitor/core';
 
 @Injectable({
   providedIn: 'root',
@@ -54,21 +55,31 @@ export class ProductsService {
       return of(this.products.value); // Return existing products as an Observable
     }
   
-    return this.http
-      .get<Product[]>(`${environment.apiUrl}/products/all-products`, {
-        params: { venueId: environment.venueId },
-      })
-      .pipe(
-        tap((products) => {
-          const sortedProducts = this.sortProducts(products);
-          this.products.next(sortedProducts);
-          this.saveProductsToSessionStorage(sortedProducts);
-        }),
-        catchError((error) => {
-          console.error('Error fetching products from backend:', error);
-          return throwError(() => error);
+    const options = {
+      url: `${environment.apiUrl}/products/all-products`,
+      params: { venueId: environment.venueId },
+      headers: { 'Content-Type': 'application/json' },
+    };
+  
+    return new Observable<Product[]>((observer) => {
+      CapacitorHttp.get(options)
+        .then((response) => {
+          if (response.status === 200) {
+            const sortedProducts = this.sortProducts(response.data);
+            this.products.next(sortedProducts);
+            this.saveProductsToSessionStorage(sortedProducts);
+            observer.next(sortedProducts);
+            observer.complete();
+          } else {
+            console.error('API request failed:', response);
+            observer.error(response);
+          }
         })
-      );
+        .catch((error) => {
+          console.error('Error fetching products:', error);
+          observer.error(error);
+        });
+    });
   }
   
 

@@ -43,7 +43,7 @@ export class PointsComponent {
             (user) => {
               this.selectedUser = user || null;
               this.employeeService.setSelectedUser(user); // ✅ Save the user globally
-              this.authService.getUserOrders(user.id).subscribe();
+              this.authService.getUserOrders();
             },
             (error) => {
               console.error('Error fetching user by phone:', error);

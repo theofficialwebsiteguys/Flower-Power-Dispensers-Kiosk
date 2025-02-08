@@ -29,8 +29,8 @@ export class HeaderComponent {
     private accessibilityService: AccessibilityService
   ) {}
 
-  ngOnInit() {
-    this.authService.isLoggedIn().subscribe(status => {
+  async ngOnInit() {
+    this.authService.isLoggedIn().subscribe(async (status) => {
       this.isLoggedIn = status;
       if (!status) {
         this.accessibilityService.announce('You are logged out.', 'polite');
@@ -44,18 +44,22 @@ export class HeaderComponent {
         }
       });
   
-      this.settingsService.getUserNotifications().subscribe(notifications => {
+      // Updated getUserNotifications call using async/await
+      try {
+        const notifications = await this.settingsService.getUserNotifications();
         this.notifications = notifications;
         this.unreadCount = notifications.filter((n: any) => n.status === 'unread').length;
-      });
+      } catch (error) {
+        console.error('Error fetching notifications:', error);
+      }
     });
   
-    this.settingsService.isDarkModeEnabled$.subscribe(isDarkModeEnabled => {
+    this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
       this.darkModeEnabled = isDarkModeEnabled;
       this.accessibilityService.announce(`${isDarkModeEnabled ? 'Dark mode' : 'Light mode'} is enabled.`, 'polite');
     });
   
-    this.cartService.cart$.subscribe(cartItems => {
+    this.cartService.cart$.subscribe((cartItems) => {
       const newCount = cartItems.reduce((count, item) => count + item.quantity, 0);
       if (this.cartItemCount !== newCount) {
         this.cartItemCount = newCount;
@@ -63,19 +67,66 @@ export class HeaderComponent {
       }
     });
   }
-  
-  
-  
 
-// Mark all notifications as read
-markAllNotificationsAsRead() {
-  if (this.unreadCount > 0) {
-    this.settingsService.markAllNotificationsAsRead(this.authService.getCurrentUser().id).subscribe(() => {
-      this.notifications.forEach(n => (n.status = 'read'));
-      this.unreadCount = 0;
-    });
+  // ngOnInit() {
+  //   this.authService.isLoggedIn().subscribe(status => {
+  //     this.isLoggedIn = status;
+  //     if (!status) {
+  //       this.accessibilityService.announce('You are logged out.', 'polite');
+  //       return;
+  //     }
+  
+  //     this.authService.getUserInfo().subscribe((userInfo: any) => {
+  //       if (userInfo) {
+  //         this.userPoints = userInfo.points;
+  //         this.accessibilityService.announce(`You have ${this.userPoints} reward points.`, 'polite');
+  //       }
+  //     });
+  
+  //     this.settingsService.getUserNotifications().subscribe(notifications => {
+  //       this.notifications = notifications;
+  //       this.unreadCount = notifications.filter((n: any) => n.status === 'unread').length;
+  //     });
+  //   });
+  
+  //   this.settingsService.isDarkModeEnabled$.subscribe(isDarkModeEnabled => {
+  //     this.darkModeEnabled = isDarkModeEnabled;
+  //     this.accessibilityService.announce(`${isDarkModeEnabled ? 'Dark mode' : 'Light mode'} is enabled.`, 'polite');
+  //   });
+  
+  //   this.cartService.cart$.subscribe(cartItems => {
+  //     const newCount = cartItems.reduce((count, item) => count + item.quantity, 0);
+  //     if (this.cartItemCount !== newCount) {
+  //       this.cartItemCount = newCount;
+  //       this.accessibilityService.announce(`You have ${this.cartItemCount} items in your cart.`, 'polite');
+  //     }
+  //   });
+  // }
+  
+  
+  async markAllNotificationsAsRead() {
+    if (this.unreadCount > 0) {
+      try {
+        await this.settingsService.markAllNotificationsAsRead(this.authService.getCurrentUser().id);
+        
+        // Update local notification statuses
+        this.notifications.forEach(n => (n.status = 'read'));
+        this.unreadCount = 0;
+      } catch (error) {
+        console.error('Error marking all notifications as read:', error);
+      }
+    }
   }
-}
+
+// // Mark all notifications as read
+// markAllNotificationsAsRead() {
+//   if (this.unreadCount > 0) {
+//     this.settingsService.markAllNotificationsAsRead(this.authService.getCurrentUser().id).subscribe(() => {
+//       this.notifications.forEach(n => (n.status = 'read'));
+//       this.unreadCount = 0;
+//     });
+//   }
+// }
 
   toggleNotifications() {
     this.showNotifications = true;
@@ -86,23 +137,48 @@ markAllNotificationsAsRead() {
     this.showNotifications = false;
   }
   
-  // Remove an individual notification
-  clearNotification(notification: any) {
+  // // Remove an individual notification
+  // clearNotification(notification: any) {
+  //   const index = this.notifications.indexOf(notification);
+  //   if (index > -1) {
+  //     this.notifications.splice(index, 1);
+  //     this.unreadCount--;
+  //     this.settingsService.deleteNotification(notification.id).subscribe();
+  //   }
+  // }
+
+  async clearNotification(notification: any) {
     const index = this.notifications.indexOf(notification);
     if (index > -1) {
       this.notifications.splice(index, 1);
       this.unreadCount--;
-      this.settingsService.deleteNotification(notification.id).subscribe();
+  
+      try {
+        await this.settingsService.deleteNotification(notification.id);
+      } catch (error) {
+        console.error('Error deleting notification:', error);
+      }
     }
   }
 
-  // Clear all notifications
-  clearAllNotifications() {
-    this.settingsService.deleteAllNotifications(this.authService.getCurrentUser().id).subscribe(() => {
-      this.notifications = [];
-      this.unreadCount = 0;
-    });
-  }
+  // // Clear all notifications
+  // clearAllNotifications() {
+  //   this.settingsService.deleteAllNotifications(this.authService.getCurrentUser().id).subscribe(() => {
+  //     this.notifications = [];
+  //     this.unreadCount = 0;
+  //   });
+  // }
+
+    // Clear all notifications
+    async clearAllNotifications() {
+      try {
+        await this.settingsService.deleteAllNotifications(this.authService.getCurrentUser().id);
+        this.notifications = [];
+        this.unreadCount = 0;
+      } catch (error) {
+        console.error('Error deleting all notifications:', error);
+      }
+    }
 
   markAsRead(notification: any) {
     if (!notification.read) {

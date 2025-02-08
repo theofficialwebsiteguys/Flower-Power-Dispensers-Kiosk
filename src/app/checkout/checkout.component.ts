@@ -4,6 +4,7 @@ import { CartService } from '../cart.service';
 import { LoadingController, ToastController } from '@ionic/angular';
 import { AccessibilityService } from '../accessibility.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-checkout',
@@ -54,7 +55,8 @@ export class CheckoutComponent implements OnInit {
     private loadingController: LoadingController,
     private accessibilityService: AccessibilityService,
     private toastController: ToastController,
-    private router: Router
+    private router: Router,
+    private authService: AuthService,
   ) {}
 
   ngOnInit() {
@@ -160,73 +162,130 @@ export class CheckoutComponent implements OnInit {
     );
   }
 
+  // async placeOrder() {
+  //   this.isLoading = true;
+  //   const loading = await this.loadingController.create({
+  //     spinner: 'crescent',
+  //     message: 'Please wait while we process your order...',
+  //     cssClass: 'custom-loading', // Apply the custom CSS
+  //   });
+  //   await loading.present();
+    
+
+  //   const user_id = this.checkoutInfo.user_info.id;
+  //   let pos_order_id = 0;
+  //   let points_add = 0;
+  //   const points_redeem = this.pointsToRedeem;
+
+  //   this.cartService.checkout(points_redeem).subscribe(
+  //     (response) => {
+  //       console.log('Final Response: ', response);
+  //       pos_order_id = response.id_order;
+  //       points_add = response.subtotal;
+
+  //       console.log('Order Placed Successfully', response);
+
+  //       this.cartService
+  //         .placeOrder(
+  //           user_id,
+  //           pos_order_id,
+  //           points_redeem ? 0 : points_add,
+  //           points_redeem
+  //         )
+  //         .subscribe({
+  //           next: () => {
+  //             console.log('Order placed successfully!');
+  //             loading.dismiss();
+  //             this.isLoading = false;
+  //             this.orderPlaced.emit();
+  //             this.accessibilityService.announce(
+  //               'Your order has been placed successfully.',
+  //               'polite'
+  //             );
+  //             // this.redirectToCart();
+  //           },
+  //           error: async (error) => {
+  //             loading.dismiss();
+  //             this.isLoading = false;
+  //             console.error('Error placing order:', error);
+  //             await this.presentToast('Error placing order: ' + JSON.stringify(error.error.message));
+  //             this.accessibilityService.announce(
+  //               'There was an error placing your order. Please try again.',
+  //               'polite'
+  //             );
+  //             // this.redirectToCart();
+  //           },
+  //         });
+  //     },
+  //     async (error) => {
+  //       loading.dismiss();
+  //       this.isLoading = false;
+  //       console.error('Error during checkout:', error);
+  //       await this.presentToast('Error placing order: ' + JSON.stringify(error.error.message));
+  //       this.accessibilityService.announce(
+  //         'Checkout failed. Please try again.',
+  //         'polite'
+  //       );
+  //       // this.redirectToCart();
+  //     }
+  //   );
+  // }
+
   async placeOrder() {
     this.isLoading = true;
     const loading = await this.loadingController.create({
       spinner: 'crescent',
       message: 'Please wait while we process your order...',
-      cssClass: 'custom-loading', // Apply the custom CSS
+      cssClass: 'custom-loading',
     });
     await loading.present();
-    
+  
+    try {
+      const user_id = this.checkoutInfo.user_info.id;
+      const points_redeem = this.pointsToRedeem;
+      let pos_order_id = 0;
+      let points_add = 0;
+  
+      const deliveryAddress =
+        this.selectedOrderType === 'delivery'
+          ? {
+              address1: this.deliveryAddress.street.trim(),
+              address2: this.deliveryAddress.apt ? this.deliveryAddress.apt.trim() : null,
+              city: this.deliveryAddress.city.trim(),
+              state: this.deliveryAddress.state.trim(),
+              zip: this.deliveryAddress.zip.trim(),
+              delivery_date: new Date().toISOString().split('T')[0],
+            }
+          : null;
+  
+      console.log('✅ Starting checkout process...');
+      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress);
+      console.log('✅ Checkout successful:', response);
+  
+      pos_order_id = response.id_order;
+      points_add = response.subtotal;
+  
+      console.log('✅ Placing order...');
+      await this.cartService.placeOrder(user_id, pos_order_id, points_redeem ? 0 : points_add, points_redeem, this.finalSubtotal);
+      console.log('✅ Order placed successfully');
+  
+      this.orderPlaced.emit();
 
-    const user_id = this.checkoutInfo.user_info.id;
-    let pos_order_id = 0;
-    let points_add = 0;
-    const points_redeem = this.pointsToRedeem;
-
-    this.cartService.checkout(points_redeem).subscribe(
-      (response) => {
-        console.log('Final Response: ', response);
-        pos_order_id = response.id_order;
-        points_add = response.subtotal;
-
-        console.log('Order Placed Successfully', response);
-
-        this.cartService
-          .placeOrder(
-            user_id,
-            pos_order_id,
-            points_redeem ? 0 : points_add,
-            points_redeem
-          )
-          .subscribe({
-            next: () => {
-              console.log('Order placed successfully!');
-              loading.dismiss();
-              this.isLoading = false;
-              this.orderPlaced.emit();
-              this.accessibilityService.announce(
-                'Your order has been placed successfully.',
-                'polite'
-              );
-              // this.redirectToCart();
-            },
-            error: async (error) => {
-              loading.dismiss();
-              this.isLoading = false;
-              console.error('Error placing order:', error);
-              await this.presentToast('Error placing order: ' + JSON.stringify(error.error.message));
-              this.accessibilityService.announce(
-                'There was an error placing your order. Please try again.',
-                'polite'
-              );
-              // this.redirectToCart();
-            },
-          });
-      },
-      async (error) => {
-        loading.dismiss();
-        this.isLoading = false;
-        console.error('Error during checkout:', error);
-        await this.presentToast('Error placing order: ' + JSON.stringify(error.error.message));
-        this.accessibilityService.announce(
-          'Checkout failed. Please try again.',
-          'polite'
-        );
-        // this.redirectToCart();
-      }
-    );
+      console.log('✅ Fetching user orders...');
+      const userOrders = await this.authService.getUserOrders(); // ✅ Ensure this is awaited
+      console.log('✅ User orders fetched successfully:', userOrders);
+      
+      this.accessibilityService.announce('Your order has been placed successfully.', 'polite');
+      console.log('🎉 Order and user data updated successfully!');
+    } catch (error:any) {
+      console.error('❌ Error placing order:', error);
+      await this.presentToast('Error placing order: ' + JSON.stringify(error.message));
+      this.accessibilityService.announce('There was an error placing your order. Please try again.', 'polite');
+    } finally {
+      this.isLoading = false;
+      console.log('✅ Cleanup complete: Destroying subscription');
+      await loading.dismiss();
+    }
   }
 
   private redirectToCart() {

@@ -1,7 +1,7 @@
 export type ProductCategory =
   | 'FLOWER'
   | 'PREROLL'
-  | 'VAPORIZERS'
+  | 'VAPE'
   | 'CONCENTRATES'
   | 'BEVERAGE'
   | 'TINCTURES'
