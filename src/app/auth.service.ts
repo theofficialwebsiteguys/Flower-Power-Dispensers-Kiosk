@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
+  map,
   Observable,
   tap,
   throwError,
@@ -32,6 +33,20 @@ export class AuthService {
 
   private apiUrl = `${environment.apiUrl}/users`;
 
+  private getHeaders(): HttpHeaders {
+    const sessionData = localStorage.getItem('sessionData');
+    const token = sessionData ? JSON.parse(sessionData).token : null;
+
+    if (!token) {
+      console.error('No API key found, user needs to log in.');
+      throw new Error('Unauthorized: No API key found');
+    }
+
+    return new HttpHeaders({
+      Authorization: token,
+    });
+  }
+
   getUserInfo(): any {
     return this.userSubject.asObservable();
   }
@@ -40,12 +55,16 @@ export class AuthService {
     return this.userSubject.value;
   }
 
+  get orders() {
+    return this.enrichedOrders.asObservable();
+  } 
+
   isLoggedIn(): Observable<boolean> {
     return this.authStatus.asObservable();
   }
 
-  register(userData: any): Observable<any> {
-    const defaultValues = { points: 0, business_id: 1 }; 
+  register(userData: any, isCustomer: boolean): Observable<any> {
+    const defaultValues = { points: 0, business_id: 1, role: isCustomer ? 'customer' : 'employee' }; 
     const payload = { ...userData, ...defaultValues };
     return this.http.post(`${this.apiUrl}/register`, payload).pipe(
       tap(() => {
@@ -75,7 +94,6 @@ export class AuthService {
             this.storeSessionData(response.sessionId, response.expiresAt);
             this.authStatus.next(true); 
             this.userSubject.next(response.user); // Update userSubject with user info
-            this.storeUserInfo(response.user);
             this.router.navigateByUrl('/rewards')
             this.validateSession();
             this.fcmService.initPushNotifications(response.user.email);
@@ -122,6 +140,7 @@ export class AuthService {
   }
 
   private storeUserInfo(user: any) {
+    console.log(user)
     localStorage.setItem('user_info', JSON.stringify(user));
     this.userSubject.next(user);
   }
@@ -275,12 +294,10 @@ export class AuthService {
       );
   }
 
-   get orders() {
-   return this.enrichedOrders.asObservable();
-  }
 
 
   handleRecentOrders(orders: any[]) {
+    console.log(orders)
     this.productsService.getProducts().subscribe((products: Product[]) => {
       const enrichedOrders = orders.map((order) => {
         const itemsWithDetails = Object.entries(order.items).map(([posProductId, quantity]) => {
@@ -311,6 +328,18 @@ export class AuthService {
     if (alleaves) {
       sessionStorage.setItem('authTokensAlleaves', JSON.stringify(alleaves));
     }
+  }
+
+  getUserOrders(userId: string): Observable<any> {
+    return this.http
+      .get<any>(`${environment.apiUrl}/orders/user?user_id=${userId}`, { headers: this.getHeaders() })
+      .pipe(
+        map((orders) => this.handleRecentOrders(orders)), // ✅ Process response before returning
+        catchError((error) => {
+          console.error('Error fetching orders:', error);
+          return throwError(() => error);
+        })
+      );
   }
 
 }

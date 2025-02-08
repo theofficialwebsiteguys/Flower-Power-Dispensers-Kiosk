@@ -21,12 +21,18 @@ export class RecentOrdersComponent  implements OnInit {
 
   ngOnInit() {
     this.authService.orders.subscribe((orders) => {
+      // Sort orders by ID in descending order (most recent first)
+      orders.sort((a, b) => b.id_order - a.id_order);
+  
+      // Separate pending and past orders
       this.pendingOrders = orders.filter((order) => !order.complete);
       this.pastOrders = orders.filter((order) => order.complete);
+  
       console.log('Pending Orders:', this.pendingOrders);
       console.log('Past Orders:', this.pastOrders);
     });
   }
+  
 
   toggleExpand(index: number, section: 'pending' | 'past'): void {
     const isExpanded = this.expandedOrderIndex[section] === index;

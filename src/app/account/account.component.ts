@@ -26,7 +26,9 @@ export class AccountComponent implements OnInit {
       this.userInfo = [
         { icon: 'person-outline', label: 'Name', value: `${this.user.fname} ${this.user.lname}` },
         { icon: 'mail-outline', label: 'Email', value: this.user.email },
-        { icon: 'call-outline', label: 'Phone', value: this.user.phone }
+        { icon: 'call-outline', label: 'Phone', value: this.user.phone },
+        { icon: 'trophy-outline', label: 'Points', value: this.user.points },
+        { icon: 'build-outline', label: 'Role', value: this.user.role === 'employee' ? 'budtender' : this.user.role }
       ];
       this.darkModeEnabled = this.settingsService.getDarkModeEnabled();
       this.settings = [

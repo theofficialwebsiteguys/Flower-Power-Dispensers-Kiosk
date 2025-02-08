@@ -1,34 +1,65 @@
 <div class="points-container" aria-labelledby="points-heading">
-  <div class="points-header">
-    <h2 id="points-heading" class="sr-only">Your Points and Membership Status</h2>
-    <span class="points-value" aria-live="polite">{{ points }} pts</span>
-    <p class="membership-status" aria-live="polite">
-      {{ isExclusiveMember ? "Exclusive Member: $1 = 2 Point" : "Free Member: $1 = 1 Points" }}
-    </p>
+  <div class="search-bar">
+    <input 
+      type="text" 
+      [(ngModel)]="searchQuery" 
+      placeholder="Search user by email or phone" 
+      (keyup.enter)="onSearch()" 
+    />
+    <button (click)="onSearch()">Search</button>
+    <button *ngIf="selectedUser" (click)="onClearSearch()" class="clear-button">Clear</button>
   </div>
 
-  <div class="progress-bar-container" aria-label="Progress towards next reward">
-    <div class="progress-bar" [style.width.%]="progressPercentage" role="progressbar" 
-      [attr.aria-valuenow]="progressPercentage" aria-valuemin="0" aria-valuemax="100">
+   <!-- New User Button -->
+   <button *ngIf="!selectedUser" class="new-user-btn" (click)="toggleSignup()">
+    {{ showSignup ? 'Cancel' : 'New User' }}
+  </button>
+
+
+
+  <div *ngIf="selectedUser" class="user-info">
+    <div class="user-header">
+      <h2>{{ selectedUser.fname }} {{ selectedUser.lname }}</h2>
+      <p>User ID: {{ selectedUser.id }}</p>
+    </div>
+
+    <div class="user-details">
+      <div class="user-row">
+        <strong>Email:</strong> <span>{{ selectedUser.email }}</span>
+      </div>
+      <div class="user-row">
+        <strong>Phone:</strong> <span>{{ selectedUser.phone }}</span>
+      </div>
+      <div class="user-row">
+        <strong>Country:</strong> <span>{{ selectedUser.country }}</span>
+      </div>
+      <div class="user-row">
+        <strong>Date of Birth:</strong> <span>{{ selectedUser.dob | date:'longDate' }}</span>
+      </div>
+      <div class="user-row">
+        <strong>Account Created:</strong> <span>{{ selectedUser.createdAt | date:'longDate' }}</span>
+      </div>
+      <div class="user-row">
+        <strong>Alleaves ID:</strong> <span>{{ selectedUser.alleaves_customer_id }}</span>
+      </div>
+      <div class="user-row">
+        <strong>Points:</strong> <span class="points-value">{{ selectedUser.points }} pts</span>
+      </div>
+    </div>
+
+    <div class="progress-bar-container" aria-label="Progress towards next reward">
+      <div class="progress-bar" [style.width.%]="progressPercentage" role="progressbar" 
+        [attr.aria-valuenow]="progressPercentage" aria-valuemin="0" aria-valuemax="100">
+      </div>
+    </div>
+
+    <div class="progress-steps" aria-label="Reward milestones">
+      <span *ngFor="let step of progressSteps">{{ step }}</span>
     </div>
   </div>
 
-  <div class="progress-steps" aria-label="Reward milestones">
-    <span *ngFor="let step of progressSteps">{{ step }}</span>
-  </div>
-
-  <!-- <div class="rewards-details" *ngIf="!isExclusiveMember">
-   <div class="reward-item">
-      <ion-icon name="medal-outline"></ion-icon>
-      <div class="reward-header">$99 Annual fee (sign up in-store)</div>
-      <h3>Platinum Tier</h3>
-      <ul class="reward-list">
-        <li>200 bonus points upon joining</li>
-        <li>10% off all in-store purchases of $100+ (pre-tax)</li>
-        <li>Choose any item on the menu for 50% off once every quarter</li>
-        <li>Access to exclusive Flower Power promotions and events</li>
-        <li>Be the first to know about new product drops and restocks on your favorites</li>
-      </ul>
+    <!-- Display Register Component If Button is Clicked -->
+    <div *ngIf="showSignup" class="signup-form">
+      <app-register [isCustomer]="true"></app-register>
     </div>
-  </div> -->
 </div>

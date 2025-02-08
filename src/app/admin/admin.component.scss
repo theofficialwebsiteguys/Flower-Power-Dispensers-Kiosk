@@ -1,0 +1,250 @@
+.admin-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Prevents full-page scrolling */
+    padding: 20px;
+    text-align: center;
+
+    .header {
+      margin-bottom: 20px;
+      h1 {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+    }
+  }
+  
+  .filter-section,
+  .date-picker-section,
+  .button-group {
+    flex-shrink: 0; /* Prevents resizing when content overflows */
+    padding-bottom: 10px;
+  }
+  
+  .table-container {
+    flex-grow: 1; /* Allows the table section to expand */
+    overflow-y: auto; /* Enables vertical scrolling */
+    max-height: calc(100vh - 200px); /* Adjust this value as needed */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #333; /* Light mode friendly */
+    color: #ffffff; /* Dark text for readability */
+    border-radius: 8px;
+    border: 1px solid #ddd; /* Light gray border */
+  }
+  
+  thead {
+    background: var(--ion-color-primary, #007bff); /* Default to primary color */
+    color: white;
+    position: sticky;
+    top: 0;
+    z-index: 2; /* Keeps table headers always visible */
+  }
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd; /* Light border */
+  }
+  
+  tr:hover {
+    background: rgba(0, 123, 255, 0.1); /* Subtle hover effect */
+    cursor: pointer;
+  }
+  
+  .no-data {
+    text-align: center;
+    color: #777;
+    margin-top: 20px;
+  }
+  
+  .modal-content {
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  
+  /* Date Picker Section */
+.date-picker-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Space between fields */
+    padding: 12px;
+    border-radius: 8px;
+  }
+  
+
+  /* Override the highlight underline */
+  ::ng-deep .sc-ion-input-md-h .input-highlight {
+    background-color: var(--ion-color-primary) !important;
+    border-bottom: 2px solid var(--ion-color-primary) !important;
+  }
+  
+  
+  /* Notification Center */
+  .notification-container {
+    padding: 20px;
+  }
+  
+  .header h1 {
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  
+  ion-card {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+  }
+  
+  ion-item {
+    margin-bottom: 10px;
+  }
+
+  .file-upload-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .file-upload-label {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .file-upload-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .file-name {
+    font-size: 0.85rem;
+    margin-top: 5px;
+    text-align: center;
+    font-style: italic;
+  }
+  
+  
+  .image-preview-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .image-preview {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #ddd;
+  }
+  
+  ::ng-deep .has-focus.sc-ion-input-md-h input.sc-ion-input-md {
+    caret-color: var(--ion-color-primary);
+  }
+
+  ::ng-deep .has-focus.sc-ion-textarea-md-h textarea.sc-ion-textarea-md {
+    caret-color: var(--ion-color-primary);
+  }
+
+  .carousel-container {
+    width: 100%;
+    height: auto;
+  }
+  
+  ion-slides {
+    width: 100%;
+    height: 300px; // Adjust height if needed
+  }
+
+  
+  .upload-container {
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+/* Image Grid Layout */
+.image-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 10px;
+  justify-content: center;
+}
+
+
+/* Image Card */
+.image-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.image-card:hover {
+  transform: scale(1.05);
+}
+
+/* Image Preview */
+.preview-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+  
+  .carousel-thumbnail {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+  
+  ion-button {
+    margin-top: 10px;
+  }
+  
+  /* Ensures 3 images per row even on smaller screens */
+  @media screen and (max-width: 768px) {
+    .image-grid {
+      grid-template-columns: repeat(3, 1fr); /* Always 3 per row */
+    }
+  }
+  
+  @media screen and (max-width: 480px) {
+    .image-grid {
+      grid-template-columns: repeat(3, 1fr); /* Always 3 per row */
+    }
+  }
+  
+
+
+/* Responsive: Ensure 3 images per row on all screens */
+@media screen and (max-width: 1024px) {
+  .image-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .image-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .image-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

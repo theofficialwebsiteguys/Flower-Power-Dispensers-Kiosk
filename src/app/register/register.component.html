@@ -220,7 +220,7 @@
       </ion-button>
     </form>
 
-    <p class="login-link">
+    <p class="login-link" *ngIf="!isCustomer">
       Already have an account?
       <a routerLink="/auth" [queryParams]="{ mode: 'login' }" aria-label="Log in to your account">Login</a>
     </p>

@@ -14,6 +14,8 @@ export class RewardsPage implements OnInit {
 
   isLoggedIn: boolean = false;
 
+  isAdmin: boolean = false;
+
   constructor(private authService: AuthService) {}
 
   ngOnInit() {
@@ -21,6 +23,9 @@ export class RewardsPage implements OnInit {
       this.isLoggedIn = status;
       this.authService.getUserInfo().subscribe((userInfo: any) => {
         this.user = userInfo;
+        if(this.user.role === 'admin'){
+          this.isAdmin = true;
+        }
       });
     });
   }

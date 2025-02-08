@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
@@ -11,6 +11,7 @@ import { AccessibilityService } from '../accessibility.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  @Input() isCustomer: boolean = false;
   registerForm: FormGroup;
   loading = false;
   submitted = false;
@@ -189,7 +190,7 @@ export class RegisterComponent {
       password: formData.password,
     };
 
-    this.authService.register(userData).subscribe({
+    this.authService.register(userData, this.isCustomer).subscribe({
       next: () => {
         this.loading = false;
         this.resetForm();

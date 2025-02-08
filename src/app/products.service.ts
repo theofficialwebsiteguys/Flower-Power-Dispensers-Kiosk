@@ -217,11 +217,11 @@ export class ProductsService {
   getCategories(): CategoryWithImage[] {
     return [
       { category: 'FLOWER', imageUrl: 'assets/icons/flower.png' },
-      { category: 'PRE_ROLLS', imageUrl: 'assets/icons/prerolls.png' },
+      { category: 'PREROLL', imageUrl: 'assets/icons/prerolls.png' },
       { category: 'CONCENTRATES', imageUrl: 'assets/icons/concentrates.png' },
-      { category: 'BEVERAGES', imageUrl: 'assets/icons/beverages.png' },
+      { category: 'BEVERAGE', imageUrl: 'assets/icons/beverages.png' },
       { category: 'TINCTURES', imageUrl: 'assets/icons/tinctures.png' },
-      { category: 'EDIBLES', imageUrl: 'assets/icons/edibles.png' },
+      { category: 'EDIBLE', imageUrl: 'assets/icons/edibles.png' },
       { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
     ];
   }

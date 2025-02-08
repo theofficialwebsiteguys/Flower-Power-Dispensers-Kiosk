@@ -23,6 +23,6 @@ import { SharedModule } from '../shared/shared.module';
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [AuthPage, LoginComponent, RegisterComponent, ForgotPasswordComponent, ResetPasswordComponent]
+  declarations: [AuthPage, LoginComponent, ForgotPasswordComponent, ResetPasswordComponent]
 })
 export class AuthPageModule {}

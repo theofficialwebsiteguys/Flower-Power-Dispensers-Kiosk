@@ -45,8 +45,6 @@ export class CheckoutComponent implements OnInit {
   selectedOrderType: string = 'pickup';
 
   
-  
-
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
 
@@ -69,7 +67,7 @@ export class CheckoutComponent implements OnInit {
 
     const ap = window.AeroPay.button({
       forceIframe: false,
-      location: 'ff46fe702a',
+      location: 'c7a33e4712',
       type: 'checkout',
       onSuccess: (uuid: string) => {
         console.log('Transaction successful:', uuid);
@@ -202,7 +200,7 @@ export class CheckoutComponent implements OnInit {
                 'Your order has been placed successfully.',
                 'polite'
               );
-              this.redirectToCart();
+              // this.redirectToCart();
             },
             error: async (error) => {
               loading.dismiss();
@@ -213,7 +211,7 @@ export class CheckoutComponent implements OnInit {
                 'There was an error placing your order. Please try again.',
                 'polite'
               );
-              this.redirectToCart();
+              // this.redirectToCart();
             },
           });
       },
@@ -226,7 +224,7 @@ export class CheckoutComponent implements OnInit {
           'Checkout failed. Please try again.',
           'polite'
         );
-        this.redirectToCart();
+        // this.redirectToCart();
       }
     );
   }

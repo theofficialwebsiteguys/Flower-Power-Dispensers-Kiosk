@@ -229,9 +229,6 @@ body {
         color: rgba(var(--ion-color-dark-contrast-rgb), 0.9) !important;
       }
 
-      .progress-bar {
-        background-color: var(--ion-color-secondary) !important;
-      }
 
       .points-badge {
         background-color: var(--ion-color-secondary) !important;
@@ -259,13 +256,18 @@ body {
       }
     }
 
-    .account-container {
+    .account-container, .points-container {
       h1 {
         color: rgba(var(--ion-color-dark-contrast-rgb), 0.9) !important;
       }
 
       .user-info,
       .settings {
+
+        .progress-bar {
+          background-color: var(--ion-color-secondary) !important;
+        }
+
         &,
         * {
           background-color: var(--ion-color-primary) !important;

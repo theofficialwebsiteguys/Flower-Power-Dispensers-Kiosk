@@ -3,6 +3,7 @@ import { CartItem, CartService } from '../cart.service';
 import { IonContent, LoadingController, ToastController } from '@ionic/angular';
 import { AuthService } from '../auth.service';
 import { AccessibilityService } from '../accessibility.service';
+import { EmployeeService } from '../employee.service';
 
 @Component({
   selector: 'app-cart',
@@ -22,17 +23,25 @@ export class CartPage {
 
   isLoading: boolean = false;
 
+  selectedUser: any;
+
   constructor(
     private readonly cartService: CartService,
     private toastController: ToastController,
     private loadingController: LoadingController,
     private authService: AuthService,
-    private accessibilityService: AccessibilityService
+    private accessibilityService: AccessibilityService,
+    private employeeService: EmployeeService
   ) {}
 
   ngOnInit(): void {
     this.cartService.cart$.subscribe((cart) => {
       this.cartItems = cart;
+    });
+
+    this.employeeService.selectedUser$.subscribe(user => {
+      console.log(user)
+      this.selectedUser = user;
     });
   }
 
@@ -43,10 +52,11 @@ export class CartPage {
       spinner: 'crescent',
     });
     await loading.present();
+    
 
     this.checkoutInfo = {
       cart: this.cartItems,
-      user_info: this.authService.getCurrentUser(),
+      user_info: this.selectedUser ?? this.authService.getCurrentUser(),
     };
     this.showCheckout = true;
     loading.dismiss();

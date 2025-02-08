@@ -20,6 +20,7 @@ export class CardSliderComponent implements OnInit {
   ngOnInit() {
     this.categories = this.productService.getCategories();
     this.productService.getProducts().subscribe((products) => {
+      console.log(products)
       this.products = products;
     });
   }

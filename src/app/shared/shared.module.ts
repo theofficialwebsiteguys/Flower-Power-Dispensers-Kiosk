@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { HeaderComponent } from '../header/header.component';
 import { ProductListComponent } from '../product-list/product-list.component';
@@ -11,6 +11,7 @@ import { ProductCategoryComponent } from '../product-category/product-category.c
 import { ProductFiltersComponent } from '../product-filters/product-filters.component';
 import { BannerCarouselComponent } from '../banner-carousel/banner-carousel.component';
 import { RouterModule } from '@angular/router';
+import { RegisterComponent } from '../register/register.component';
 
 @NgModule({
   declarations: [
@@ -20,9 +21,10 @@ import { RouterModule } from '@angular/router';
     ProductCategoriesComponent,
     ProductCategoryComponent,
     ProductFiltersComponent,
-    BannerCarouselComponent
+    BannerCarouselComponent,
+    RegisterComponent
   ],
-  imports: [CommonModule, IonicModule, FormsModule, RouterModule],
+  imports: [CommonModule, IonicModule, FormsModule, RouterModule, ReactiveFormsModule],
   exports: [
     HeaderComponent,
     ProductListComponent,
@@ -30,7 +32,8 @@ import { RouterModule } from '@angular/router';
     ProductCategoriesComponent,
     ProductCategoryComponent,
     ProductFiltersComponent,
-    BannerCarouselComponent
+    BannerCarouselComponent,
+    RegisterComponent
   ],
 })
 export class SharedModule {}
