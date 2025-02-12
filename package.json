@@ -22,6 +22,7 @@
     "@angular/platform-browser": "^18.0.0",
     "@angular/platform-browser-dynamic": "^18.0.0",
     "@angular/router": "^18.0.0",
+    "@awesome-cordova-plugins/in-app-browser": "^6.14.0",
     "@capacitor-community/fcm": "^6.0.0",
     "@capacitor-firebase/messaging": "^6.2.0",
     "@capacitor/android": "6.2.0",
@@ -36,7 +37,9 @@
     "@capacitor/status-bar": "6.0.1",
     "@google-cloud/storage": "^7.15.0",
     "@ionic/angular": "^8.4.0",
+    "aerosync-web-sdk": "^1.1.0",
     "bootstrap": "^5.3.3",
+    "file-saver": "^2.0.5",
     "firebase": "^10.14.1",
     "ionicons": "^7.0.0",
     "libphonenumber-js": "^1.11.14",
@@ -44,6 +47,7 @@
     "rxjs": "~7.8.0",
     "swiper": "^11.1.14",
     "tslib": "^2.3.0",
+    "uuid": "^11.0.5",
     "zone.js": "~0.14.2"
   },
   "devDependencies": {
@@ -59,6 +63,7 @@
     "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^6.1.2",
     "@ionic/angular-toolkit": "^11.0.1",
+    "@types/file-saver": "^2.0.7",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
     "@typescript-eslint/parser": "^6.0.0",

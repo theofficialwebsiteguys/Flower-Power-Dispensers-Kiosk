@@ -14,14 +14,16 @@ import { AccessibilityService } from '../accessibility.service';
 export class CardSliderComponent implements OnInit {
   products: Product[] = [];
   categories: CategoryWithImage[] = [];
+  loading: boolean = true;
 
   constructor(private readonly productService: ProductsService, private accessibilityService: AccessibilityService) {}
 
   ngOnInit() {
     this.categories = this.productService.getCategories();
+
     this.productService.getProducts().subscribe((products) => {
-      console.log(products)
       this.products = products;
+      this.loading = false; // Set loading to false when data is retrieved
     });
   }
 

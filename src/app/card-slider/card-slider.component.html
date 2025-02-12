@@ -5,6 +5,9 @@
       <ion-icon name="arrow-forward-outline" class="arrow-icon" aria-hidden="true"></ion-icon>
     </a>
   </div>
+  <div *ngIf="loading" class="loading-container">
+    <ion-spinner name="crescent"></ion-spinner>
+  </div>
   <div class="slider-container" tabindex="0" [attr.aria-label]="'Product slider for ' + category.category">
     <div class="slider">
       <ng-container *ngFor="let product of products">

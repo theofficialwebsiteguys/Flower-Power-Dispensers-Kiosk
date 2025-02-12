@@ -1,69 +1,18 @@
 <div class="admin-container">
+
   <div class="header">
-    <h1 tabindex="0">Admin Query</h1>
+    <h1 tabindex="0">Admin Tools</h1>
   </div>
 
-  <!-- Filter Selection -->
-  <div class="filter-section">
-    <ion-segment [(ngModel)]="selectedFilter">
-      <ion-segment-button value="users">Users</ion-segment-button>
-      <ion-segment-button value="orders">Orders by Date</ion-segment-button>
-    </ion-segment>
-  </div>
-
-  <!-- Date Picker (Shown for 'Orders') -->
-  <div *ngIf="selectedFilter === 'orders'" class="date-picker-section">
-    <ion-label>Start Date</ion-label>
-    <ion-input type="date" [(ngModel)]="startDate"></ion-input>
-
-    <ion-label>End Date</ion-label>
-    <ion-input type="date" [(ngModel)]="endDate"></ion-input>
-
-    <ion-button expand="block" (click)="clearDates()">Clear Dates</ion-button>
-  </div>
-
-  <!-- Query Buttons -->
   <div class="button-group">
-    <ion-button expand="block" (click)="fetchData()">Run Query</ion-button>
-    <ion-button expand="block" color="medium" (click)="clearQuery()">Clear Query</ion-button>
+    <ion-button expand="block" color="primary" (click)="fetchData()">Download Data</ion-button>
   </div>
 
-  <!-- Data Table -->
-  <div *ngIf="data.length > 0" class="table-container">
-    <table>
-      <thead>
-        <tr>
-          <th *ngFor="let col of tableColumns">{{ col }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let item of data" (click)="openDetail(item)">
-          <td *ngFor="let col of tableColumns">{{ item[col.toLowerCase()] }}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <!-- No Data Found Message -->
-  <div *ngIf="data.length === 0 && searchPerformed" class="no-data">
-    <p>No results found.</p>
-  </div>
-
-  <!-- Modal for Data Details -->
-  <ion-modal *ngIf="selectedItem" (didDismiss)="closeDetail()">
-    <div class="modal-content">
-      <h3>{{ selectedItem.title || 'Details' }}</h3>
-      <p>{{ selectedItem.fullDetails || 'No additional information' }}</p>
-      <ion-button expand="block" (click)="closeDetail()">Close</ion-button>
-    </div>
-  </ion-modal>
-
-  <!-- Notification Center -->
   <div class="notification-container">
     <div class="header">
       <h1 tabindex="0">Notification Center</h1>
     </div>
-
+  
     <div class="input-group">
       <label class="input-label">Notification Title</label>
       <ion-item>
@@ -71,7 +20,7 @@
         <ion-input color="primary" [(ngModel)]="title"></ion-input>
       </ion-item>
     </div>
-
+  
     <div class="input-group">
       <label class="input-label">Notification Body</label>
       <ion-item>
@@ -79,7 +28,19 @@
         <ion-textarea color="primary" [(ngModel)]="body"></ion-textarea>
       </ion-item>
     </div>
-
+  
+    <div class="input-group">
+      <label class="input-label">Select Category (Optional)</label>
+      <ion-item>
+        <ion-label position="floating">Category</ion-label>
+        <ion-select [(ngModel)]="selectedCategory" placeholder="Select a category">
+          <ion-select-option *ngFor="let category of categories" [value]="category">
+            {{ category }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+    </div>
+  
     <ion-item class="file-upload-container" lines="none">
       <ion-label class="file-upload-label">Upload Image</ion-label>
       <div class="file-upload-wrapper">
@@ -88,24 +49,22 @@
       </div>
       <p *ngIf="selectedFileName" class="file-name">{{ selectedFileName }}</p>
     </ion-item>
-
+  
     <div class="image-preview-container" *ngIf="imageUrl">
       <img [src]="imageUrl" alt="Preview" class="image-preview">
     </div>
-
+  
     <div class="button-group">
-      <ion-button expand="full" (click)="sendNotification()" color="primary">Send Notification</ion-button>
-      <ion-button expand="full" color="medium" (click)="clearNotificationForm()">Clear Notification</ion-button>
+      <ion-button expand="block" (click)="sendNotification()" color="primary">Send Notification</ion-button>
+      <ion-button expand="block" color="medium" (click)="clearNotificationForm()">Clear Notification</ion-button>
     </div>
   </div>
-
-  <!-- Banner Controller -->
+  
   <div class="upload-container">
     <div class="header">
       <h1 tabindex="0">Banner Controller</h1>
     </div>
 
-    <!-- Grid layout with 3 images per row -->
     <div class="image-grid">
       <div *ngFor="let image of carouselImages; let i = index" class="image-card" (click)="toggleDropdown(i)">
         <img [src]="image" class="carousel-thumbnail">
@@ -113,7 +72,6 @@
       </div>
     </div>
 
-    <!-- Expandable section for replacing images -->
     <div *ngFor="let image of carouselImages; let i = index">
       <div *ngIf="expandedIndex === i" class="expandable-content">
         <div class="image-preview-container">

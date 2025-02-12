@@ -32,6 +32,8 @@ export class PointsComponent {
             (user) => {
               this.selectedUser = user || null;
               this.employeeService.setSelectedUser(user); // ✅ Save the user globally
+              this.authService.storeUserInfo(user);
+              this.authService.getUserOrders();
             },
             (error) => {
               console.error('Error fetching user by email:', error);

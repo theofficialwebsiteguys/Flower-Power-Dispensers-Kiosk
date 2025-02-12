@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../admin.service';
-
+import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -40,6 +40,9 @@ export class AdminComponent {
   selectedImageFileName: (string | undefined)[] = []; // ✅ Allows undefined values
   uploadedImagePreviewUrl: (string | undefined)[] = []; // ✅ Allows undefined values
 
+  selectedCategory: string = ''; // Holds the selected category
+  categories: string[] = ['PREROLL', 'EDIBLE', 'FLOWER', 'CONCENTRATES', 'BEVERAGE', 'TINCTURES', 'ACCESSORIES'];
+
   constructor(private adminService: AdminService) {}
 
   ngOnInit() {
@@ -49,7 +52,7 @@ export class AdminComponent {
   // Load images from storage
   loadCarouselImages() {
     this.adminService.getCarouselImages().subscribe(response => {
-      this.carouselImages = response.images;
+      this.carouselImages = response.images.map(imgUrl => `${imgUrl}?v=${new Date().getTime()}`);
     });
   }
 
@@ -89,89 +92,150 @@ export class AdminComponent {
 
     this.adminService.replaceCarouselImage(this.selectedImageFile[index]!, index)
       .subscribe(response => {
-        // Update the carousel with the new image URL
-        this.carouselImages[index] = response.imageUrl;
-        this.selectedImageFile[index] = undefined; // ✅ Set to undefined instead of null
-        this.selectedImageFileName[index] = undefined; // ✅ Set to undefined instead of null
-        this.uploadedImagePreviewUrl[index] = undefined; // ✅ Set to undefined instead of null
+        if (response.imageUrl) {
+          // Force browser to load the new image
+          this.carouselImages[index] = `${response.imageUrl}?v=${new Date().getTime()}`;
+        }
+
+        // Reset the file selection states
+        this.selectedImageFile[index] = undefined;
+        this.selectedImageFileName[index] = undefined;
+        this.uploadedImagePreviewUrl[index] = undefined;
         this.selectedIndex = null;
       });
-  }
+}
+
   
 
   /** Retrieve data based on selected filter */
   fetchData() {
     this.searchPerformed = true;
-    
-    if (this.selectedFilter === 'users') {
-      this.getAllUsers();
-      this.tableColumns = ['ID', 'Name', 'Email', 'Phone', 'DOB', 'alleaves_customer_id', 'Points', 'Role', 'created_at'];
-    } else if (this.selectedFilter === 'orders') {
-      this.getOrdersByDateRange();
-      this.tableColumns = [
-        'ID', 'user_id', 'pos_order_id', 'points_add', 'points_redeem', 
-        'points_locked', 'total_amount', 'points_awarded', 'complete', 'created_at'
-      ];
-    }
+
+    this.adminService.getAdminData().subscribe(
+      (data) => {
+        this.exportToCSV(data);
+      },
+      (error) => {
+        console.error('Error fetching admin data:', error);
+      }
+    );
+
+    // if (this.selectedFilter === 'users') {
+    //   this.getAllUsers();
+    //   this.tableColumns = ['id', 'name', 'email', 'phone', 'dob', 'alleaves_customer_id', 'points', 'role', 'created_at'];
+    // } else if (this.selectedFilter === 'orders') {
+    //   this.getOrdersByDateRange();
+    //   this.tableColumns = [
+    //     'id', 'user_id', 'pos_order_id', 'points_add', 'points_redeem', 
+    //     'points_locked', 'total_amount', 'points_awarded', 'complete', 'created_at'
+    //   ];
+    // }
   }
 
   /** Retrieve all users */
-  private getAllUsers() {
-    this.adminService.getUsers().subscribe(
-      (users) => {
-        console.log(users)
-        this.data = users.map(user => ({
-          id: user.id,
-          name: `${user.fname} ${user.lname}`,
-          email: user.email,
-          phone: user.phone,
-          dob: user.dob,
-          alleaves_customer_id: user.alleaves_customer_id,
-          points: user.points,
-          role: user.role,
-          created_at: user.createdAt
-        }));
-      },
-      (error) => {
-        console.error('Error fetching users:', error);
-        this.data = [];
-      }
-    );
-  }
+  // private getAllUsers() {
+  //   this.adminService.getUsers().subscribe(
+  //     (users) => {
+  //       console.log(users)
+  //       this.data = users.map(user => ({
+  //         id: user.id,
+  //         name: `${user.fname} ${user.lname}`,
+  //         email: user.email,
+  //         phone: user.phone,
+  //         dob: user.dob,
+  //         alleaves_customer_id: user.alleaves_customer_id,
+  //         points: user.points,
+  //         role: user.role,
+  //         created_at: user.createdAt
+  //       }));
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching users:', error);
+  //       this.data = [];
+  //     }
+  //   );
+  // }
+  
 
   /** Retrieve all orders within a date range */
-  private getOrdersByDateRange() {
-    let queryParams = '';
+  // private getOrdersByDateRange() {
+  //   let queryParams = '';
 
-    // Construct query params only if both dates are selected
-    if (this.startDate && this.endDate) {
-      queryParams = `?startDate=${this.startDate}&endDate=${this.endDate}`;
+  //   // Construct query params only if both dates are selected
+  //   if (this.startDate && this.endDate) {
+  //     queryParams = `?startDate=${this.startDate}&endDate=${this.endDate}`;
+  //   }
+
+  //   this.adminService.getOrdersByDateRange(queryParams).subscribe(
+  //     (orders) => {
+  //       console.log(orders); // Debugging
+
+
+  //       this.data = orders.map(order => ({
+  //         id: order.id,
+  //         user_id: order.user_id,
+  //         pos_order_id: order.pos_order_id,
+  //         points_add: order.points_add,
+  //         points_redeem: order.points_redeem,
+  //         points_locked: order.points_locked,
+  //         total_amount: order.total_amount,
+  //         points_awarded: order.points_awarded ? 'Yes' : 'No',
+  //         complete: order.complete ? 'Yes' : 'No',
+  //         created_at: new Date(order.createdAt).toLocaleString(),
+  //       }));
+  //     },
+  //     (error) => {
+  //       console.error('Error fetching orders:', error);
+  //       this.data = [];
+  //     }
+  //   );
+  // }
+
+  exportToCSV(data: any[]) {
+    if (data.length === 0) {
+      console.warn('No data to export');
+      return;
     }
-
-    this.adminService.getOrdersByDateRange(queryParams).subscribe(
-      (orders) => {
-        console.log(orders); // Debugging
-
-
-        this.data = orders.map(order => ({
-          id: order.id,
-          user_id: order.user_id,
-          pos_order_id: order.pos_order_id,
-          points_add: order.points_add,
-          points_redeem: order.points_redeem,
-          points_locked: order.points_locked,
-          total_amount: order.total_amount,
-          points_awarded: order.points_awarded ? 'Yes' : 'No',
-          complete: order.complete ? 'Yes' : 'No',
-          created_at: new Date(order.createdAt).toLocaleString(),
-        }));
-      },
-      (error) => {
-        console.error('Error fetching orders:', error);
-        this.data = [];
+  
+    // Define CSV headers including user details and order details
+    const headers = [
+      'User ID', 'First Name', 'Last Name', 'Email', 'DOB', 'Country', 'Phone',
+      'Points', 'Account Created', 'Customer ID', 'Role',
+      'Order ID', 'POS Order ID', 'Points Added', 'Points Redeemed',
+      'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At'
+    ];
+  
+    // Flatten user and order data
+    const csvRows = data.flatMap(user => {
+      if (user.Orders.length > 0) {
+        return user.Orders.map((order: any) => [
+          user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone,
+          user.points, user.createdAt, user.alleaves_customer_id, user.role,
+          order.id, order.pos_order_id, order.points_add, order.points_redeem,
+          order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No',
+          order.points_locked, order.total_amount, order.createdAt
+        ]);
+      } else {
+        // If user has no orders, add a single row with empty order fields
+        return [[
+          user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone,
+          user.points, user.createdAt, user.alleaves_customer_id, user.role,
+          '', '', '', '', '', '', '', '', ''
+        ]];
       }
-    );
+    });
+  
+    // Convert to CSV format
+    const csvContent = [
+      headers.join(','), // Add header row
+      ...csvRows.map(row => row.map((value: any) => `"${value}"`).join(',')) // Add data rows
+    ].join('\n');
+  
+    // Create and trigger CSV download
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    saveAs(blob, `exported_users_orders.csv`);
   }
+  
 
   clearNotificationForm() {
     this.title = '';
@@ -238,14 +302,33 @@ export class AdminComponent {
   }
 
   sendNotification() {
-    this.adminService.sendPushNotification(this.title, this.body, this.imageUrl)
-      .subscribe({
-        next: (response) => {
-          console.log('Notification sent:', response);
-        },
-        error: (error) => {
-          console.error('Error sending notification:', error);
-        }
-      });
+    if (!this.title || !this.body) {
+      console.error('Title and body are required!');
+      return;
+    }
+
+    if (this.selectedCategory) {
+      // Send to a specific category group
+      this.adminService.sendPushNotificationToCategory(this.title, this.body, this.selectedCategory, this.imageUrl)
+        .subscribe({
+          next: (response) => {
+            console.log('Category notification sent:', response);
+          },
+          error: (error) => {
+            console.error('Error sending category notification:', error);
+          }
+        });
+    } else {
+      // Send to all users
+      this.adminService.sendPushNotificationToAll(this.title, this.body, this.imageUrl)
+        .subscribe({
+          next: (response) => {
+            console.log('Notification sent:', response);
+          },
+          error: (error) => {
+            console.error('Error sending notification:', error);
+          }
+        });
+    }
   }
 }

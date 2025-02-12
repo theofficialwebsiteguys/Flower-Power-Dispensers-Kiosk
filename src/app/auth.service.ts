@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import {
   BehaviorSubject,
   catchError,
+  filter,
   map,
   Observable,
   tap,
@@ -58,9 +59,11 @@ export class AuthService {
   }
 
   get orders() {
-    return this.enrichedOrders.asObservable();
-  } 
-
+    return this.enrichedOrders.asObservable().pipe(
+      filter((orders) => orders && orders.length > 0) // Only emit when orders exist
+    );
+  }
+  
   isLoggedIn(): Observable<boolean> {
     return this.authStatus.asObservable();
   }
@@ -206,7 +209,7 @@ export class AuthService {
     localStorage.setItem('sessionData', JSON.stringify(sessionData));
   }
 
-  private storeUserInfo(user: any) {
+  storeUserInfo(user: any) {
     console.log(user)
     localStorage.setItem('user_info', JSON.stringify(user));
     this.userSubject.next(user);

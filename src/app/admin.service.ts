@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { CapacitorHttp, HttpResponse } from '@capacitor/core';
+import { from, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -25,18 +26,18 @@ export class AdminService {
   }
 
   /** Get all users */
-  getUsers(): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/users/`, { headers: this.getHeaders()});
+  // getUsers(): Observable<any[]> {
+  //   return this.http.get<any[]>(`${environment.apiUrl}/users/`, { headers: this.getHeaders()});
+  // }
+
+  // /** Get all orders within a specific date range */
+  // getOrdersByDateRange(queryParams: string): Observable<any[]> {
+  //   return this.http.get<any[]>(`${environment.apiUrl}/orders/date-range${queryParams}`, { headers: this.getHeaders() });
+  // }
+
+  getAdminData(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/users/`, { headers: this.getHeaders() });
   }
-
-  /** Get all orders within a specific date range */
-  getOrdersByDateRange(queryParams: string): Observable<any[]> {
-    return this.http.get<any[]>(`${environment.apiUrl}/orders/date-range${queryParams}`, { headers: this.getHeaders() });
-  }
-
-
-
-  //Notification Center
 
   uploadImage(file: File): Observable<{ imageUrl: string }> {
     const formData = new FormData();
@@ -52,16 +53,27 @@ export class AdminService {
     });
   }
 
-  sendPushNotification(title: string, body: string, imageUrl?: string): Observable<any> {
+  sendPushNotificationToAll(title: string, body: string, imageUrl?: string): Observable<any> {
     const payload = { title, body, image: imageUrl };
     return this.http.post<any>(`${environment.apiUrl}/notifications/sendPushToAll`, payload, { headers: this.getHeaders() });
   }
 
-   /** Get current carousel images */
-   getCarouselImages(): Observable<{ images: string[] }> {
-    return this.http.get<{ images: string[] }>(`${environment.apiUrl}/notifications/images`, {
-      headers: this.getHeaders()
-    });
+
+  sendPushNotificationToCategory(title: string, body: string, category: string, imageUrl?: string): Observable<any> {
+    const payload = { title, body, category, image: imageUrl };
+    return this.http.post<any>(`${environment.apiUrl}/notifications/sendPushByCategory`, payload);
+  }
+
+  getCarouselImages(): Observable<{ images: string[] }> {
+    const url = `${environment.apiUrl}/notifications/images`;
+    const options = {
+      method: 'GET',
+      url
+    };
+
+    return from(CapacitorHttp.request(options)).pipe(
+      map((response: HttpResponse) => response.data) // Extract the `data` property
+    );
   }
 
   /** Replace a carousel image */
