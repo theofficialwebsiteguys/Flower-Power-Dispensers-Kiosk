@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable({
@@ -20,8 +21,8 @@ export class AeropayService {
 
     const payload = {
       scope: 'merchant',
-      api_key: '016c0534-ff89-4626-b8a4-fdbe7fbe1f08', // Replace with actual API Key
-      api_secret: '13322af3-39fb-462d-865c-9f238b248abd', // Replace with actual API Secret
+      api_key: environment.aeropay_api_key,
+      api_secret: environment.aeropay_api_secret,
       id: '1760',
       userId: '1102575'
     };
@@ -43,8 +44,8 @@ export class AeropayService {
 
     const payload = {
       scope: 'userForMerchant',
-      api_key: '016c0534-ff89-4626-b8a4-fdbe7fbe1f08', // Replace with actual API Key
-      api_secret: '13322af3-39fb-462d-865c-9f238b248abd', // Replace with actual API Secret
+      api_key: environment.aeropay_api_key,
+      api_secret: environment.aeropay_api_secret,
       id: '1760',
       userId: userId
     };
