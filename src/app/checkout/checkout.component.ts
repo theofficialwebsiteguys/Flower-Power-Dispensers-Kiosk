@@ -84,6 +84,7 @@ export class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    console.log(this.checkoutInfo)
     this.calculateDefaultTotals();
     this.generateTimeOptions();
   }
@@ -296,7 +297,7 @@ export class CheckoutComponent implements OnInit {
 
   calculateDefaultTotals() {
     this.finalSubtotal = this.checkoutInfo.cart.reduce(
-      (total: number, item: any) => total + item.price,
+      (total: number, item: any) => total + (item.price * item.quantity),
       0
     );
     this.finalTax = this.finalSubtotal * 0.13;

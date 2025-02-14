@@ -732,8 +732,8 @@ export class CartService {
     const payload: any = { user_id, pos_order_id, points_add, points_redeem, amount, cart };
 
     // Conditionally add employee_id if the selectedUserId is different from user_id
-    if (selectedUserId && selectedUserId !== user_id) {
-        payload.employee_id = selectedUserId;
+    if (selectedUserId) {
+        payload.employee_id = this.authService.getCurrentUser().id;
     }
   
     const sessionData = localStorage.getItem('sessionData');

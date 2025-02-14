@@ -53,11 +53,13 @@ export class CartPage {
     });
     await loading.present();
     
-
+    console.log(this.selectedUser)
     this.checkoutInfo = {
       cart: this.cartItems,
       user_info: this.selectedUser ?? this.authService.getCurrentUser(),
     };
+
+    console.log(this.checkoutInfo)
     this.showCheckout = true;
     loading.dismiss();
     this.accessibilityService.announce('Checkout process started.', 'polite');

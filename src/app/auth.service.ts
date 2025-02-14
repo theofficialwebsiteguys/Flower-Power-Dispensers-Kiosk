@@ -566,8 +566,8 @@ export class AuthService {
       // Handle recent orders & ensure update triggers
       this.handleRecentOrders(response.data);
   
-      // Force an update to ensure orders refresh in the component
-      this.enrichedOrders.next([...response.data]);
+      // // Force an update to ensure orders refresh in the component
+      // this.enrichedOrders.next([...response.data]);
   
       return response.data;
     } catch (error) {

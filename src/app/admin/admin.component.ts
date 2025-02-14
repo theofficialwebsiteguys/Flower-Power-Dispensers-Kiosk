@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { AdminService } from '../admin.service';
 import { saveAs } from 'file-saver';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Platform, ToastController } from '@ionic/angular';
+
 @Component({
   selector: 'app-admin',
   templateUrl: './admin.component.html',
@@ -43,7 +46,7 @@ export class AdminComponent {
   selectedCategory: string = ''; // Holds the selected category
   categories: string[] = ['PREROLL', 'EDIBLE', 'FLOWER', 'CONCENTRATES', 'BEVERAGE', 'TINCTURES', 'ACCESSORIES'];
 
-  constructor(private adminService: AdminService) {}
+  constructor(private adminService: AdminService, private platform: Platform, private toastController: ToastController) {}
 
   ngOnInit() {
     this.loadCarouselImages();
@@ -219,8 +222,8 @@ export class AdminComponent {
   //     }
   //   );
   // }
-
-  exportToCSV(data: any[]) {
+  
+  async exportToCSV(data: any[]) {
     if (data.length === 0) {
       console.warn('No data to export');
       return;
@@ -229,63 +232,66 @@ export class AdminComponent {
     let headers: string[] = [];
     let csvRows: string[][] = [];
   
-    // Detect the data type by checking key properties
     if (data[0].id !== undefined && data[0].email !== undefined && data[0].role !== undefined) {
-      // Case 1: Exporting Users (No Orders)
-      headers = [
-        'User ID', 'First Name', 'Last Name', 'Email', 'DOB', 'Country', 'Phone',
-        'Points', 'Account Created', 'Customer ID', 'Role'
-      ];
-  
-      csvRows = data.map((user: any) => [
-        user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone,
-        user.points, user.createdAt, user.alleaves_customer_id, user.role
-      ]);
-  
+      headers = ['User ID', 'First Name', 'Last Name', 'Email', 'DOB', 'Country', 'Phone', 'Points', 'Account Created', 'Customer ID', 'Role'];
+      csvRows = data.map(user => [user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone, user.points, user.createdAt, user.alleaves_customer_id, user.role]);
     } else if (data[0].Employee !== undefined) {
-      // Case 2: Exporting Orders by Employees
-      headers = [
-        'Employee ID', 'Employee Name', 'Employee Email', 'Employee Role',
-        'Order ID', 'POS Order ID', 'Points Added', 'Points Redeemed', 
-        'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At'
-      ];
-  
+      headers = ['Employee ID', 'Employee Name', 'Employee Email', 'Employee Role', 'Order ID', 'POS Order ID', 'Points Added', 'Points Redeemed', 'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At'];
       csvRows = data.map(order => [
         order.Employee?.id || '', `${order.Employee?.fname || ''} ${order.Employee?.lname || ''}`,
         order.Employee?.email || '', order.Employee?.role || '', order.id, order.pos_order_id, order.points_add, order.points_redeem,
         order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No',
         order.points_locked, order.total_amount, order.createdAt
       ]);
-  
     } else if (data[0].user_id !== undefined && data[0].pos_order_id !== undefined) {
-      // Case 3: Exporting General Orders (Not Employee-specific)
-      headers = [
-        'Order ID', 'User ID', 'POS Order ID', 'Points Added', 'Points Redeemed', 
-        'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At',
-      ];
-  
-      csvRows = data.map(order => [
-        order.id, order.user_id, order.pos_order_id, order.points_add, order.points_redeem,
-        order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No',
-        order.points_locked, order.total_amount, order.createdAt
-      ]);
+      headers = ['Order ID', 'User ID', 'POS Order ID', 'Points Added', 'Points Redeemed', 'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At'];
+      csvRows = data.map(order => [order.id, order.user_id, order.pos_order_id, order.points_add, order.points_redeem, order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No', order.points_locked, order.total_amount, order.createdAt]);
     } else {
       console.warn('Unknown data structure, cannot export.');
       return;
     }
   
-    // Convert to CSV format
-    const csvContent = [
-      headers.join(','), // Add header row
-      ...csvRows.map(row => row.map(value => `"${value}"`).join(',')) // Add data rows
-    ].join('\n');
+    // Convert data to CSV format
+    const csvContent = [headers.join(','), ...csvRows.map(row => row.map(value => `"${value}"`).join(','))].join('\n');
   
-    // Create and trigger CSV download
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, `exported_data.csv`);
+    // ✅ Generate a unique file name with timestamp
+    const timestamp = new Date().toISOString().replace(/[:.-]/g, '_'); 
+    const fileName = `exported_data_${timestamp}.csv`;
+  
+    if (this.platform.is('capacitor')) {
+      // ✅ Running on a mobile device (Capacitor)
+      try {
+        await Filesystem.writeFile({
+          path: fileName,
+          data: csvContent,
+          directory: Directory.Documents,
+          encoding: Encoding.UTF8,
+        });
+  
+        console.log('CSV file saved successfully:', fileName);
+        await this.presentToast('File Saved To Device Documents', 'success');
+        
+        // You can use the Share API to let users open the file
+        // Or a FileOpener plugin if needed
+      } catch (error) {
+        console.error('Error saving file:', error);
+      }
+    } else {
+      // ✅ Running on web (fallback to `saveAs`)
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      saveAs(blob, fileName);
+    }
   }
-  
-  
+
+  async presentToast(message: string, color: string = 'danger') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 5000,
+      color: color,
+      position: 'bottom',
+    });
+    await toast.present();
+  }
 
   clearNotificationForm() {
     this.title = '';

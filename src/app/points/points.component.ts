@@ -45,7 +45,7 @@ export class PointsComponent {
           this.employeeService.getUserByPhone(trimmedQuery).subscribe(
             (user) => {
               this.selectedUser = user || null;
-              this.employeeService.setSelectedUser(user.id); // ✅ Save the user globally
+              this.employeeService.setSelectedUser(user); // ✅ Save the user globally
               this.authService.getUserOrders(user.id).then(() => {
                 console.log("Orders refreshed.");
               });
