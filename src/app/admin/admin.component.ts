@@ -111,7 +111,7 @@ export class AdminComponent {
   fetchData() {
     this.searchPerformed = true;
 
-    this.adminService.getAdminData().subscribe(
+    this.adminService.getUserData().subscribe(
       (data) => {
         this.exportToCSV(data);
       },
@@ -131,6 +131,35 @@ export class AdminComponent {
     //   ];
     // }
   }
+
+  fetchOrdersByEmployees() {
+    this.searchPerformed = true;
+  
+    this.adminService.getOrdersByEmployeesData().subscribe(
+      (data) => {
+        this.exportToCSV(data);
+      },
+      (error) => {
+        console.error('Error fetching orders by employees:', error);
+      }
+    );
+  
+  }
+  
+  fetchOrders() {
+    this.searchPerformed = true;
+  
+    this.adminService.getOrdersData().subscribe(
+      (data) => {
+        this.exportToCSV(data);
+      },
+      (error) => {
+        console.error('Error fetching orders by employees:', error);
+      }
+    );
+  
+  }
+  
 
   /** Retrieve all users */
   // private getAllUsers() {
@@ -197,44 +226,65 @@ export class AdminComponent {
       return;
     }
   
-    // Define CSV headers including user details and order details
-    const headers = [
-      'User ID', 'First Name', 'Last Name', 'Email', 'DOB', 'Country', 'Phone',
-      'Points', 'Account Created', 'Customer ID', 'Role',
-      'Order ID', 'POS Order ID', 'Points Added', 'Points Redeemed',
-      'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At'
-    ];
+    let headers: string[] = [];
+    let csvRows: string[][] = [];
   
-    // Flatten user and order data
-    const csvRows = data.flatMap(user => {
-      if (user.Orders.length > 0) {
-        return user.Orders.map((order: any) => [
-          user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone,
-          user.points, user.createdAt, user.alleaves_customer_id, user.role,
-          order.id, order.pos_order_id, order.points_add, order.points_redeem,
-          order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No',
-          order.points_locked, order.total_amount, order.createdAt
-        ]);
-      } else {
-        // If user has no orders, add a single row with empty order fields
-        return [[
-          user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone,
-          user.points, user.createdAt, user.alleaves_customer_id, user.role,
-          '', '', '', '', '', '', '', '', ''
-        ]];
-      }
-    });
+    // Detect the data type by checking key properties
+    if (data[0].id !== undefined && data[0].email !== undefined && data[0].role !== undefined) {
+      // Case 1: Exporting Users (No Orders)
+      headers = [
+        'User ID', 'First Name', 'Last Name', 'Email', 'DOB', 'Country', 'Phone',
+        'Points', 'Account Created', 'Customer ID', 'Role'
+      ];
+  
+      csvRows = data.map((user: any) => [
+        user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone,
+        user.points, user.createdAt, user.alleaves_customer_id, user.role
+      ]);
+  
+    } else if (data[0].Employee !== undefined) {
+      // Case 2: Exporting Orders by Employees
+      headers = [
+        'Employee ID', 'Employee Name', 'Employee Email', 'Employee Role',
+        'Order ID', 'POS Order ID', 'Points Added', 'Points Redeemed', 
+        'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At'
+      ];
+  
+      csvRows = data.map(order => [
+        order.Employee?.id || '', `${order.Employee?.fname || ''} ${order.Employee?.lname || ''}`,
+        order.Employee?.email || '', order.Employee?.role || '', order.id, order.pos_order_id, order.points_add, order.points_redeem,
+        order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No',
+        order.points_locked, order.total_amount, order.createdAt
+      ]);
+  
+    } else if (data[0].user_id !== undefined && data[0].pos_order_id !== undefined) {
+      // Case 3: Exporting General Orders (Not Employee-specific)
+      headers = [
+        'Order ID', 'User ID', 'POS Order ID', 'Points Added', 'Points Redeemed', 
+        'Order Complete', 'Points Awarded', 'Points Locked', 'Total Amount', 'Order Created At',
+      ];
+  
+      csvRows = data.map(order => [
+        order.id, order.user_id, order.pos_order_id, order.points_add, order.points_redeem,
+        order.complete ? 'Yes' : 'No', order.points_awarded ? 'Yes' : 'No',
+        order.points_locked, order.total_amount, order.createdAt
+      ]);
+    } else {
+      console.warn('Unknown data structure, cannot export.');
+      return;
+    }
   
     // Convert to CSV format
     const csvContent = [
       headers.join(','), // Add header row
-      ...csvRows.map(row => row.map((value: any) => `"${value}"`).join(',')) // Add data rows
+      ...csvRows.map(row => row.map(value => `"${value}"`).join(',')) // Add data rows
     ].join('\n');
   
     // Create and trigger CSV download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, `exported_users_orders.csv`);
+    saveAs(blob, `exported_data.csv`);
   }
+  
   
 
   clearNotificationForm() {

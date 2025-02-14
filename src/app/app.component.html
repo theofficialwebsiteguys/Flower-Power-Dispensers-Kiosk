@@ -15,8 +15,9 @@
   <!-- Main Content -->
   <ion-router-outlet
     *ngIf="!showSplashScreen"
-    @fadeIn
+    [attr.inert]="showSplashScreen ? true : null"
     aria-live="polite"
     aria-label="Main content area"
-  ></ion-router-outlet>
+    id="main-content"
+></ion-router-outlet>
 </ion-app>

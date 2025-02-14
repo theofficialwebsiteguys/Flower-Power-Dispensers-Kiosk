@@ -55,4 +55,9 @@ export class EmployeeService {
   clearSelectedUser() {
     this.selectedUserSubject.next(null);
   }
+
+  getSelectedUser(): any {
+    return this.selectedUserSubject.getValue();
+  }
+  
 }

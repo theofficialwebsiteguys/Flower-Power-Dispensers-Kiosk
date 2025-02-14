@@ -11,19 +11,21 @@ export class AdminService {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders {
+  private getHeaders(): { [key: string]: string } {
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
-
+  
     if (!token) {
       console.error('No API key found, user needs to log in.');
       throw new Error('Unauthorized: No API key found');
     }
-
-    return new HttpHeaders({
+  
+    return {
       Authorization: token,
-    });
+      'Content-Type': 'application/json',
+    };
   }
+  
 
   /** Get all users */
   // getUsers(): Observable<any[]> {
@@ -35,8 +37,16 @@ export class AdminService {
   //   return this.http.get<any[]>(`${environment.apiUrl}/orders/date-range${queryParams}`, { headers: this.getHeaders() });
   // }
 
-  getAdminData(): Observable<any[]> {
+  getUserData(): Observable<any[]> {
     return this.http.get<any[]>(`${environment.apiUrl}/users/`, { headers: this.getHeaders() });
+  }
+
+  getOrdersByEmployeesData(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/orders/employees`, { headers: this.getHeaders() });
+  }
+
+  getOrdersData(): Observable<any[]> {
+    return this.http.get<any[]>(`${environment.apiUrl}/orders/`, { headers: this.getHeaders() });
   }
 
   uploadImage(file: File): Observable<{ imageUrl: string }> {
@@ -66,15 +76,18 @@ export class AdminService {
 
   getCarouselImages(): Observable<{ images: string[] }> {
     const url = `${environment.apiUrl}/notifications/images`;
+  
     const options = {
       method: 'GET',
-      url
+      url,
+      headers: { 'x-auth-api-key': environment.db_api_key } // Add headers
     };
-
+  
     return from(CapacitorHttp.request(options)).pipe(
-      map((response: HttpResponse) => response.data) // Extract the `data` property
+      map((response: any) => response.data) // Extract the `data` property
     );
   }
+  
 
   /** Replace a carousel image */
   replaceCarouselImage(file: File, index: number): Observable<{ imageUrl: string }> {

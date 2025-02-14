@@ -99,7 +99,7 @@ export class AeropayService {
     };
   
     return this.http.post<any>('https://staging-api.aeropay.com/user', payload, { headers }).pipe(
-      tap(response => console.log('✅ User Created:', response))
+      tap(response => console.log(response))
     );
   }
 
@@ -112,7 +112,7 @@ export class AeropayService {
     const payload = { userId, code };
   
     return this.http.post<any>('https://staging-api.aeropay.com/confirmUser', payload, { headers }).pipe(
-      tap(response => console.log('✅ AeroPay User Verified:', response))
+      tap(response => console.log(response))
     );
   }
   
@@ -123,7 +123,7 @@ export class AeropayService {
       .set('authorizationToken', `Bearer ${this.getUsedForMerchantToken()}`);
   
     return this.http.get<any>('https://staging-api.aeropay.com/aggregatorCredentials?aggregator=aerosync', { headers }).pipe(
-      tap(response => console.log('✅ Aerosync Credentials Retrieved:', response))
+      tap(response => console.log(response))
     );
   }
   
@@ -148,7 +148,7 @@ export class AeropayService {
     console.log('🚀 Linking Bank Account to AeroPay with Payload:', payload);
 
     return this.http.post<any>('https://staging-api.aeropay.com/linkAccountFromAggregator', payload, { headers }).pipe(
-      tap(response => console.log('✅ Bank Account Linked:', response))
+      tap(response => console.log(response))
     );
   }
   
@@ -177,7 +177,7 @@ export class AeropayService {
     console.log('🚀 Initiating AeroPay Transaction with Payload:', payload);
 
     return this.http.post<any>('https://staging-api.aeropay.com/transaction', payload, { headers }).pipe(
-      tap(response => console.log('✅ AeroPay Transaction Created:', response))
+      tap(response => console.log(response))
     );
   }
   

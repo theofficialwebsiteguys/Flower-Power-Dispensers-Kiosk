@@ -60,9 +60,10 @@ export class AuthService {
 
   get orders() {
     return this.enrichedOrders.asObservable().pipe(
-      filter((orders) => orders && orders.length > 0) // Only emit when orders exist
+      filter((orders) => orders === null || (orders && orders.length > 0)) // ✅ Allow `null` to trigger updates
     );
   }
+  
   
   isLoggedIn(): Observable<boolean> {
     return this.authStatus.asObservable();
@@ -506,9 +507,12 @@ export class AuthService {
           })
           .filter((item) => item !== null),
       }));
-      this.enrichedOrders.next(enrichedOrders);
+  
+      console.log("Enriched Orders Updated:", enrichedOrders);
+      this.enrichedOrders.next([...enrichedOrders]); // Emit new array
     });
   }
+  
     
   setAuthTokensAlleaves(alleaves: any): void {
     sessionStorage.removeItem('authTokensAlleaves');
@@ -529,23 +533,28 @@ export class AuthService {
   //     );
   // }
 
-  async getUserOrders(): Promise<any> {
+  async getUserOrders(userId?: number): Promise<any> {
     try {
+      console.log("Fetching user orders for ID:", userId);
+      
+      // Clear previous orders to trigger a refresh
+      this.enrichedOrders.next(null as any);
+  
+      // Determine user ID: use provided ID or default to the current user's ID
+      const user_id = userId ? String(userId) : String(this.getCurrentUser().id);
+  
       const response = await CapacitorHttp.get({
         url: `${environment.apiUrl}/orders/user`,
         headers: this.getHeaders(),
-        params: { user_id: String(this.getCurrentUser().id) }, // Ensure it's a string
+        params: { user_id }, 
       });
   
       console.log("API Response:", response);
-      console.log("Response Data Type:", typeof response.data);
   
-      // Handle cases where the response is not an object
       if (typeof response.data === "number") {
-        response.data = String(response.data); // Convert to string
+        response.data = String(response.data);
       }
   
-      // Ensure JSON parsing if needed
       try {
         if (typeof response.data === "string") {
           response.data = JSON.parse(response.data);
@@ -554,8 +563,11 @@ export class AuthService {
         console.warn("Failed to parse response:", e);
       }
   
+      // Handle recent orders & ensure update triggers
       this.handleRecentOrders(response.data);
-      this.updateUserData();
+  
+      // Force an update to ensure orders refresh in the component
+      this.enrichedOrders.next([...response.data]);
   
       return response.data;
     } catch (error) {
@@ -563,5 +575,6 @@ export class AuthService {
       throw error;
     }
   }
+  
 
 }

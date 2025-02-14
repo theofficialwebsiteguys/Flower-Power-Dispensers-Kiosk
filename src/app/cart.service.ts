@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, forkJoin, map, Observable, of, switchMap, 
 import { environment } from 'src/environments/environment';
 import { AuthService } from './auth.service';
 import { CapacitorHttp } from '@capacitor/core';
+import { EmployeeService } from './employee.service';
 
 export interface CartItem {
   id: string;
@@ -34,7 +35,7 @@ export class CartService {
 
   private inactivityTimer: any;
 
-  constructor(private http: HttpClient, private authService: AuthService) {
+  constructor(private http: HttpClient, private authService: AuthService, private employeeService: EmployeeService) {
     if (!sessionStorage.getItem(this.cartKey)) {
       sessionStorage.setItem(this.cartKey, JSON.stringify([]));
     }
@@ -724,9 +725,16 @@ export class CartService {
   }
 
   async placeOrder(user_id: number, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
-    const payload = { user_id, pos_order_id, points_add, points_redeem, amount, cart };
-  
-    console.log(payload);
+    const selectedUser = this.employeeService.getSelectedUser();
+    const selectedUserId = selectedUser ? selectedUser.id : null;
+
+    // Constructing payload
+    const payload: any = { user_id, pos_order_id, points_add, points_redeem, amount, cart };
+
+    // Conditionally add employee_id if the selectedUserId is different from user_id
+    if (selectedUserId && selectedUserId !== user_id) {
+        payload.employee_id = selectedUserId;
+    }
   
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
@@ -756,7 +764,7 @@ export class CartService {
         console.error('Error in placeOrder:', error);
         throw error;
       });
-  }
+    }
   
 
   // placeOrder(user_id: number, pos_order_id: number, points_add: number, points_redeem: number) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { CartItem, CartService } from '../cart.service';
 import { AccessibilityService } from '../accessibility.service';
@@ -19,22 +19,36 @@ export class RecentOrdersComponent  implements OnInit {
     past: null,
   }; 
 
-  constructor(private authService: AuthService, private cartService: CartService, private accessibilityService: AccessibilityService) {}
+  constructor(private authService: AuthService, private cartService: CartService, private accessibilityService: AccessibilityService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.loading = true;
+    this.loading = true; // ✅ Start loading
   
     this.authService.orders.subscribe((orders) => {
-      setTimeout(() => {
-        orders.sort((a, b) => b.id_order - a.id_order);
+      console.log("New orders received:", orders);
   
-        this.pendingOrders = orders.filter((order) => !order.complete);
-        this.pastOrders = orders.filter((order) => order.complete);
+      // ✅ Check if it's still loading (null case)
+      if (orders === null) {
+        this.pendingOrders = [];
+        this.pastOrders = [];
+        this.loading = true;
+        return;
+      }
   
-        this.loading = false; 
-      }, 500);
+      this.loading = false; // ✅ Stop loading after data arrives
+  
+      // Sort and categorize orders
+      this.pendingOrders = orders.filter((order) => !order.complete);
+      this.pastOrders = orders.filter((order) => order.complete);
+    });
+  
+    // ✅ Fetch new orders when component initializes
+    this.authService.getUserOrders().then(() => {
+      console.log("Orders refreshed.");
     });
   }
+  
+  
 
   
 getLatestStatus(order: any): string {
