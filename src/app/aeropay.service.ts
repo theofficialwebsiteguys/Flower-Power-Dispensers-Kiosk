@@ -23,8 +23,7 @@ export class AeropayService {
       scope: 'merchant',
       api_key: environment.aeropay_api_key,
       api_secret: environment.aeropay_api_secret,
-      id: '1760',
-      userId: '1102575'
+      id: environment.aeropay_merchant_id
     };
 
     return this.http.post<any>(`https://staging-api.aeropay.com/token`, payload, { headers }).pipe(
@@ -46,7 +45,7 @@ export class AeropayService {
       scope: 'userForMerchant',
       api_key: environment.aeropay_api_key,
       api_secret: environment.aeropay_api_secret,
-      id: '1760',
+      id: environment.aeropay_merchant_id,
       userId: userId
     };
 
@@ -98,7 +97,7 @@ export class AeropayService {
       email: userData.email
     };
   
-    return this.http.post<any>('https://staging-api.aeropay.com/user', payload, { headers }).pipe(
+    return this.http.post<any>(`${environment.aeropay_url}/user`, payload, { headers }).pipe(
       tap(response => console.log(response))
     );
   }
@@ -111,7 +110,7 @@ export class AeropayService {
   
     const payload = { userId, code };
   
-    return this.http.post<any>('https://staging-api.aeropay.com/confirmUser', payload, { headers }).pipe(
+    return this.http.post<any>(`${environment.aeropay_url}/confirmUser`, payload, { headers }).pipe(
       tap(response => console.log(response))
     );
   }
@@ -122,7 +121,7 @@ export class AeropayService {
       .set('accept', 'application/json')
       .set('authorizationToken', `Bearer ${this.getUsedForMerchantToken()}`);
   
-    return this.http.get<any>('https://staging-api.aeropay.com/aggregatorCredentials?aggregator=aerosync', { headers }).pipe(
+    return this.http.get<any>(`${environment.aeropay_url}/aggregatorCredentials?aggregator=aerosync`, { headers }).pipe(
       tap(response => console.log(response))
     );
   }
@@ -147,7 +146,7 @@ export class AeropayService {
 
     console.log('🚀 Linking Bank Account to AeroPay with Payload:', payload);
 
-    return this.http.post<any>('https://staging-api.aeropay.com/linkAccountFromAggregator', payload, { headers }).pipe(
+    return this.http.post<any>(`${environment.aeropay_url}/linkAccountFromAggregator`, payload, { headers }).pipe(
       tap(response => console.log(response))
     );
   }
@@ -169,14 +168,14 @@ export class AeropayService {
 
     const payload: any = {
       amount: amount,
-      merchantId: '1760',
+      id: environment.aeropay_merchant_id,
       uuid: transactionUUID,
       bankAccountId: bankAccountId
     };
 
     console.log('🚀 Initiating AeroPay Transaction with Payload:', payload);
 
-    return this.http.post<any>('https://staging-api.aeropay.com/transaction', payload, { headers }).pipe(
+    return this.http.post<any>(`${environment.aeropay_url}/transaction`, payload, { headers }).pipe(
       tap(response => console.log(response))
     );
   }
