@@ -228,10 +228,10 @@ export class AdminComponent {
       console.warn('No data to export');
       return;
     }
-  
+
     let headers: string[] = [];
     let csvRows: string[][] = [];
-  
+
     if (data[0].id !== undefined && data[0].email !== undefined && data[0].role !== undefined) {
       headers = ['User ID', 'First Name', 'Last Name', 'Email', 'DOB', 'Country', 'Phone', 'Points', 'Account Created', 'Customer ID', 'Role'];
       csvRows = data.map(user => [user.id, user.fname, user.lname, user.email, user.dob, user.country, user.phone, user.points, user.createdAt, user.alleaves_customer_id, user.role]);
@@ -250,38 +250,17 @@ export class AdminComponent {
       console.warn('Unknown data structure, cannot export.');
       return;
     }
-  
+
     // Convert data to CSV format
     const csvContent = [headers.join(','), ...csvRows.map(row => row.map(value => `"${value}"`).join(','))].join('\n');
-  
-    // ✅ Generate a unique file name with timestamp
-    const timestamp = new Date().toISOString().replace(/[:.-]/g, '_'); 
-    const fileName = `exported_data_${timestamp}.csv`;
-  
-    if (this.platform.is('capacitor')) {
-      // ✅ Running on a mobile device (Capacitor)
-      try {
-        await Filesystem.writeFile({
-          path: fileName,
-          data: csvContent,
-          directory: Directory.Documents,
-          encoding: Encoding.UTF8,
-        });
-  
-        console.log('CSV file saved successfully:', fileName);
-        await this.presentToast('File Saved To Device Documents', 'success');
-        
-        // You can use the Share API to let users open the file
-        // Or a FileOpener plugin if needed
-      } catch (error) {
-        console.error('Error saving file:', error);
-      }
-    } else {
-      // ✅ Running on web (fallback to `saveAs`)
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      saveAs(blob, fileName);
-    }
-  }
+
+    // Send CSV data to the backend using the AdminService
+    this.adminService.sendCsvEmail(csvContent).subscribe({
+      next: (response) => console.log('Email Sent:', response.message),
+      error: (error) => console.error('Error sending CSV:', error),
+    });
+}
+
 
   async presentToast(message: string, color: string = 'danger') {
     const toast = await this.toastController.create({

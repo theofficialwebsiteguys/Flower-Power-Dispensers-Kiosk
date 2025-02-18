@@ -841,4 +841,41 @@ export class CartService {
       });
   }  
 
+
+  async createAlleavesCustomer(userData: {
+    fname: string;
+    lname: string;
+    phone: string;
+    email: string;
+    dob: string;
+  }): Promise<any> {
+    try {
+      const request = {
+        method: 'POST',
+        url: 'https://app.alleaves.com/api/customer',
+        headers: {
+          Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('authTokensAlleaves') || '{}')}`,
+          'Content-Type': 'application/json; charset=utf-8',
+          Accept: 'application/json; charset=utf-8'
+        },
+        data: {
+          name_first: userData.fname,
+          name_last: userData.lname,
+          phone: userData.phone,
+          email: userData.email,
+          date_of_birth: userData.dob
+        }
+      };
+
+      const response = await CapacitorHttp.request(request);
+
+      console.log('External API Response:', response);
+      return response.data; // Return response for further processing
+
+    } catch (error) {
+      console.error('Error calling Alleaves API:', error);
+      throw new Error('Failed to create Alleaves customer');
+    }
+  }
+
 }

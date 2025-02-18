@@ -89,14 +89,42 @@ export class AdminService {
   }
   
 
-  /** Replace a carousel image */
   replaceCarouselImage(file: File, index: number): Observable<{ imageUrl: string }> {
     const formData = new FormData();
     formData.append('file', file);
-    formData.append('replaceIndex', index.toString()); // Send index info
-
-    return this.http.post<{ imageUrl: string }>(`${environment.apiUrl}/notifications/replace`, formData, {
-      headers: this.getHeaders()
-    });
+    formData.append('replaceIndex', index.toString());
+  
+    // Prepare the request options
+    const options = {
+      method: 'POST',
+      url: `${environment.apiUrl}/notifications/replace`,
+      headers: this.getHeaders(),
+      data: formData
+    };
+  
+    // Use CapacitorHttp to send the request
+    return from(CapacitorHttp.request(options)).pipe(
+      map((response: any) => response.data)
+    );
   }
+  
+
+sendCsvEmail(csvContent: string): Observable<any> {
+  const payload = { csvContent };
+
+  // Prepare the request options
+  const options = {
+    method: 'POST',
+    url: `${environment.apiUrl}/businesses/send-csv-email`,
+    headers: this.getHeaders(),
+    data: payload
+  };
+
+  // Use CapacitorHttp to send the request
+  return from(CapacitorHttp.request(options)).pipe(
+    map((response: any) => response.data)
+  );
+}
+
+
 }

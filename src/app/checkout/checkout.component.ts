@@ -70,6 +70,9 @@ export class CheckoutComponent implements OnInit {
   aeropayUserId: any;
 
   loadingAerosync = false;
+
+  originalUserInfo: any = null; // Store initial user info
+
   
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
@@ -84,9 +87,10 @@ export class CheckoutComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log(this.checkoutInfo)
     this.calculateDefaultTotals();
     this.generateTimeOptions();
+
+    this.originalUserInfo = { ...this.checkoutInfo.user_info };
   }
 
   async startAeroPayProcess() {
@@ -368,7 +372,29 @@ export class CheckoutComponent implements OnInit {
     await loading.present();
   
     try {
+
+      if (this.hasUserInfoChanged()) {
+        console.log('User info changed, creating Alleaves customer...');
+        const newUserData = {
+          fname: this.checkoutInfo.user_info.fname,
+          lname: this.checkoutInfo.user_info.lname,
+          phone: this.checkoutInfo.user_info.phone,
+          email: this.checkoutInfo.user_info.email,
+          dob: this.checkoutInfo.user_info.dob
+        };
+  
+        const alleavesResponse = await this.cartService.createAlleavesCustomer(newUserData);
+        
+        if (alleavesResponse?.id_customer) {
+          console.log('Alleaves Customer Created:', alleavesResponse.id_customer);
+          this.checkoutInfo.user_info.alleaves_customer_id = alleavesResponse.id_customer; // Save the ID
+        } else {
+          console.warn('Failed to create Alleaves Customer');
+        }
+      }
+
       const user_id = this.checkoutInfo.user_info.id;
+      console.log(this.checkoutInfo.user_info.alleaves_customer_id)
       const points_redeem = this.pointsToRedeem;
       let pos_order_id = 0;
       let points_add = 0;
@@ -432,6 +458,18 @@ export class CheckoutComponent implements OnInit {
       this.isLoading = false;
       await loading.dismiss();
     }
+  }
+
+  hasUserInfoChanged(): boolean {
+    if (!this.originalUserInfo) return false;
+  
+    return (
+      this.originalUserInfo.fname !== this.checkoutInfo.user_info.fname ||
+      this.originalUserInfo.lname !== this.checkoutInfo.user_info.lname ||
+      this.originalUserInfo.phone !== this.checkoutInfo.user_info.phone ||
+      this.originalUserInfo.email !== this.checkoutInfo.user_info.email ||
+      this.originalUserInfo.dob !== this.checkoutInfo.user_info.dob
+    );
   }
 
   async presentToast(message: string, color: string = 'danger') {
