@@ -1,6 +1,8 @@
 import { trigger, transition, style, animate, state } from '@angular/animations';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { AccessibilityService } from '../accessibility.service';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-splash-screen',
@@ -33,7 +35,7 @@ export class SplashScreenComponent implements OnInit {
   splashVisibility = 'visible';
   logoSrc = 'assets/logo.png';
 
-  constructor(private accessibilityService: AccessibilityService) {}
+  constructor(private accessibilityService: AccessibilityService, private authService: AuthService, private router: Router) {}
   
   ngOnInit() {
     const isDarkMode = document.body.classList.contains('dark-mode');
@@ -50,17 +52,23 @@ export class SplashScreenComponent implements OnInit {
     }, 1000);
   }
 
-  onYesClick() {
+  onLoginClick() {
     this.splashVisibility = 'hidden';
     this.showAgeVerification = false;
+    this.authService.setGuest(true);
     this.accessibilityService.announce('Thank you for confirming your age. Entering the app.', 'polite');
     setTimeout(() => {
       this.closeSplash.emit();
     }, 100);
+    this.router.navigate(['/auth'], { queryParams: { mode: 'login' } });
   }
 
-  onNoClick() {
-    this.accessibilityService.announce('Access denied. You must be over 21 to enter.', 'assertive');
-    alert('Sorry, you must be over 21 to enter.');
+  onGuestClick() {
+    this.authService.setGuest(true);
+    setTimeout(() => {
+      this.closeSplash.emit();
+    }, 100);
+    // this.accessibilityService.announce('Access denied. You must be over 21 to enter.', 'assertive');
+    // alert('Sorry, you must be over 21 to enter.');
   }
 }

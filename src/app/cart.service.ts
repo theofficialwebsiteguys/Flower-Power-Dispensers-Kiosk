@@ -181,37 +181,38 @@ export class CartService {
     this.saveCart([]);
   }
 
-  checkout(points_redeem: number, orderType: string, deliveryAddress: any) {
+  checkout(points_redeem: number, orderType: string, deliveryAddress: any, allLeavesId?: number) {
     const cartItems = this.getCart();
-    const unmatchedItems = [...cartItems];
-    const matchedCart: any[] = [];
-    let skip = 0;
-    const take = 5000;
+    // const unmatchedItems = [...cartItems];
+    // const matchedCart: any[] = [];
+    // let skip = 0;
+    // const take = 5000;
     let id_order = 0;
     let subtotal = 0;
     let user_info: any;
-    let checkoutItems: any[] = [];
+    // let checkoutItems: any[] = [];
+    const checkoutItems = [...cartItems];
   
-    const fetchAndMatch = async (): Promise<any[]> => {
-      while (unmatchedItems.length > 0) {
-        const inventoryResponse = await this.fetchInventory(skip, take);
-        inventoryResponse.forEach((inventoryItem: any) => {
-          const matchIndex = unmatchedItems.findIndex(
-            (cartItem) => +cartItem.posProductId === inventoryItem.id_item
-          );
-          if (matchIndex !== -1) {
-            matchedCart.push({
-              ...unmatchedItems[matchIndex],
-              id_batch: inventoryItem.id_batch,
-            });
-            unmatchedItems.splice(matchIndex, 1);
-          }
-        });
-        skip += take;
-        if (inventoryResponse.length === 0) break;
-      }
-      return matchedCart;
-    };
+    // const fetchAndMatch = async (): Promise<any[]> => {
+    //   while (unmatchedItems.length > 0) {
+    //     const inventoryResponse = await this.fetchInventory(skip, take);
+    //     inventoryResponse.forEach((inventoryItem: any) => {
+    //       const matchIndex = unmatchedItems.findIndex(
+    //         (cartItem) => +cartItem.posProductId === inventoryItem.id_item
+    //       );
+    //       if (matchIndex !== -1) {
+    //         matchedCart.push({
+    //           ...unmatchedItems[matchIndex],
+    //           id_batch: inventoryItem.id_batch,
+    //         });
+    //         unmatchedItems.splice(matchIndex, 1);
+    //       }
+    //     });
+    //     skip += take;
+    //     if (inventoryResponse.length === 0) break;
+    //   }
+    //   return matchedCart;
+    // };
   
     const getUserInfo = async () => {
       user_info = await this.authService.getCurrentUser();
@@ -221,7 +222,7 @@ export class CartService {
   
     const createOrder = async () => {
       const orderDetails = {
-        id_customer: user_info.alleaves_customer_id,
+        id_customer: allLeavesId ?? user_info.alleaves_customer_id,
         id_external: null,
         id_location: 1000,
         id_status: 1,
@@ -245,13 +246,13 @@ export class CartService {
   
     const updateOrderItemPrices = async () => {
       let remainingDiscount = points_redeem / 20;
-      const sortedItems = [...checkoutItems].sort((a, b) => b.price - a.price);
+      const sortedItems = [...checkoutItems].sort((a: any, b: any) => b.price - a.price);
       for (const item of sortedItems) {
         if (remainingDiscount <= 0) break;
-        const discountAmount = Math.min(item.price, remainingDiscount);
+        const discountAmount = Math.min(Number(item.price), remainingDiscount);
         remainingDiscount -= discountAmount;
-        const priceOverride = item.price - discountAmount;
-        const url = `https://app.alleaves.com/api/order/${id_order}/item/${item.id_item}`;
+        const priceOverride = Number(item.price) - discountAmount;
+        const url = `https://app.alleaves.com/api/order/${id_order}/item/${item.posProductId}`;
         const headers = {
           Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('authTokensAlleaves') || '{}')}`,
           'Content-Type': 'application/json; charset=utf-8',
@@ -273,7 +274,6 @@ export class CartService {
     return (async () => {
       try {
         await getUserInfo();
-        checkoutItems = await fetchAndMatch();
         await createOrder();
         await addItemsToOrder();
         await updateOrderItemPrices();
@@ -491,6 +491,8 @@ export class CartService {
 
 
   async fetchInventory(skip: number, take: number) {
+
+    console.log(sessionStorage.getItem('authTokensAlleaves'))
     const headers = {
       Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('authTokensAlleaves') || '{}')}`,
       'Content-Type': 'application/json; charset=utf-8',
@@ -724,7 +726,7 @@ export class CartService {
       });
   }
 
-  async placeOrder(user_id: number, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
+  async placeOrder(user_id: number = 562, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
     const selectedUser = this.employeeService.getSelectedUser();
     const selectedUserId = selectedUser ? selectedUser.id : null;
 
@@ -739,15 +741,24 @@ export class CartService {
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
   
-    if (!token) {
-      throw new Error("No user logged in");
-    }
+    // if (!token) {
+    //   throw new Error("No user logged in");
+    // }
   
-    const headers = {
-      Authorization: token,
-      'Content-Type': 'application/json', // Ensure it's set
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json',
       Accept: 'application/json',
     };
+    
+    // Check if the user is a guest and modify the headers accordingly
+    if (this.authService.isGuest()) {
+      headers['x-auth-api-key'] = environment.db_api_key; // Use API key for guests
+    } else if (token) {
+        headers['Authorization'] = `${token}`; // Use Bearer token for authenticated users
+      } else {
+        console.error('No authentication token found');
+        throw new Error('Unauthorized: No API key or token found');
+      }
     
     const options = {
       url: `${environment.apiUrl}/orders/create`,
@@ -755,9 +766,11 @@ export class CartService {
       headers: headers,
       data: payload,
     };
+    
   
     return CapacitorHttp.request(options)
       .then((response) => {
+        this.clearCart();
         return response.data;
       })
       .catch((error) => {

@@ -1,7 +1,7 @@
 <app-header></app-header>
 
 <ion-content [fullscreen]="true">
-  <div *ngIf="isLoggedIn; else guestContent" aria-labelledby="user-dashboard-heading">
+  <div *ngIf="isLoggedIn && !isGuest; else guestContent" aria-labelledby="user-dashboard-heading">
     <h1 id="user-dashboard-heading" class="sr-only">User Dashboard</h1>
     <app-points
       [attr.aria-label]="'You have ' + user.points + ' points. ' + user.premium ? 'You are an exclusive member.' : 'You are not an exclusive member.'"

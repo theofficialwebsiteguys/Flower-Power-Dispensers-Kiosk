@@ -1,5 +1,5 @@
 <div class="order-history">
-  <h2>Pending Orders</h2>
+  <h2 *ngIf="!loading && !isGuest">Pending Orders</h2>
 
   <!-- Loading Spinner for Pending Orders -->
   <div *ngIf="loading" class="loading-container">
@@ -8,7 +8,7 @@
 
   <div
     class="order-list"
-    *ngIf="!loading"
+    *ngIf="!loading && !isGuest"
     role="region"
     aria-labelledby="pending-orders-heading"
   >
@@ -58,7 +58,7 @@
 
   
 
-  <h2>Past Orders</h2>
+  <h2 *ngIf="!loading && !isGuest">Past Orders</h2>
 
   <!-- Loading Spinner for Past Orders -->
   <div *ngIf="loading" class="loading-container">
@@ -67,7 +67,7 @@
 
   <div
     class="order-list"
-    *ngIf="!loading"
+    *ngIf="!loading && !isGuest"
     role="region"
     aria-labelledby="past-orders-heading"
   >

@@ -63,7 +63,7 @@ export class LoginComponent {
       next: () => {
         this.resetForm();
         this.accessibilityService.announce('Login successful. Redirecting to rewards page.', 'polite');
-        this.router.navigate(['/rewards'])
+        this.router.navigate(['/home'])
       },
       error: (err) => {
         this.loading = false;

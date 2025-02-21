@@ -43,7 +43,7 @@ export class CheckoutComponent implements OnInit {
 
   selectedPaymentMethod: string = 'cash';
 
-  selectedOrderType: string = 'pickup';
+  selectedOrderType: string = 'retail';
 
   aeropayButtonInstance: any;
 
@@ -76,6 +76,7 @@ export class CheckoutComponent implements OnInit {
   
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
+  isGuest: boolean = false;
 
   constructor(
     private cartService: CartService,
@@ -89,6 +90,24 @@ export class CheckoutComponent implements OnInit {
   ngOnInit() {
     this.calculateDefaultTotals();
     this.generateTimeOptions();
+
+    this.authService.guest$.subscribe(value => {
+      this.isGuest = value;
+      console.log(value)
+    });
+
+    if(this.isGuest){
+      this.checkoutInfo.user_info = {
+        fname: '',
+        lname: '',
+        email: '',
+        phone: '',
+        dob: '',
+        alleaves_customer_id: null, // Retain ID if exists
+        points: 0, // Keep points
+      };
+  
+    }
 
     this.originalUserInfo = { ...this.checkoutInfo.user_info };
   }
@@ -373,14 +392,14 @@ export class CheckoutComponent implements OnInit {
   
     try {
 
-      if (this.hasUserInfoChanged()) {
+      if (this.isGuest) {
         console.log('User info changed, creating Alleaves customer...');
         const newUserData = {
           fname: this.checkoutInfo.user_info.fname,
           lname: this.checkoutInfo.user_info.lname,
           phone: this.checkoutInfo.user_info.phone,
           email: this.checkoutInfo.user_info.email,
-          dob: this.checkoutInfo.user_info.dob
+          dob: '1990-01-01'
         };
   
         const alleavesResponse = await this.cartService.createAlleavesCustomer(newUserData);
@@ -437,7 +456,7 @@ export class CheckoutComponent implements OnInit {
            
           }
   
-      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress);
+      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.checkoutInfo.user_info.alleaves_customer_id);
   
       pos_order_id = response.id_order;
       points_add = response.subtotal;
@@ -447,7 +466,7 @@ export class CheckoutComponent implements OnInit {
   
       this.orderPlaced.emit();
 
-      const userOrders = await this.authService.getUserOrders();
+      this.authService.logout();
       
       this.accessibilityService.announce('Your order has been placed successfully.', 'polite');
     } catch (error:any) {

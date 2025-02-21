@@ -22,9 +22,12 @@ import { CapacitorHttp } from '@capacitor/core';
 export class AuthService {
   private userSubject = new BehaviorSubject<any>(null); 
 
-  private authStatus = new BehaviorSubject<boolean>(this.hasToken());
+  private authStatus = new BehaviorSubject<boolean>(true);
 
   private enrichedOrders = new BehaviorSubject<any[]>([]);
+
+  private guestSubject = new BehaviorSubject<boolean>(false);
+  guest$ = this.guestSubject.asObservable();
 
   private apiUrl = `${environment.apiUrl}/users`;
 
@@ -35,20 +38,36 @@ export class AuthService {
     }
   }
 
+  setGuest(value: boolean) {
+    this.guestSubject.next(value);
+    console.log("here")
+    this.validateSession();
+  }
+
+  isGuest(): boolean {
+    return this.guestSubject.getValue();
+  }
+
   private getHeaders(): { [key: string]: string } {
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
-
-    if (!token) {
-      console.error('No API key found, user needs to log in.');
-      throw new Error('Unauthorized: No API key found');
-    }
-
-    return {
-      Authorization: token, // Ensure correct Bearer token format
-      'Content-Type': 'application/json', // Optional, ensures JSON data format
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json', // Ensure JSON data format
     };
+  
+    if (this.isGuest()) {
+      headers['x-auth-api-key'] = environment.db_api_key; // Set API key header for guests
+    } else {
+      if (!token) {
+        console.error('No API key found, user needs to log in.');
+        throw new Error('Unauthorized: No API key found');
+      }
+      headers['Authorization'] = `${token}`; // Set Bearer token for authenticated users
+    }
+  
+    return headers;
   }
+  
 
   getUserInfo(): any {
     return this.userSubject.asObservable();
@@ -59,10 +78,9 @@ export class AuthService {
   }
 
   get orders() {
-    return this.enrichedOrders.asObservable().pipe(
-      filter((orders) => orders === null || (orders && orders.length > 0)) // ✅ Allow `null` to trigger updates
-    );
+    return this.enrichedOrders.asObservable(); // ✅ Always emits, even if empty
   }
+  
   
   
   isLoggedIn(): Observable<boolean> {
@@ -121,10 +139,13 @@ export class AuthService {
           if (response.status === 200) {
             const { sessionId, user, expiresAt } = response.data;
             this.storeSessionData(sessionId, expiresAt);
+            //this allows the checkout
+            this.setGuest(false);
             this.authStatus.next(true);
+            //this sets user info
             this.userSubject.next(user);
             this.storeUserInfo(user);
-            this.router.navigateByUrl('/rewards');
+            this.router.navigateByUrl('/home');
             this.validateSession();
             this.fcmService.initPushNotifications(user.email);
             observer.next(response.data);
@@ -196,8 +217,8 @@ export class AuthService {
         this.removeToken();
         this.authStatus.next(false);
         this.userSubject.next(null);
-        this.router.navigate(['/rewards']);
         this.removeUser();
+        window.location.reload();
       })
       .catch((error) => console.error('Logout failed:', error));
   }
@@ -327,26 +348,33 @@ export class AuthService {
   validateSession(): void {
     const sessionData = this.getSessionData();
 
-    if (!sessionData || this.isTokenExpired(sessionData.expiry)) {
-      this.authStatus.next(false);
-      this.removeToken();
-      this.removeUser();
-      return;
-    }
+    // if (!sessionData || this.isTokenExpired(sessionData.expiry)) {
+    //   // this.authStatus.next(false);
+    //   this.removeToken();
+    //   this.removeUser();
+    //   return;
+    // }
 
     const headers = this.getHeaders();
 
+    const url = this.isGuest()
+    ? `${this.apiUrl}/validate-session?bypassUserCheck=true`
+    : `${this.apiUrl}/validate-session`;
+
+
     CapacitorHttp.get({
-      url: `${this.apiUrl}/validate-session`,
+      url,
       headers,
     })
       .then((response) => {
         if (response.status === 200) {
           this.authStatus.next(true);
-          this.updateUserData();
-          this.handleRecentOrders(response.data.orders);
           this.setAuthTokensAlleaves(response.data.authTokens?.alleaves);
-          this.fcmService.initPushNotifications(this.getCurrentUser().email);
+          if(!this.isGuest()){
+            this.updateUserData();
+            this.handleRecentOrders(response.data.orders);
+            this.fcmService.initPushNotifications(this.getCurrentUser().email);
+          }
         } else {
           this.authStatus.next(false);
           this.logout();
@@ -362,9 +390,9 @@ export class AuthService {
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
 
-    if (!token) {
-      this.logout();
-    }
+    // if (!token) {
+    //   this.logout();
+    // }
     const headers = this.getHeaders();
 
     CapacitorHttp.get({
@@ -535,6 +563,9 @@ export class AuthService {
 
   async getUserOrders(userId?: number): Promise<any> {
     try {
+      if(this.isGuest()){
+        return;
+      }
       console.log("Fetching user orders for ID:", userId);
       
       // Clear previous orders to trigger a refresh

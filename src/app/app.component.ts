@@ -75,13 +75,13 @@ export class AppComponent {
   }
   
   initializeApp() {
-    this.authService.validateSession();
+    //this.authService.validateSession();
     this.settingsService.updateTheme();
   
     // Only check login after products are fetched
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
-      if (this.isLoggedIn) this.onCloseSplash();
+      // if (this.isLoggedIn) this.onCloseSplash();
     });
             
     this.productService.fetchProducts().subscribe({

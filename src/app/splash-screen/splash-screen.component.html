@@ -4,23 +4,23 @@
   </div>
 
   <div *ngIf="showAgeVerification" @fadeIn class="age-verification" role="alertdialog" aria-labelledby="age-verification-heading" aria-describedby="age-verification-description">
-    <p class="verification-text">Are you 21 years old or older?</p>
+    <p class="verification-text">If you're a Flower Power Rewards member, log in to earn and use points. Or, continue as a guest.</p>
     <div class="button-group">
       <ion-button
-        (click)="onYesClick()"
+        (click)="onLoginClick()"
         class="yes-btn"
         shape="round"
         aria-label="Yes, I am 21 years or older"
       >
-        Yes
+        Rewards Member
       </ion-button>
       <ion-button
-        (click)="onNoClick()"
+        (click)="onGuestClick()"
         class="no-btn"
         shape="round"
         aria-label="No, I am not 21 years or older"
       >
-        No
+        Guest
       </ion-button>
     </div>
   </div>

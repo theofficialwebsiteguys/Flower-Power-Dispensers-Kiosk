@@ -18,34 +18,37 @@ export class RecentOrdersComponent  implements OnInit {
     pending: null,
     past: null,
   }; 
+  isGuest: boolean = false;
 
   constructor(private authService: AuthService, private cartService: CartService, private accessibilityService: AccessibilityService, private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
     this.loading = true; // ✅ Start loading
+
+    this.authService.guest$.subscribe(value => {
+      this.isGuest = value;
+      console.log(value)
+    });
   
     this.authService.orders.subscribe((orders) => {
-      console.log("New orders received:", orders);
-  
-      // ✅ Check if it's still loading (null case)
-      if (orders === null) {
-        this.pendingOrders = [];
-        this.pastOrders = [];
-        this.loading = true;
-        return;
-      }
-  
-      this.loading = false; // ✅ Stop loading after data arrives
-  
-      // Sort and categorize orders
-      this.pendingOrders = orders.filter((order) => !order.complete);
-      this.pastOrders = orders.filter((order) => order.complete);
+      // If the observable emits immediately, force Angular to detect changes
+      setTimeout(() => {
+        // Sort orders by ID in descending order (most recent first)
+        orders.sort((a, b) => b.id_order - a.id_order);
+
+        // Separate pending and past orders
+        this.pendingOrders = orders.filter((order) => !order.complete);
+        this.pastOrders = orders.filter((order) => order.complete);
+
+        this.loading = false; // Stop loading after orders are processed
+      }, 500); // Simulate delay for better UI feedback
     });
   
     // ✅ Fetch new orders when component initializes
     this.authService.getUserOrders().then(() => {
       console.log("Orders refreshed.");
     });
+   
   }
   
   

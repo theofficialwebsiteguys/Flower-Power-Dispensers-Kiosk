@@ -3,27 +3,48 @@ import { Injectable } from '@angular/core';
 import { CapacitorHttp, HttpResponse } from '@capacitor/core';
 import { from, map, Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {}
+
+  // private getHeaders(): { [key: string]: string } {
+  //   const sessionData = localStorage.getItem('sessionData');
+  //   const token = sessionData ? JSON.parse(sessionData).token : null;
+  
+  //   if (!token) {
+  //     console.error('No API key found, user needs to log in.');
+  //     throw new Error('Unauthorized: No API key found');
+  //   }
+  
+  //   return {
+  //     Authorization: token,
+  //     'Content-Type': 'application/json',
+  //   };
+  // }
 
   private getHeaders(): { [key: string]: string } {
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
+    const headers: { [key: string]: string } = {
+      'Content-Type': 'application/json', // Ensure JSON data format
+    };
   
-    if (!token) {
-      console.error('No API key found, user needs to log in.');
-      throw new Error('Unauthorized: No API key found');
+    if (this.authService.isGuest()) {
+      headers['x-auth-api-key'] = environment.db_api_key; // Set API key header for guests
+    } else {
+      if (!token) {
+        console.error('No API key found, user needs to log in.');
+        throw new Error('Unauthorized: No API key found');
+      }
+      headers['Authorization'] = `${token}`; // Set Bearer token for authenticated users
     }
   
-    return {
-      Authorization: token,
-      'Content-Type': 'application/json',
-    };
+    return headers;
   }
   
 
@@ -71,7 +92,7 @@ export class AdminService {
 
   sendPushNotificationToCategory(title: string, body: string, category: string, imageUrl?: string): Observable<any> {
     const payload = { title, body, category, image: imageUrl };
-    return this.http.post<any>(`${environment.apiUrl}/notifications/sendPushByCategory`, payload);
+    return this.http.post<any>(`${environment.apiUrl}/notifications/sendPushByCategory`, payload, { headers: this.getHeaders() });
   }
 
   getCarouselImages(): Observable<{ images: string[] }> {

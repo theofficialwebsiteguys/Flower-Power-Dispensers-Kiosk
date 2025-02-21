@@ -18,8 +18,10 @@ export class HeaderComponent {
   cartItemCount = 0;
   showNotifications = false;
   unreadCount = 2; // Example unread count
+  userName = '';
 
   notifications: any[] = [];
+  isGuest: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -30,28 +32,35 @@ export class HeaderComponent {
   ) {}
 
   async ngOnInit() {
+    
     this.authService.isLoggedIn().subscribe(async (status) => {
       this.isLoggedIn = status;
       if (!status) {
         this.accessibilityService.announce('You are logged out.', 'polite');
         return;
       }
+
+      this.authService.guest$.subscribe(value => {
+        this.isGuest = value;
+        console.log(value)
+      });
   
       this.authService.getUserInfo().subscribe((userInfo: any) => {
         if (userInfo) {
           this.userPoints = userInfo.points;
+          this.userName = userInfo.fname;
           this.accessibilityService.announce(`You have ${this.userPoints} reward points.`, 'polite');
         }
       });
   
-      // Updated getUserNotifications call using async/await
-      try {
-        const notifications = await this.settingsService.getUserNotifications();
-        this.notifications = notifications;
-        this.unreadCount = notifications.filter((n: any) => n.status === 'unread').length;
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
+      // // Updated getUserNotifications call using async/await
+      // try {
+      //   const notifications = await this.settingsService.getUserNotifications();
+      //   this.notifications = notifications;
+      //   this.unreadCount = notifications.filter((n: any) => n.status === 'unread').length;
+      // } catch (error) {
+      //   console.error('Error fetching notifications:', error);
+      // }
     });
   
     this.settingsService.isDarkModeEnabled$.subscribe((isDarkModeEnabled) => {
@@ -66,6 +75,10 @@ export class HeaderComponent {
         this.accessibilityService.announce(`You have ${this.cartItemCount} items in your cart.`, 'polite');
       }
     });
+  }
+
+  refreshApp() {
+    window.location.reload();
   }
 
   // ngOnInit() {
