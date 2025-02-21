@@ -1,5 +1,5 @@
 <div class="points-container" aria-labelledby="points-heading">
-  <div class="search-bar">
+  <div class="search-bar" *ngIf="loggedInUser?.role === 'employee' || loggedInUser?.role === 'admin'">
     <input 
       type="text" 
       [(ngModel)]="searchQuery" 
@@ -11,7 +11,7 @@
   </div>
 
    <!-- New User Button -->
-   <button *ngIf="!selectedUser" class="new-user-btn" (click)="toggleSignup()">
+   <button *ngIf="!selectedUser && (loggedInUser?.role === 'employee' || loggedInUser?.role === 'admin')" class="new-user-btn" (click)="toggleSignup()">
     {{ showSignup ? 'Cancel' : 'New User' }}
   </button>
 

@@ -12,8 +12,20 @@ export class PointsComponent {
   selectedUser: any = null;
   maxPoints: number = 1000;
   showSignup = false;
+  loggedInUser: any = null;
 
   constructor(private employeeService: EmployeeService, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.getLoggedInUser();
+  }
+
+  getLoggedInUser() {
+    this.authService.getUserInfo().subscribe((user: any) => {
+      this.loggedInUser = user;
+    });
+  }
+
 
   get progressPercentage(): number {
     return this.selectedUser ? (this.selectedUser.points / this.maxPoints) * 100 : 0;
