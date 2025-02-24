@@ -687,44 +687,43 @@ export class CartService {
     };
   
     const apiUrl = `https://app.alleaves.com/api/order/${idOrder}/item`;
-  
-    const addItemRequests = checkoutItems.map((item) => {
+
+    const addedItems: any[] = [];
+
+    for (const item of checkoutItems) {
       const body = {
         id_batch: item.id_batch,
         id_area: 1000,
         qty: item.quantity,
       };
-  
+
       const options = {
         url: apiUrl,
         method: 'POST',
         headers: headers,
         data: body,
       };
-  
-      return CapacitorHttp.request(options)
-        .then((response) => {
+
+      try {
+        const response = await CapacitorHttp.request(options);
+
+        if (response?.data?.items) {
           const generatedItems = response.data.items.map((resItem: any) => ({
             ...item,
             id_item: resItem.id_item,
           }));
-          return generatedItems;
-        })
-        .catch((error) => {
-          console.error(`Error adding item (id_batch: ${item.id_batch}):`, error);
-          throw error;
-        });
-    });
-  
-    return Promise.all(addItemRequests)
-      .then((responses) => {
-        return responses.flat();
-      })
-      .catch((error) => {
-        console.error('Error processing items:', error);
-        throw error;
-      });
-  }
+          addedItems.push(...generatedItems);
+        } else {
+          console.warn(`Unexpected response format for item ${item.id_batch}:`, response);
+        }
+      } catch (error) {
+        console.error(`Error adding item (id_batch: ${item.id_batch}):`, error);
+        continue; // Continue with the next item instead of stopping all requests
+      }
+    }
+
+    return addedItems;
+}
 
   async placeOrder(user_id: number = 562, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
     const selectedUser = this.employeeService.getSelectedUser();

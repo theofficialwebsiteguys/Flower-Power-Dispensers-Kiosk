@@ -16,6 +16,7 @@
     <form>
       <div class="input-row">
         <ion-item class="rounded-input half-width">
+          <ion-label position="floating" class="name-labels" style="margin-bottom: 20px;"><span class="required">*</span> </ion-label>
           <ion-input
             [(ngModel)]="checkoutInfo.user_info.fname"
             name="first"
@@ -24,6 +25,7 @@
           ></ion-input>
         </ion-item>
         <ion-item class="rounded-input half-width">
+          <ion-label position="floating" class="name-labels" style="margin-bottom: 20px;"><span class="required">*</span> </ion-label>
           <ion-input
             [(ngModel)]="checkoutInfo.user_info.lname"
             name="last"
@@ -53,22 +55,22 @@
     </form>
   </div>
 
-  <div class="section order-type" *ngIf="!isGuest">
+  <!-- <div class="section order-type" *ngIf="!isGuest">
     <h2>Order Type</h2>
     <ion-radio-group [(ngModel)]="selectedOrderType" (ionChange)="onOrderTypeChange($event)" aria-label="Select Order Type">
       <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="pickup" checked></ion-radio>
         <ion-label>Pickup</ion-label>
       </ion-item>
-      <ion-item lines="none" class="radio-item">
+       <ion-item lines="none" class="radio-item">
         <ion-radio slot="start" value="delivery" [disabled]="!enableDelivery"></ion-radio>
         <ion-label>Delivery</ion-label>
       </ion-item>
     </ion-radio-group>
   
-    <p *ngIf="!enableDelivery" class="delivery-warning">
+     <p *ngIf="!enableDelivery" class="delivery-warning">
       Orders must be at least $90 for delivery.
-    </p>
+    </p> 
 
     <div *ngIf="selectedOrderType === 'delivery'" class="delivery-address">
       <h3>Delivery Address</h3>
@@ -116,7 +118,7 @@
     </div>
     
     
-  </div>
+  </div> -->
   
 
   <div class="section payment-method">
@@ -131,7 +133,7 @@
         <ion-radio [disabled]="selectedOrderType === 'delivery'" slot="start" value="card"></ion-radio>
         <ion-label>In Store - Debit</ion-label>
       </ion-item>
-      <ion-item lines="none" class="radio-item" *ngIf="!isGuest">
+      <ion-item lines="none" class="radio-item" *ngIf="showAeropay">
         <ion-radio slot="start" value="aeropay"></ion-radio>
         <ion-label class="aeropay-label">
           <img class="aeropay-image" src="assets/aeropay.png" alt="Powered by Aeropay">
@@ -181,12 +183,12 @@
         Subtotal: <span>{{ finalSubtotal | currency }}</span>
       </p>
       <p>
-        Available Points: <span>{{ checkoutInfo.user_info.points }}</span>
+        Available Points: <span>{{ originalUserInfo.points }}</span>
       </p>
       <ng-container *ngIf="!isGuest">
       <p>
         Potential Savings:
-        <span>{{ checkoutInfo.user_info.points * pointValue | currency }}</span>
+        <span>{{ originalUserInfo.points * pointValue | currency }}</span>
       </p>
       <p>
         Points to Redeem: <span>{{ pointsToRedeem }}</span>
@@ -195,13 +197,13 @@
         <ion-range
           [(ngModel)]="pointsToRedeem"
           [min]="0"
-          [max]="checkoutInfo.user_info.points"
+          [max]="originalUserInfo.points"
           [step]="1"
           (ionChange)="updateTotals()"
           aria-label="Adjust points to redeem for discount"
         >
           <ion-label slot="start">0</ion-label>
-          <ion-label slot="end">{{ checkoutInfo.user_info.points }}</ion-label>
+          <ion-label slot="end">{{ originalUserInfo.points }}</ion-label>
         </ion-range>
       </ion-item>
       <p>

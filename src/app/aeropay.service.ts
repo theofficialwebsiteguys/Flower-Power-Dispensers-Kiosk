@@ -26,7 +26,7 @@ export class AeropayService {
       id: environment.aeropay_merchant_id
     };
 
-    return this.http.post<any>(`https://staging-api.aeropay.com/token`, payload, { headers }).pipe(
+    return this.http.post<any>(`https://api.aeropay.com/token`, payload, { headers }).pipe(
       tap(response => {
         if (response.token) {
           this.setMerchantToken(response.token, response.TTL);
@@ -49,7 +49,7 @@ export class AeropayService {
       userId: userId
     };
 
-    return this.http.post<any>(`https://staging-api.aeropay.com/token`, payload, { headers }).pipe(
+    return this.http.post<any>(`https://api.aeropay.com/token`, payload, { headers }).pipe(
       tap(response => {
         if (response.token) {
           this.setUsedForMerchantToken(response.token, response.TTL);

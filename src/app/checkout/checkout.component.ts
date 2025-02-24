@@ -5,6 +5,7 @@ import { AccessibilityService } from '../accessibility.service';
 import { AuthService } from '../auth.service';
 import { AeropayService } from '../aeropay.service';
 import { openWidget } from 'aerosync-web-sdk';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-checkout',
@@ -73,10 +74,14 @@ export class CheckoutComponent implements OnInit {
 
   originalUserInfo: any = null; // Store initial user info
 
+  showAeropay: boolean = true;
   
   @Output() back: EventEmitter<void> = new EventEmitter<void>();
   @Output() orderPlaced = new EventEmitter<void>();
   isGuest: boolean = false;
+
+  originalUserId: number = 0;
+  userRole: any;
 
   constructor(
     private cartService: CartService,
@@ -85,6 +90,7 @@ export class CheckoutComponent implements OnInit {
     private toastController: ToastController,
     private authService: AuthService,
     private aeropayService: AeropayService,
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -93,23 +99,34 @@ export class CheckoutComponent implements OnInit {
 
     this.authService.guest$.subscribe(value => {
       this.isGuest = value;
+      this.showAeropay = false;
       console.log(value)
     });
 
-    if(this.isGuest){
-      this.checkoutInfo.user_info = {
-        fname: '',
-        lname: '',
-        email: '',
-        phone: '',
-        dob: '',
-        alleaves_customer_id: null, // Retain ID if exists
-        points: 0, // Keep points
-      };
-  
+    this.originalUserId = this.checkoutInfo.user_info.id
+
+    if(this.checkoutInfo.user_info.role === 'employee'){
+      this.showAeropay = false;
+    } else if(this.checkoutInfo.user_info.role === 'customer'){
+      this.showAeropay = true
     }
 
+    this.authService.getUserInfo().subscribe((user: any) => {
+      if (user) {
+        this.userRole = user.role;
+      }
+    });
+
     this.originalUserInfo = { ...this.checkoutInfo.user_info };
+
+    this.checkoutInfo.user_info = {
+      fname: '',
+      lname: '',
+      email: '',
+      phone: '',
+      dob: '',
+    };
+
   }
 
   async startAeroPayProcess() {
@@ -319,12 +336,14 @@ export class CheckoutComponent implements OnInit {
   }
 
   calculateDefaultTotals() {
+    console.log(this.checkoutInfo.cart);
     this.finalSubtotal = this.checkoutInfo.cart.reduce(
       (total: number, item: any) => total + (item.price * item.quantity),
       0
     );
     this.finalTax = this.finalSubtotal * 0.13;
     this.finalTotal = this.finalSubtotal + this.finalTax;
+    this.updateTotals();
   }
 
   updateTotals() {
@@ -462,11 +481,16 @@ export class CheckoutComponent implements OnInit {
       points_add = response.subtotal;
 
      
-      await this.cartService.placeOrder(user_id, pos_order_id, points_redeem ? 0 : points_add, points_redeem, this.finalSubtotal, this.checkoutInfo.cart);
+      await this.cartService.placeOrder(this.originalUserId, pos_order_id, points_redeem ? 0 : points_add, points_redeem, this.finalSubtotal, this.checkoutInfo.cart);
   
       this.orderPlaced.emit();
 
-      this.authService.logout();
+      if(this.userRole === 'employee' && !this.isGuest){
+        this.router.navigateByUrl('/rewards')
+      } else{
+        this.authService.logout();
+      }
+
       
       this.accessibilityService.announce('Your order has been placed successfully.', 'polite');
     } catch (error:any) {

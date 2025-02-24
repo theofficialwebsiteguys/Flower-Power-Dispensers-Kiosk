@@ -24,6 +24,7 @@ export class CartPage {
   isLoading: boolean = false;
 
   selectedUser: any;
+  isGuest: boolean = false;
 
   constructor(
     private readonly cartService: CartService,
@@ -43,6 +44,10 @@ export class CartPage {
       console.log(user)
       this.selectedUser = user;
     });
+
+    this.authService.guest$.subscribe(value => {
+      this.isGuest = value;
+    });
   }
 
   async checkout() {
@@ -56,7 +61,7 @@ export class CartPage {
     console.log(this.selectedUser)
     this.checkoutInfo = {
       cart: this.cartItems,
-      user_info: this.selectedUser ?? this.authService.getCurrentUser(),
+      user_info: this.isGuest ? '' : (this.selectedUser ?? this.authService.getCurrentUser()),
     };
 
     console.log(this.checkoutInfo)

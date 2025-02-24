@@ -65,6 +65,7 @@ export class SplashScreenComponent implements OnInit {
 
   onGuestClick() {
     this.authService.setGuest(true);
+    this.router.navigateByUrl('/home');
     setTimeout(() => {
       this.closeSplash.emit();
     }, 100);
