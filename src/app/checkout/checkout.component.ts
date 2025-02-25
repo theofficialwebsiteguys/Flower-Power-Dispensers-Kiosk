@@ -126,8 +126,7 @@ export class CheckoutComponent implements OnInit {
       lname: '',
       email: '',
       phone: '',
-      dob: '',
-      alleaves_customer_id: ''
+      dob: ''
     };
 
   }
@@ -478,7 +477,7 @@ export class CheckoutComponent implements OnInit {
            
           }
   
-      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.originalAllLeaves);
+      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.checkoutInfo.user_info.alleaves_customer_id);
   
       pos_order_id = response.id_order;
       points_add = response.subtotal;
