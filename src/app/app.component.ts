@@ -6,7 +6,7 @@ import {
   group,
   query,
 } from '@angular/animations';
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { App } from '@capacitor/app';
 
 import { ProductsService } from './products.service';
@@ -15,7 +15,7 @@ import { SettingsService } from './settings.service';
 import { FcmService } from './fcm.service';
 import { Router } from '@angular/router';
 import { GeolocationService } from './geolocation.service';
-import { ModalController } from '@ionic/angular';
+import { AlertController, ModalController } from '@ionic/angular';
 import { RestrictedComponent } from './restricted/restricted.component';
 
 @Component({
@@ -42,6 +42,11 @@ export class AppComponent {
 
   isLoggedIn: boolean = false;
 
+  private inactivityTimer: any;
+  private confirmTimer: any;
+  private inactivityLimit = 2 * 60 * 1000; // 5 minutes
+  private confirmLimit = 15 * 1000; // 30 seconds to respond
+
   constructor(
     private productService: ProductsService,
     private authService: AuthService,
@@ -49,7 +54,8 @@ export class AppComponent {
     private fcmService: FcmService,
     private router: Router,
     private geoLocationService: GeolocationService,
-    private modalController: ModalController
+    private modalController: ModalController,
+    private alertController: AlertController
   ) {
     // Listen for app URL open events
     App.addListener('appUrlOpen', (data: any) => {
@@ -75,6 +81,7 @@ export class AppComponent {
   }
   
   initializeApp() {
+    // setTimeout(() => this.startInactivityTimer(), 100);
     //this.authService.validateSession();
     this.settingsService.updateTheme();
   
@@ -96,9 +103,67 @@ export class AppComponent {
     });
   }
 
+  private startInactivityTimer() {
+    clearTimeout(this.inactivityTimer);
+    this.inactivityTimer = setTimeout(() => this.promptUserActivity(), this.inactivityLimit);
+  }
+
+    /** Reset Inactivity Timer on User Activity */
+    @HostListener('document:mousemove')
+    @HostListener('document:keypress')
+    @HostListener('document:touchstart')
+    resetInactivityTimer() {
+      if (!this.showSplashScreen) {
+        clearTimeout(this.inactivityTimer);
+        this.startInactivityTimer();
+      }
+    }
+  
+    private async promptUserActivity() {
+      let timeLeft = this.confirmLimit / 1000; // Convert milliseconds to seconds
+    
+      const alert = await this.alertController.create({
+        header: `Are you still there? ${timeLeft}`,
+        message: 'Tap "Still here" to continue shopping',
+        buttons: [
+          {
+            text: 'Still here',
+            handler: () => {
+              clearTimeout(this.confirmTimer); // Stop auto-reload
+              clearInterval(countdownInterval); // Stop countdown updates
+              this.resetInactivityTimer(); // Restart the inactivity timer
+            },
+          },
+        ],
+        backdropDismiss: false, // Prevent dismissing by clicking outside
+      });
+    
+      await alert.present();
+    
+      // Update countdown every second
+      const countdownInterval = setInterval(async () => {
+        timeLeft -= 1;
+        if (timeLeft <= 0) {
+          clearInterval(countdownInterval); // Stop the countdown
+        } else {
+          alert.header = `Are you still there? ${timeLeft}`,
+          await alert.header; // Force update the UI
+        }
+      }, 1000);
+    
+      // If user doesn't respond within confirmLimit, reload
+      this.confirmTimer = setTimeout(() => {
+        clearInterval(countdownInterval); // Stop the countdown before reload
+        alert.dismiss();
+        window.location.reload();
+      }, this.confirmLimit);
+    }
+    
+
   onCloseSplash() {
     setTimeout(() => {
       this.showSplashScreen = false;
+      this.startInactivityTimer();
   
       // Move focus to the main content area
       setTimeout(() => {

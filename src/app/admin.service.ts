@@ -147,5 +147,26 @@ sendCsvEmail(csvContent: string): Observable<any> {
   );
 }
 
+toggleDelivery(): Observable<{ deliveryAvailable: boolean }> {
+  const options = {
+    url: `${environment.apiUrl}/businesses/toggle-delivery`,
+    method: 'POST', // Use PATCH or POST based on your API design
+    headers: this.getHeaders()
+  };
+
+  // Convert CapacitorHttp request to Observable
+  return from(CapacitorHttp.request(options).then(response => response.data));
+}
+
+checkDeliveryEligibility(): Observable<{ deliveryAvailable: boolean }> {
+  const options = {
+    url: `${environment.apiUrl}/businesses/delivery-eligibility`,
+    method: 'GET',
+    headers: this.getHeaders()
+  };
+
+  // Convert CapacitorHttp request to Observable
+  return from(CapacitorHttp.request(options).then(response => response.data));
+}
 
 }

@@ -4,11 +4,17 @@
     <h1 tabindex="0">Admin Tools</h1>
   </div>
 
-  <div class="button-group">
+  <ion-item>
+    <ion-label>Delivery</ion-label>
+    <ion-toggle [checked]="deliveryAvailable" (ionChange)="onToggleDelivery($event)" slot="end"></ion-toggle>
+  </ion-item>
+  
+
+  <!-- <div class="button-group">
     <ion-button expand="block" color="primary" (click)="fetchData()">Download User Data</ion-button>
     <ion-button expand="block" color="primary" (click)="fetchOrders()">Download Order Data</ion-button>
     <ion-button expand="block" color="primary" (click)="fetchOrdersByEmployees()">Download Budtender Data</ion-button>
-  </div>
+  </div> -->
 
   <div class="notification-container">
     <div class="header">

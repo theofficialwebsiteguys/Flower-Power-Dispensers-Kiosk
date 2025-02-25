@@ -46,10 +46,36 @@ export class AdminComponent {
   selectedCategory: string = ''; // Holds the selected category
   categories: string[] = ['PREROLL', 'EDIBLE', 'FLOWER', 'CONCENTRATES', 'BEVERAGE', 'TINCTURES', 'ACCESSORIES'];
 
+  deliveryAvailable: boolean = false;
+
   constructor(private adminService: AdminService, private platform: Platform, private toastController: ToastController) {}
 
   ngOnInit() {
     this.loadCarouselImages();
+    this.getDeliveryEligibility();
+  }
+
+  getDeliveryEligibility(): void {
+    this.adminService.checkDeliveryEligibility().subscribe(
+      (response) => {
+        this.deliveryAvailable = response.deliveryAvailable;
+      },
+      (error) => {
+        console.error('Error fetching delivery eligibility', error);
+      }
+    );
+  }
+
+  onToggleDelivery(event: any): void {
+    // Optionally, you can use the event value to decide further, or simply toggle via the API
+    this.adminService.toggleDelivery().subscribe(
+      (response) => {
+        this.deliveryAvailable = response.deliveryAvailable;
+      },
+      (error) => {
+        console.error('Error toggling delivery', error);
+      }
+    );
   }
 
   // Load images from storage
