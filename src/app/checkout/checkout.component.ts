@@ -413,24 +413,22 @@ export class CheckoutComponent implements OnInit {
   
     try {
 
-      if (this.isGuest) {
-        console.log('User info changed, creating Alleaves customer...');
-        const newUserData = {
-          fname: this.checkoutInfo.user_info.fname,
-          lname: this.checkoutInfo.user_info.lname,
-          phone: this.checkoutInfo.user_info.phone,
-          email: this.checkoutInfo.user_info.email,
-          dob: '1990-01-01'
-        };
-  
-        const alleavesResponse = await this.cartService.createAlleavesCustomer(newUserData);
-        
-        if (alleavesResponse?.id_customer) {
-          console.log('Alleaves Customer Created:', alleavesResponse.id_customer);
-          this.checkoutInfo.user_info.alleaves_customer_id = alleavesResponse.id_customer; // Save the ID
-        } else {
-          console.warn('Failed to create Alleaves Customer');
-        }
+      console.log('User info changed, creating Alleaves customer...');
+      const newUserData = {
+        fname: this.checkoutInfo.user_info.fname,
+        lname: this.checkoutInfo.user_info.lname,
+        phone: this.checkoutInfo.user_info.phone,
+        email: this.checkoutInfo.user_info.email,
+        dob: '1990-01-01'
+      };
+
+      const alleavesResponse = await this.cartService.createAlleavesCustomer(newUserData);
+      
+      if (alleavesResponse?.id_customer) {
+        console.log('Alleaves Customer Created:', alleavesResponse.id_customer);
+        this.checkoutInfo.user_info.alleaves_customer_id = alleavesResponse.id_customer; // Save the ID
+      } else {
+        console.warn('Failed to create Alleaves Customer');
       }
 
       const user_id = this.checkoutInfo.user_info.id;
@@ -476,8 +474,9 @@ export class CheckoutComponent implements OnInit {
             });
            
           }
+
   
-      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.checkoutInfo.user_info.alleaves_customer_id);
+      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.checkoutInfo.user_info.alleaves_customer_id ?? this.originalAllLeaves);
   
       pos_order_id = response.id_order;
       points_add = response.subtotal;

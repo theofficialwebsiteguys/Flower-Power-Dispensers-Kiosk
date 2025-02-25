@@ -332,11 +332,11 @@ export class ProductsService {
     return [
       { category: 'FLOWER', imageUrl: 'assets/icons/flower.png' },
       { category: 'PREROLL', imageUrl: 'assets/icons/prerolls.png' },
+      { category: 'EDIBLE', imageUrl: 'assets/icons/edibles.png' },
       { category: 'VAPE', imageUrl: 'assets/icons/vaporizers.png' },
       { category: 'CONCENTRATES', imageUrl: 'assets/icons/concentrates.png' },
       { category: 'BEVERAGE', imageUrl: 'assets/icons/beverages.png' },
       { category: 'TINCTURES', imageUrl: 'assets/icons/tinctures.png' },
-      { category: 'EDIBLE', imageUrl: 'assets/icons/edibles.png' },
       { category: 'ACCESSORIES', imageUrl: 'assets/icons/accessories.png' },
     ];
   }

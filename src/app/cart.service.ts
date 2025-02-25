@@ -181,7 +181,7 @@ export class CartService {
     this.saveCart([]);
   }
 
-  checkout(points_redeem: number, orderType: string, deliveryAddress: any, allLeavesId?: number) {
+  checkout(points_redeem: number, orderType: string, deliveryAddress: any, allLeavesId: number) {
     const cartItems = this.getCart();
     // const unmatchedItems = [...cartItems];
     // const matchedCart: any[] = [];
@@ -222,7 +222,7 @@ export class CartService {
   
     const createOrder = async () => {
       const orderDetails = {
-        id_customer: allLeavesId ?? user_info.alleaves_customer_id,
+        id_customer: allLeavesId,
         id_external: null,
         id_location: 1000,
         id_status: 1,
