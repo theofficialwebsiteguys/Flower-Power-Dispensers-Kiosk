@@ -11,7 +11,7 @@ import { AccessibilityService } from '../accessibility.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
-  @Input() isCustomer: boolean = false;
+  @Input() isCustomer: boolean = true;
   registerForm: FormGroup;
   loading = false;
   submitted = false;

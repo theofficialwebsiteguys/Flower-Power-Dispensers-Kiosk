@@ -82,6 +82,7 @@ export class CheckoutComponent implements OnInit {
 
   originalUserId: number = 0;
   userRole: any;
+  originalAllLeaves: any;
 
   constructor(
     private cartService: CartService,
@@ -104,6 +105,7 @@ export class CheckoutComponent implements OnInit {
     });
 
     this.originalUserId = this.checkoutInfo.user_info.id
+    this.originalAllLeaves = this.checkoutInfo.user_info.alleaves_customer_id;
 
     if(this.checkoutInfo.user_info.role === 'employee'){
       this.showAeropay = false;
@@ -125,6 +127,7 @@ export class CheckoutComponent implements OnInit {
       email: '',
       phone: '',
       dob: '',
+      alleaves_customer_id: ''
     };
 
   }
@@ -475,7 +478,7 @@ export class CheckoutComponent implements OnInit {
            
           }
   
-      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.checkoutInfo.user_info.alleaves_customer_id);
+      const response = await this.cartService.checkout(points_redeem, this.selectedOrderType, deliveryAddress, this.originalAllLeaves);
   
       pos_order_id = response.id_order;
       points_add = response.subtotal;
