@@ -148,7 +148,7 @@ export class ProductsService {
   //             const defaultThcB = thcB ?? '100';
   
   //             switch (criterion) {
-  //               case 'POPULAR': {
+  //               case 'RECENT': {
   //                 break;
   //               }
   //               case 'PRICE': {
@@ -246,7 +246,7 @@ export class ProductsService {
               const defaultThcB = thcB ?? '100';
   
               switch (criterion) {
-                case 'POPULAR': {
+                case 'RECENT': {
                   if (direction === 'ASC') result = Number(posProductIdA) - Number(posProductIdB);
                   else if (direction === 'DESC') result = Number(posProductIdB) - Number(posProductIdA);
                 
