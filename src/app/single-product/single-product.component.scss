@@ -12,7 +12,22 @@
   cursor: pointer;
   font-size: 1.2em;
   color: var(--ion-color-primary-tint);
-  display: flex;
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  z-index: 10; /* Ensure it's not hidden behind other elements */
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+@media (display-mode: standalone) {
+  .back-button {
+    display: flex !important;
+    position: fixed;
+    top: 10px;
+    left: 10px;
+  }
 }
 
 .back-button ion-icon {

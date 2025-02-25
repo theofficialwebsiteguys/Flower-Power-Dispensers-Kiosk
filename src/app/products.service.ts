@@ -236,8 +236,8 @@ export class ProductsService {
           })
           .sort(
             (
-              { price: priceA, thc: thcA, title: titleA },
-              { price: priceB, thc: thcB, title: titleB }
+              { posProductId: posProductIdA, price: priceA, thc: thcA, title: titleA },
+              { posProductId: posProductIdB, price: priceB, thc: thcB, title: titleB }
             ) => {
               let result = 0;
   
@@ -247,6 +247,9 @@ export class ProductsService {
   
               switch (criterion) {
                 case 'POPULAR': {
+                  if (direction === 'ASC') result = Number(posProductIdA) - Number(posProductIdB);
+                  else if (direction === 'DESC') result = Number(posProductIdB) - Number(posProductIdA);
+                
                   break;
                 }
                 case 'PRICE': {
@@ -257,12 +260,19 @@ export class ProductsService {
                   break;
                 }
                 case 'THC': {
-                  if (direction === 'ASC')
-                    result = Number(defaultThcA) - Number(defaultThcB);
-                  else if (direction === 'DESC')
-                    result = Number(defaultThcB) - Number(defaultThcA);
+                  // Extract THC percentage, ensuring null/undefined default to 100
+                  const extractThcValue = (thc: string | null | undefined): number => {
+                    return thc ? Number(thc.replace('% THC', '')) : 0;
+                  };
+                
+                  const thcValueA = extractThcValue(thcA);
+                  const thcValueB = extractThcValue(thcB);
+                
+                  if (direction === 'ASC') result = thcValueA - thcValueB;
+                  else if (direction === 'DESC') result = thcValueB - thcValueA;
+                
                   break;
-                }
+                }                
                 case 'ALPHABETICAL': {
                   if (direction === 'ASC')
                     result = titleA.localeCompare(titleB);

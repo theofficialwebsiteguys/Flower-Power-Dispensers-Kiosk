@@ -46,7 +46,7 @@ export const DEFAULT_PRODUCT_FILTERS: ProductFilters = {
 };
 
 export const OPTIONS_CRITERIA: CriteriaOptions = [
-  { label: 'Popular', value: 'POPULAR' },
+  { label: 'Recently Added', value: 'POPULAR' },
   { label: 'Price', value: 'PRICE' },
   { label: 'THC', value: 'THC' },
   { label: 'A-Z', value: 'ALPHABETICAL' },
