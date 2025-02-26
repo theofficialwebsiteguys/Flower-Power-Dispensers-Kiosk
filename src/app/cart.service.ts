@@ -679,51 +679,57 @@ export class CartService {
   //   );
   // }
 
-  async addCheckoutItemsToOrder(idOrder: number, checkoutItems: any[]) {
-    const headers = {
-      Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('authTokensAlleaves') || '{}')}`,
-      'Content-Type': 'application/json; charset=utf-8',
-      Accept: 'application/json; charset=utf-8',
+ async addCheckoutItemsToOrder(idOrder: number, checkoutItems: any[]) {
+  const headers = {
+    Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('authTokensAlleaves') || '{}')}`,
+    'Content-Type': 'application/json; charset=utf-8',
+    Accept: 'application/json; charset=utf-8',
+  };
+
+  const apiUrl = `https://app.alleaves.com/api/order/${idOrder}/item`;
+  const addedItems: any[] = [];
+
+
+  for (const item of checkoutItems) {
+    const body = {
+      id_batch: item.id_batch,
+      id_area: 1000,
+      qty: item.quantity,
     };
-  
-    const apiUrl = `https://app.alleaves.com/api/order/${idOrder}/item`;
 
-    const addedItems: any[] = [];
+    const options = {
+      url: apiUrl,
+      method: 'POST',
+      headers: headers,
+      data: body,
+    };
 
-    for (const item of checkoutItems) {
-      const body = {
-        id_batch: item.id_batch,
-        id_area: 1000,
-        qty: item.quantity,
-      };
+    try {
+      const response = await CapacitorHttp.request(options);
 
-      const options = {
-        url: apiUrl,
-        method: 'POST',
-        headers: headers,
-        data: body,
-      };
-
-      try {
-        const response = await CapacitorHttp.request(options);
-
-        if (response?.data?.items) {
-          const generatedItems = response.data.items.map((resItem: any) => ({
-            ...item,
-            id_item: resItem.id_item,
-          }));
-          addedItems.push(...generatedItems);
-        } else {
-          console.warn(`Unexpected response format for item ${item.id_batch}:`, response);
-        }
-      } catch (error) {
-        console.error(`Error adding item (id_batch: ${item.id_batch}):`, error);
-        continue; // Continue with the next item instead of stopping all requests
+      if (response?.data?.items?.length > 0) {
+        // Only push unique items based on `id_item`
+        response.data.items.forEach((resItem: any) => {
+          const exists = addedItems.some((added) => added.id_item === resItem.id_item);
+          if (!exists) {
+            addedItems.push({
+              ...item,
+              id_item: resItem.id_item,
+            });
+          }
+        });
+      } else {
+        console.warn(`Unexpected response format for item ${item.id_batch}:`, response);
       }
+    } catch (error) {
+      console.error(`Error adding item (id_batch: ${item.id_batch}):`, error);
+      continue;
     }
+  }
 
-    return addedItems;
+  return addedItems;
 }
+
 
   async placeOrder(user_id: number = 562, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
     const selectedUser = this.employeeService.getSelectedUser();
