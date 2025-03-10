@@ -108,7 +108,6 @@ export class SingleProductComponent implements OnInit {
   
     this.cartService.addToCart(cartItem); 
     this.accessibilityService.announce(`${this.currentProduct.title} added to cart. Quantity: ${this.quantity}.`, 'assertive');
-    alert('Item added to cart!');
   }
   
   getProductImage(product: any): string {

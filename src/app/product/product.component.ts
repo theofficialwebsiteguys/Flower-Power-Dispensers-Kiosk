@@ -61,7 +61,6 @@ export class ProductComponent implements OnInit {
     }
     const cartItem: CartItem = { ...this.product, quantity: this.quantity };
     this.cartService.addToCart(cartItem);
-    alert('Item added to cart!');
     this.accessibilityService.announce(`${this.product.title} added to your cart.`, 'polite');
   }
 

@@ -3,7 +3,7 @@
     <img [src]="logoSrc" [@logoAnimation]="logoState" class="logo" alt="App Logo" id="splash-logo" />
   </div>
 
-  <div *ngIf="showAgeVerification" @fadeIn class="age-verification" role="alertdialog" aria-labelledby="age-verification-heading" aria-describedby="age-verification-description">
+  <div class="bottom-section" *ngIf="showAgeVerification" @fadeIn class="age-verification" role="alertdialog" aria-labelledby="age-verification-heading" aria-describedby="age-verification-description">
     <p class="verification-text">Login or Sign Up to earn and use FPD points. Or, continue as a guest.</p>
     <div class="button-group">
       <ion-button

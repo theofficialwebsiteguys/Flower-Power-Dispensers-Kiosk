@@ -111,10 +111,10 @@ export class AuthService {
         data: payload,
       })
         .then((response) => {
-          this.login({
-            email: userData.email,
-            password: userData.password,
-          }).subscribe();
+          // this.login({
+          //   email: userData.email,
+          //   password: userData.password,
+          // }).subscribe();
           observer.next(response.data);
           observer.complete();
         })

@@ -44,8 +44,8 @@ export class AppComponent {
 
   private inactivityTimer: any;
   private confirmTimer: any;
-  private inactivityLimit = 2 * 60 * 1000; // 5 minutes
-  private confirmLimit = 15 * 1000; // 30 seconds to respond
+  private inactivityLimit = 5 * 60 * 1000; // 5 minutes
+  private confirmLimit = 60 * 1000; // 30 seconds to respond
 
   constructor(
     private productService: ProductsService,

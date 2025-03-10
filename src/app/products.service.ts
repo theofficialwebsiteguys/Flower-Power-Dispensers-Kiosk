@@ -50,10 +50,10 @@ export class ProductsService {
   }
 
   fetchProducts(): Observable<Product[]> {
-    if (this.products.value.length > 0) {
-      console.log('Products already loaded from session storage.');
-      return of(this.products.value); // Return existing products as an Observable
-    }
+    // if (this.products.value.length > 0) {
+    //   console.log('Products already loaded from session storage.');
+    //   return of(this.products.value); 
+    // }
   
     const options = {
       url: `${environment.apiUrl}/products/all-products`,

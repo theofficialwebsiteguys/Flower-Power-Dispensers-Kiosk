@@ -741,6 +741,9 @@ export class CartService {
     // Conditionally add employee_id if the selectedUserId is different from user_id
     if (selectedUserId) {
         payload.employee_id = this.authService.getCurrentUser().id;
+    }else{
+        payload.employee_id = this.authService.getCurrentUser().id;
+        payload.user_id = 562;
     }
   
     const sessionData = localStorage.getItem('sessionData');

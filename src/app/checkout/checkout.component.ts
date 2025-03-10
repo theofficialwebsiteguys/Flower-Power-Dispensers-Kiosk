@@ -6,6 +6,7 @@ import { AuthService } from '../auth.service';
 import { AeropayService } from '../aeropay.service';
 import { openWidget } from 'aerosync-web-sdk';
 import { Router } from '@angular/router';
+import { ProductsService } from '../products.service';
 
 @Component({
   selector: 'app-checkout',
@@ -84,6 +85,8 @@ export class CheckoutComponent implements OnInit {
   userRole: any;
   originalAllLeaves: any;
 
+  invalidName: boolean = false;
+
   constructor(
     private cartService: CartService,
     private loadingController: LoadingController,
@@ -91,7 +94,8 @@ export class CheckoutComponent implements OnInit {
     private toastController: ToastController,
     private authService: AuthService,
     private aeropayService: AeropayService,
-    private router: Router
+    private router: Router,
+    private productsService: ProductsService
   ) {}
 
   ngOnInit() {
@@ -403,6 +407,11 @@ export class CheckoutComponent implements OnInit {
   }
 
   async placeOrder() {
+    if(this.checkoutInfo.user_info.fname === '' || this.checkoutInfo.user_info.lname === ''){
+      this.invalidName = true;
+      return;
+    }
+
     this.isLoading = true;
     const loading = await this.loadingController.create({
       spinner: 'crescent',
@@ -491,6 +500,17 @@ export class CheckoutComponent implements OnInit {
       } else{
         this.authService.logout();
       }
+
+      this.invalidName = false;
+
+      this.productsService.fetchProducts().subscribe({
+        next: () => {
+          console.log("Products fetched successfully.");
+        },
+        error: (error) => {
+          console.error("Error fetching products:", error);
+        }
+      });
 
       
       this.accessibilityService.announce('Your order has been placed successfully.', 'polite');

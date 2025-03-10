@@ -13,6 +13,7 @@
 
   <div class="section contact-info">
     <h2>Contact Information</h2>
+    <p class="required" *ngIf="invalidName">Name Required.</p>
     <form>
       <div class="input-row">
         <ion-item class="rounded-input half-width">

@@ -24,7 +24,7 @@
 
   .age-verification {
     position: absolute;
-    top: calc(60%); // Adjusted for better alignment
+    top: calc(70%); // Adjusted for better alignment
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -108,4 +108,9 @@
       }
     }
   }
+}
+
+
+.bottom-section{
+  margin-top: 50px;
 }
