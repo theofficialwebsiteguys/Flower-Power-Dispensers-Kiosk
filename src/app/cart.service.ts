@@ -733,8 +733,8 @@ export class CartService {
 
   async placeOrder(user_id: number = 562, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
     const selectedUser = this.employeeService.getSelectedUser();
-    const selectedUserId = selectedUser ? selectedUser.id : null;
-
+    const selectedUserId = selectedUser && selectedUser.id ? selectedUser.id : null;
+    
     // Constructing payload
     const payload: any = { user_id, pos_order_id, points_add, points_redeem, amount, cart };
 
