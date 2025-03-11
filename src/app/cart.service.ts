@@ -742,8 +742,10 @@ export class CartService {
     if (selectedUserId) {
         payload.employee_id = this.authService.getCurrentUser().id;
     }else{
+      if(!this.authService.isGuest()){
         payload.employee_id = this.authService.getCurrentUser().id;
-        payload.user_id = 562;
+      }
+      payload.user_id = 562;
     }
   
     const sessionData = localStorage.getItem('sessionData');
