@@ -191,7 +191,7 @@ export class CartService {
     let subtotal = 0;
     let user_info: any;
     // let checkoutItems: any[] = [];
-    const checkoutItems = [...cartItems];
+    let checkoutItems = [...cartItems];
   
     // const fetchAndMatch = async (): Promise<any[]> => {
     //   while (unmatchedItems.length > 0) {
@@ -241,9 +241,31 @@ export class CartService {
   
     const addItemsToOrder = async () => {
       const responses = await this.addCheckoutItemsToOrder(id_order, checkoutItems);
-      subtotal = responses.reduce((acc: number, item: any) => acc + (item.price || 0), 0);
+      console.log("Responses: ", responses);
+    
+      let responseIndex = 0;
+    
+      // Assign each response ID to the correct checkout item, considering quantity
+      checkoutItems = checkoutItems.flatMap((cartItem) => {
+        const newItems = [];
+        for (let i = 0; i < cartItem.quantity; i++) {
+          if (responses[responseIndex]) {
+            newItems.push({
+              ...cartItem,
+              id_item: responses[responseIndex].id_item, // Assign unique id_item
+            });
+            responseIndex++; // Move to next response item
+          }
+        }
+        return newItems;
+      });
+    
+      console.log("Updated Checkout Items: ", checkoutItems);
+    
+      // Recalculate subtotal
+      subtotal = checkoutItems.reduce((acc: number, item: any) => acc + (item.price || 0), 0);
     };
-  
+
     const updateOrderItemPrices = async () => {
       let remainingDiscount = points_redeem / 20;
       const sortedItems = [...checkoutItems].sort((a: any, b: any) => b.price - a.price);
