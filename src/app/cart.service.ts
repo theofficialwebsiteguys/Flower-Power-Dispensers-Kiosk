@@ -753,22 +753,37 @@ export class CartService {
 }
 
 
-  async placeOrder(user_id: number = 562, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
+  async placeOrder(user_id: number, pos_order_id: number, points_add: number, points_redeem: number, amount: number, cart: any) {
     const selectedUser = this.employeeService.getSelectedUser();
-    const selectedUserId = selectedUser && selectedUser.id ? selectedUser.id : null;
-    
-    // Constructing payload
-    const payload: any = { user_id, pos_order_id, points_add, points_redeem, amount, cart };
+    const currentUser = this.authService.getCurrentUser();
+    const isGuest = this.authService.isGuest();
 
-    // Conditionally add employee_id if the selectedUserId is different from user_id
-    if (selectedUserId) {
-        payload.employee_id = this.authService.getCurrentUser().id;
-    }else{
-      if(!this.authService.isGuest()){
-        payload.employee_id = this.authService.getCurrentUser().id;
-      }
+    const payload: any = {
+      pos_order_id,
+      points_add,
+      points_redeem,
+      amount,
+      cart
+    };
+
+    if (!isGuest && selectedUser?.id) {
+      // ✅ Case 1: Employee selecting a user (even if the user is a guest)
+      payload.user_id = selectedUser.id;
+      payload.employee_id = currentUser.id;
+    } else if (!isGuest && currentUser.role === 'employee' || currentUser.role === 'admin') {
+      // ✅ Case 2: Employee checking out a guest (no selected user)
+      payload.user_id = 562; // guest user
+      payload.employee_id = currentUser.id;
+    } else if (!isGuest) {
+      // ✅ Case 3: Logged-in customer (no employee)
+      payload.user_id = currentUser.id;
+      payload.employee_id = 562; // no employee involved
+    } else {
+      // ✅ Case 4: Full guest checkout
       payload.user_id = 562;
+      payload.employee_id = 562;
     }
+
   
     const sessionData = localStorage.getItem('sessionData');
     const token = sessionData ? JSON.parse(sessionData).token : null;
