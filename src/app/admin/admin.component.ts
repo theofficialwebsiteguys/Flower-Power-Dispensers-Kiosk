@@ -44,7 +44,7 @@ export class AdminComponent {
   uploadedImagePreviewUrl: (string | undefined)[] = []; // ✅ Allows undefined values
 
   selectedCategory: string = ''; // Holds the selected category
-  categories: string[] = ['PREROLL', 'EDIBLE', 'FLOWER', 'CONCENTRATES', 'BEVERAGE', 'TINCTURES', 'ACCESSORIES'];
+  categories: string[] = ['PREROLL', 'EDIBLE', 'FLOWER', 'CONCENTRATES', 'BEVERAGE', 'TINCTURES', 'TOPICAL', 'ACCESSORIES'];
 
   deliveryAvailable: boolean = false;
 
