@@ -770,7 +770,7 @@ export class CartService {
       // ✅ Case 1: Employee selecting a user (even if the user is a guest)
       payload.user_id = selectedUser.id;
       payload.employee_id = currentUser.id;
-    } else if (!isGuest && currentUser.role === 'employee' || currentUser.role === 'admin') {
+    } else if (!isGuest && currentUser?.role === 'employee' || currentUser?.role === 'admin') {
       // ✅ Case 2: Employee checking out a guest (no selected user)
       payload.user_id = 562; // guest user
       payload.employee_id = currentUser.id;
