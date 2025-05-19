@@ -218,8 +218,8 @@ export class ProductsService {
 
             const isMatchingSearch = searchQuery.trim() === '' || title.toLowerCase().includes(searchQuery.toLowerCase());
 
-            const isMatchingCategory =
-                searchQuery.trim() !== '' || category === this.currentCategory.value;
+            const selectedCategory = this.currentCategory.value;
+            const isMatchingCategory = !selectedCategory || category === selectedCategory;
   
             return (
               isMatchingSearch && 
