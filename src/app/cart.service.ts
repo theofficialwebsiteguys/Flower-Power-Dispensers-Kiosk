@@ -19,6 +19,8 @@ export interface CartItem {
   thc: string;
   weight: string;
   category: string;
+  id_item?: string;
+  price_after_points?: number;
 }
 
 @Injectable({
@@ -274,7 +276,8 @@ export class CartService {
         const discountAmount = Math.min(Number(item.price), remainingDiscount);
         remainingDiscount -= discountAmount;
         const priceOverride = Number(item.price) - discountAmount;
-        const url = `https://app.alleaves.com/api/order/${id_order}/item/${item.posProductId}`;
+        item.price_after_points = priceOverride;
+        const url = `https://app.alleaves.com/api/order/${id_order}/item/${item.id_item}`;
         const headers = {
           Authorization: `Bearer ${JSON.parse(sessionStorage.getItem('authTokensAlleaves') || '{}')}`,
           'Content-Type': 'application/json; charset=utf-8',
