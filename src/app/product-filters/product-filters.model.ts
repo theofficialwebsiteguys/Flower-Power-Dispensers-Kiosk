@@ -61,4 +61,6 @@ export const OPTIONS_STRAINS: StrainOptions = [
   { label: 'Hybrid', value: 'HYBRID' },
   { label: 'Indica', value: 'INDICA' },
   { label: 'Sativa', value: 'SATIVA' },
+  { label: 'Indica Hybrid', value: 'INDICA HYBRID' },
+  { label: 'Sativa Hybrid', value: 'SATIVA HYBRID' },
 ];

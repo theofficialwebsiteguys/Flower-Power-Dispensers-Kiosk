@@ -13,9 +13,5 @@ export class ProductDisplayPage implements OnInit {
   constructor(private productService: ProductsService) {}
 
   ngOnInit() {
-    this.productService.updateProductFilters({
-      ...DEFAULT_PRODUCT_FILTERS,
-      sortMethod: { criterion: 'RECENT', direction: 'DESC' },
-    });
   }
 }

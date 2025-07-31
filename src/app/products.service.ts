@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Product } from './product/product.model';
+import { Product, Strain } from './product/product.model';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { BehaviorSubject, catchError, combineLatest, filter, map, Observable, of, switchMap, tap, throwError } from 'rxjs';
@@ -220,16 +220,14 @@ export class ProductsService {
 
             const selectedCategory = this.currentCategory.value;
             const isMatchingCategory = !selectedCategory || category === selectedCategory;
-  
+
+            const normalizedStrainType: Strain = (strainType ?? '').toUpperCase() as Strain;
+
             return (
               isMatchingSearch && 
               isMatchingCategory &&
               (isEmpty(brands) || brands.includes(brand)) &&
-              (!strainType ||
-                isEmpty(strains) ||
-                strains.some((s) =>
-                  strainType.toUpperCase().split(' ').includes(s)
-                )) &&
+              (isEmpty(strains) || strains.includes(normalizedStrainType)) &&
               (!weight || isEmpty(weights) || weights.includes(weight)) &&
               (!defaultThc || isInRange(Number(defaultThc.split('%')[0]), thcRange))
             );

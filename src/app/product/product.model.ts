@@ -1,6 +1,6 @@
 import { ProductCategory } from "../product-category/product-category.model";
 
-export type Strain = 'HYBRID' | 'INDICA' | 'SATIVA';
+export type Strain = 'HYBRID' | 'INDICA' | 'SATIVA' | 'INDICA HYBRID' | 'SATIVA HYBRID';
 
 export type Product = {
   [key: string]: any;

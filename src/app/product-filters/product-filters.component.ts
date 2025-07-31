@@ -74,7 +74,7 @@ export class ProductFiltersComponent implements OnInit {
   }
 
   isStrain(value: string): value is Strain {
-    return ['HYBRID', 'SATIVA', 'INDICA'].includes(value);
+    return ['HYBRID', 'SATIVA', 'INDICA', 'INDICA HYBRID', 'SATIVA HYBRID'].includes(value);
   }
 
   handleCheckField(
